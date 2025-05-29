@@ -4,6 +4,9 @@ class_name Spacecraft
 # Gravity assist
 var gravity_assist: GravityAssist = null
 
+# Fire effect - configured in Godot 4 IDE
+@onready var fire_particles: CPUParticles2D = $FireParticles
+
 func _ready():
 	self.freeze_mode = RigidBody2D.FREEZE_MODE_KINEMATIC
 	self.freeze = true
@@ -12,6 +15,24 @@ func _ready():
 func _physics_process(delta):
 	if gravity_assist:
 		apply_gravity_assist(delta)
+	
+	# Update fire effect based on movement
+	update_fire_effect()
+
+func update_fire_effect():
+	"""Update fire effect based on spacecraft movement"""
+	if not fire_particles:
+		return
+		
+	var is_moving = linear_velocity.length() > 10.0
+	
+	if is_moving and not freeze:
+		# Show fire when moving
+		fire_particles.emitting = true
+		
+	else:
+		# Hide fire when not moving
+		fire_particles.emitting = false
 
 func release():
 	"""Release spacecraft from slingshot"""
@@ -41,10 +62,6 @@ func apply_gravity_assist(delta):
 	# Check if gravity assist is complete
 	if gravity_assist.is_curve_complete():
 		exit_gravity_assist()
-	
-	## Manual exit
-	#if Input.is_action_just_pressed("FINGER_TAP"):
-		#exit_gravity_assist()
 
 func exit_gravity_assist():
 	"""Complete the gravity assist"""
