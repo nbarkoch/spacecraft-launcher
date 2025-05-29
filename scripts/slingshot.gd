@@ -11,11 +11,17 @@ var slingshotState
 var leftLine
 var rightLine
 var spacecraft
+var trajectory_predictor
 
 func _ready():
 	slingshotState = SlingshotState.idle
 	leftLine = $LeftLine
 	rightLine = $RightLine
+	
+	# Create trajectory predictor
+	trajectory_predictor = TrajectoryPredictor.new()
+	add_child(trajectory_predictor)
+	trajectory_predictor.hide_trajectory()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -46,12 +52,20 @@ func _process(delta):
 				if launch_direction.length() > 0:
 					spacecraft.rotation = launch_direction.angle() + PI/2
 				
+				# Calculate and show trajectory prediction
+				var velocity = (center_pos - mouse_pos) * 10
+				trajectory_predictor.show_trajectory()
+				trajectory_predictor.update_prediction(mouse_pos, velocity)
+				
 			if Input.is_action_just_released("FINGER_TAP"):
 				var mouse_pos = get_global_mouse_position()
 				var center_pos = $SlingshotCenter.global_position
 				mouse_pos.x = min(center_pos.x+60, max(center_pos.x-60, mouse_pos.x))
 				mouse_pos.y = min(center_pos.y+60, max(center_pos.y+10, mouse_pos.y))
 				slingshotState = SlingshotState.released
+				
+				# Hide trajectory predictor
+				trajectory_predictor.hide_trajectory()
 				
 				# Calculate velocity
 				var velocity = (center_pos - mouse_pos) * 10

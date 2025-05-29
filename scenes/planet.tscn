@@ -27,7 +27,7 @@ script = ExtResource("1_qf0ol")
 [node name="CollisionShape" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_j7r55")
 
-[node name="Sprite" type="Sprite2D" parent="."]
+[node name="Sprite" type="Sprite2D" parent="." groups=["planets"]]
 material = SubResource("ShaderMaterial_sdf1j")
 scale = Vector2(0.343103, 0.339655)
 texture = ExtResource("3_nwi0i")

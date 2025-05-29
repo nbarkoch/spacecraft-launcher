@@ -14,6 +14,9 @@ class_name Planet
 var gravity_visualizer: GravityZoneVisualizer
 
 func _ready():
+	# Add to planets group for trajectory prediction
+	add_to_group("Planets")
+	
 	setup_collision_shapes()
 	if show_gravity_zone:
 		setup_gravity_visualization()
@@ -63,7 +66,6 @@ func _on_planet_area_body_entered(body):
 		body.exit_gravity_assist()
 		await get_tree().create_timer(1.5).timeout
 		body.destroy()
-
 
 func toggle_visualization(visible: bool):
 	"""Show/hide the gravity zone visualization"""
