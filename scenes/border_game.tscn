@@ -1,10 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://bp4wny2hgl85v"]
+[gd_scene load_steps=5 format=3 uid="uid://bp4wny2hgl85v"]
 
 [ext_resource type="Script" path="res://scripts/border_game.gd" id="1_vqse4"]
-[ext_resource type="Texture2D" uid="uid://c5f0oqu0yvwfp" path="res://sprites/bg.png" id="2_jtfvt"]
+[ext_resource type="Shader" path="res://shaders/gradient_background.gdshader" id="1_y4uhd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kc0ic"]
 size = Vector2(345, 549.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4x834"]
+shader = ExtResource("1_y4uhd")
+shader_parameter/top_color = Color(0, 0.114, 0.31, 1)
+shader_parameter/bottom_color = Color(0, 0.318, 0.494, 1)
 
 [node name="BorderGame" type="Area2D"]
 collision_layer = 0
@@ -14,9 +19,12 @@ script = ExtResource("1_vqse4")
 position = Vector2(-1, 0)
 shape = SubResource("RectangleShape2D_kc0ic")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(2.00001, -7.00003)
-scale = Vector2(0.443359, 0.40625)
-texture = ExtResource("2_jtfvt")
+[node name="GradientBackground" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_4x834")
+offset_left = -200.0
+offset_top = -400.0
+offset_right = 200.0
+offset_bottom = 400.0
+mouse_filter = 2
 
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
