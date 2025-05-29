@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://bp4wny2hgl85v"]
+
+[ext_resource type="Script" path="res://scripts/border_game.gd" id="1_vqse4"]
+[ext_resource type="Shader" path="res://shaders/gradient_background.gdshader" id="1_y4uhd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f3v8t"]
+shader = ExtResource("1_y4uhd")
+shader_parameter/top_color = Color(0.05, 0.05, 0.2, 1)
+shader_parameter/bottom_color = Color(0, 0, 0.05, 1)
+shader_parameter/animation_time = 0.0
+shader_parameter/animate = false
+
+[node name="ColorRect" type="ColorRect"]
+material = SubResource("ShaderMaterial_f3v8t")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vqse4")
+top_color = null
+bottom_color = null
+animate_gradient = null
+animation_speed = null
