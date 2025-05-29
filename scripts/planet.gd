@@ -9,7 +9,7 @@ class_name Planet
 # Visualization
 @export var show_gravity_zone: bool = true
 @export var zone_color: Color = Color(0.5, 0.8, 1.0, 0.6)
-@export var zone_rotation_speed: float = 30.0
+@export var zone_rotation_speed: float = 15.0
 
 var gravity_visualizer: GravityZoneVisualizer
 
