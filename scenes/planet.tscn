@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://p8a8uk5vtjdd"]
+
+[ext_resource type="Script" path="res://scripts/planet.gd" id="1_qf0ol"]
+[ext_resource type="Texture2D" uid="uid://dndb3cxmw7l18" path="res://sprites/planet_1.png" id="1_qv1i3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_j7r55"]
+radius = 41.0122
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i6pyu"]
+radius = 83.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g0lai"]
+radius = 42.0
+
+[node name="Planet" type="StaticBody2D"]
+script = ExtResource("1_qf0ol")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_j7r55")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(-1.90735e-06, -1.90735e-06)
+scale = Vector2(0.575862, 0.568965)
+texture = ExtResource("1_qv1i3")
+
+[node name="GravityZone" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="GravityZoneCollision" type="CollisionShape2D" parent="GravityZone"]
+shape = SubResource("CircleShape2D_i6pyu")
+
+[node name="PlanetArea" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="Collision" type="CollisionShape2D" parent="PlanetArea"]
+shape = SubResource("CircleShape2D_g0lai")
+
+[connection signal="body_entered" from="GravityZone" to="." method="_on_gravity_zone_body_entered"]
+[connection signal="body_entered" from="PlanetArea" to="." method="_on_planet_area_body_entered"]
