@@ -17,6 +17,13 @@ func _ready():
 	setup_collision_shapes()
 	if show_gravity_zone:
 		setup_gravity_visualization()
+	var material = $Sprite.material as ShaderMaterial
+	if material:
+		# Change glow radius dynamically
+		pass
+		material.set_shader_parameter("glow_radius", 0.25)
+		material.set_shader_parameter("glow_intensity", 0.2)
+		material.set_shader_parameter("planet_size", 0.28)
 
 func setup_collision_shapes():
 	"""Set up the collision shapes based on configured radii"""

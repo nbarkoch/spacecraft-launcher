@@ -1,10 +1,19 @@
-[gd_scene load_steps=6 format=3 uid="uid://p8a8uk5vtjdd"]
+[gd_scene load_steps=8 format=3 uid="uid://p8a8uk5vtjdd"]
 
 [ext_resource type="Script" path="res://scripts/planet.gd" id="1_qf0ol"]
-[ext_resource type="Texture2D" uid="uid://dndb3cxmw7l18" path="res://sprites/planet_1.png" id="1_qv1i3"]
+[ext_resource type="Shader" path="res://shaders/planet_glow.gdshader" id="1_qf7tu"]
+[ext_resource type="Texture2D" uid="uid://clmgi8lv7syhj" path="res://sprites/planet_g.png" id="3_nwi0i"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_j7r55"]
 radius = 24.0208
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sdf1j"]
+shader = ExtResource("1_qf7tu")
+shader_parameter/glow_intensity = 1.0
+shader_parameter/glow_radius = 0.2
+shader_parameter/glow_color = Vector4(0.3, 0.7, 1, 1)
+shader_parameter/glow_softness = 0.5
+shader_parameter/planet_size = 0.3
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_i6pyu"]
 radius = 55.0
@@ -19,11 +28,12 @@ script = ExtResource("1_qf0ol")
 shape = SubResource("CircleShape2D_j7r55")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-position = Vector2(0, -1)
+material = SubResource("ShaderMaterial_sdf1j")
 scale = Vector2(0.343103, 0.339655)
-texture = ExtResource("1_qv1i3")
+texture = ExtResource("3_nwi0i")
 
 [node name="GravityZone" type="Area2D" parent="."]
+visible = false
 collision_layer = 2
 
 [node name="GravityZoneCollision" type="CollisionShape2D" parent="GravityZone"]

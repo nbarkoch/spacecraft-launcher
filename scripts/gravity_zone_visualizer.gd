@@ -5,7 +5,7 @@ class_name GravityZoneVisualizer
 @export var dash_length: float = 8.0
 @export var gap_length: float = 6.0
 @export var line_width: float = 2.0
-@export var line_color: Color = Color(1.0, 1.0, 1.0, 0.35)  # Light blue, semi-transparent
+@export var line_color: Color = Color(1.0, 1.0, 1.0, 0.15)  # Light blue, semi-transparent
 @export var rotation_speed: float = 30.0  # degrees per second
 
 var line2d: Line2D
