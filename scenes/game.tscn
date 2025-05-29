@@ -1,10 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://dw3q2rdxoga8g"]
+[gd_scene load_steps=5 format=3 uid="uid://dw3q2rdxoga8g"]
 
 [ext_resource type="PackedScene" uid="uid://ogg3oaxoy66n" path="res://scenes/slingshot.tscn" id="1_c5tod"]
+[ext_resource type="PackedScene" uid="uid://bp4wny2hgl85v" path="res://scenes/border_game.tscn" id="1_rwg3j"]
 [ext_resource type="PackedScene" uid="uid://jx76bqm121v4" path="res://scenes/spacecraft.tscn" id="2_l0j4p"]
 [ext_resource type="PackedScene" uid="uid://p8a8uk5vtjdd" path="res://scenes/planet.tscn" id="3_kc5c4"]
 
 [node name="Game" type="Node2D"]
+
+[node name="BorderGame" parent="." instance=ExtResource("1_rwg3j")]
 
 [node name="Slingshot" parent="." instance=ExtResource("1_c5tod")]
 position = Vector2(0, 173)
@@ -17,3 +20,6 @@ position = Vector2(0, 155)
 
 [node name="Planet" parent="." instance=ExtResource("3_kc5c4")]
 position = Vector2(-19, -91)
+
+[node name="Planet2" parent="." instance=ExtResource("3_kc5c4")]
+position = Vector2(41, -2)

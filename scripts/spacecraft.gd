@@ -42,9 +42,9 @@ func apply_gravity_assist(delta):
 	if gravity_assist.is_curve_complete():
 		exit_gravity_assist()
 	
-	# Manual exit
-	if Input.is_action_just_pressed("FINGER_TAP"):
-		exit_gravity_assist()
+	## Manual exit
+	#if Input.is_action_just_pressed("FINGER_TAP"):
+		#exit_gravity_assist()
 
 func exit_gravity_assist():
 	"""Complete the gravity assist"""
@@ -64,3 +64,4 @@ func destroy():
 	print("Spacecraft destroyed!")
 	queue_free()
 	GameManager.currentState = GameManager.GameState.idle
+	get_tree().reload_current_scene()

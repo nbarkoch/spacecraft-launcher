@@ -4,13 +4,13 @@
 [ext_resource type="Texture2D" uid="uid://dndb3cxmw7l18" path="res://sprites/planet_1.png" id="1_qv1i3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_j7r55"]
-radius = 41.0122
+radius = 24.0208
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_i6pyu"]
-radius = 83.0
+radius = 55.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_g0lai"]
-radius = 42.0
+radius = 24.0832
 
 [node name="Planet" type="StaticBody2D"]
 script = ExtResource("1_qf0ol")
@@ -19,8 +19,8 @@ script = ExtResource("1_qf0ol")
 shape = SubResource("CircleShape2D_j7r55")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-position = Vector2(-1.90735e-06, -1.90735e-06)
-scale = Vector2(0.575862, 0.568965)
+position = Vector2(0, -1)
+scale = Vector2(0.343103, 0.339655)
 texture = ExtResource("1_qv1i3")
 
 [node name="GravityZone" type="Area2D" parent="."]

@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://bp4wny2hgl85v"]
+
+[ext_resource type="Script" path="res://scripts/border_game.gd" id="1_vqse4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kc0ic"]
+size = Vector2(345, 549.5)
+
+[node name="BorderGame" type="Area2D"]
+collision_layer = 0
+script = ExtResource("1_vqse4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, 0)
+shape = SubResource("RectangleShape2D_kc0ic")
+
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

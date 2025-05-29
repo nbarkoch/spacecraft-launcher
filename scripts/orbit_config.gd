@@ -19,15 +19,15 @@ func _init(p_planet: Planet, spacecraft_velocity: Vector2):
 	if speed > 600:
 		# Fast = wide gentle curve
 		curve_strength = 1.0
-		curve_duration = 2.5
+		curve_duration = 0.5
 	elif speed > 500:
 		# Medium = moderate curve  
 		curve_strength = 2.0
-		curve_duration = 3.0
+		curve_duration = 1.0
 	else:
 		# Slow = tight curve
 		curve_strength = 4.0
-		curve_duration = 4.0
+		curve_duration = 2.0
 	
 	#print("Gravity assist - Speed: ", speed, " Curve strength: ", curve_strength, " Duration: ", curve_duration)
 
