@@ -16,16 +16,16 @@ scale = Vector2(0.450311, 0.445455)
 texture = ExtResource("2_olcri")
 
 [node name="LeftLine" type="Line2D" parent="."]
-position = Vector2(0, 25)
+position = Vector2(0, 21)
 points = PackedVector2Array(0, -44, -20, -44)
-width = 6.0
-default_color = Color(0.313726, 0.32549, 0.360784, 1)
+width = 4.0
+default_color = Color(0.427451, 0.427451, 0.427451, 1)
 
 [node name="RightLine" type="Line2D" parent="."]
-position = Vector2(0, 25)
+position = Vector2(0, 21)
 points = PackedVector2Array(0, -44, 20, -44)
-width = 6.0
-default_color = Color(0.313726, 0.32549, 0.360784, 1)
+width = 4.0
+default_color = Color(0.427451, 0.427451, 0.427451, 1)
 
 [node name="TouchArea" type="Area2D" parent="."]
 
@@ -33,14 +33,11 @@ default_color = Color(0.313726, 0.32549, 0.360784, 1)
 shape = SubResource("CircleShape2D_0jt4s")
 
 [node name="SlingshotCenter" type="Marker2D" parent="."]
-position = Vector2(0, -19)
+position = Vector2(0, -23)
 
 [node name="TrajectoryPredictor" type="Node2D" parent="."]
 script = ExtResource("3_tp123")
 max_prediction_time = 3.0
-prediction_steps = 150
-dash_length = 12.0
-gap_length = 8.0
 line_width = 2.5
 normal_color = Color(1, 1, 1, 0.8)
 gravity_color = Color(0.3, 0.7, 1, 0.9)
