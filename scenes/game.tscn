@@ -10,13 +10,13 @@
 [node name="BorderGame" parent="." instance=ExtResource("1_rwg3j")]
 
 [node name="Slingshot" parent="." instance=ExtResource("1_c5tod")]
-position = Vector2(0, 173)
+position = Vector2(0, 181)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)
 
 [node name="Spacecraft" parent="." instance=ExtResource("2_l0j4p")]
-position = Vector2(0, 155)
+position = Vector2(0, 162)
 
 [node name="Planet" parent="." instance=ExtResource("3_kc5c4")]
 position = Vector2(-19, -91)
