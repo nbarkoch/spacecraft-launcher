@@ -9,11 +9,11 @@ radius = 24.0208
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sdf1j"]
 shader = ExtResource("1_qf7tu")
-shader_parameter/glow_intensity = 1.0
-shader_parameter/glow_radius = 0.2
+shader_parameter/glow_intensity = 0.193
+shader_parameter/glow_radius = 0.231
 shader_parameter/glow_color = Vector4(0.3, 0.7, 1, 1)
-shader_parameter/glow_softness = 0.5
-shader_parameter/planet_size = 0.3
+shader_parameter/glow_softness = 0.381
+shader_parameter/planet_size = 0.265
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_i6pyu"]
 radius = 55.0
@@ -46,4 +46,5 @@ collision_layer = 2
 shape = SubResource("CircleShape2D_g0lai")
 
 [connection signal="body_entered" from="GravityZone" to="." method="_on_gravity_zone_body_entered"]
+[connection signal="body_exited" from="GravityZone" to="." method="_on_gravity_zone_body_exited"]
 [connection signal="body_entered" from="PlanetArea" to="." method="_on_planet_area_body_entered"]

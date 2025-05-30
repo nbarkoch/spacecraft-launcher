@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dw3q2rdxoga8g"]
+[gd_scene load_steps=6 format=3 uid="uid://dw3q2rdxoga8g"]
 
 [ext_resource type="PackedScene" uid="uid://ogg3oaxoy66n" path="res://scenes/slingshot.tscn" id="1_c5tod"]
 [ext_resource type="PackedScene" uid="uid://bp4wny2hgl85v" path="res://scenes/border_game.tscn" id="1_rwg3j"]
 [ext_resource type="PackedScene" uid="uid://jx76bqm121v4" path="res://scenes/spacecraft.tscn" id="2_l0j4p"]
-[ext_resource type="PackedScene" uid="uid://p8a8uk5vtjdd" path="res://scenes/planet.tscn" id="3_kc5c4"]
+[ext_resource type="PackedScene" uid="uid://dyct1qho3vncc" path="res://scenes/planets/planet_c.tscn" id="5_q18na"]
+[ext_resource type="PackedScene" uid="uid://et54j7lrftig" path="res://scenes/planets/planet_g.tscn" id="5_qgthy"]
 
 [node name="Game" type="Node2D"]
 
@@ -18,8 +19,8 @@ zoom = Vector2(2, 2)
 [node name="Spacecraft" parent="." instance=ExtResource("2_l0j4p")]
 position = Vector2(0, 162)
 
-[node name="Planet" parent="." instance=ExtResource("3_kc5c4")]
-position = Vector2(-19, -91)
+[node name="GreenPlanet" parent="." instance=ExtResource("5_qgthy")]
+position = Vector2(36, -40)
 
-[node name="Planet2" parent="." instance=ExtResource("3_kc5c4")]
-position = Vector2(41, -2)
+[node name="CyanPlanet" parent="." instance=ExtResource("5_q18na")]
+position = Vector2(-40, -136)

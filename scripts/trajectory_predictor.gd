@@ -8,7 +8,10 @@ class_name TrajectoryPredictor
 @export var normal_color: Color = Color(1.0, 1.0, 1.0, 0.4)
 @export var gravity_color: Color = Color(0.3, 0.7, 1.0, 0.4)
 @export var collision_color: Color = Color(1.0, 0.2, 0.2, 0.9)
-@export var animation_speed_multiplier: float = 0.35  # Multiplier for fine-tuning
+@export var animation_speed_multiplier: float = 0.35
+
+# Spacecraft collision offset (simple approach)
+@export var spacecraft_collision_radius: float = 6.0  # Match spacecraft's collision radius
 
 # Internal variables
 var trajectory_line: Line2D
@@ -16,7 +19,7 @@ var is_predicting: bool = false
 var animation_offset: float = 0.0
 var cached_points: Array = []
 var cached_states: Array = []
-var current_velocity: Vector2 = Vector2.ZERO  # Store the current velocity
+var current_velocity: Vector2 = Vector2.ZERO
 var velocity_based_speed: float = 0.0
 
 func _ready():
@@ -25,16 +28,17 @@ func _ready():
 func _process(delta):
 	"""Animate the trajectory dashes at velocity-matched speed"""
 	if is_predicting and cached_points.size() > 0:
-		# Use velocity-based animation speed
 		animation_offset += velocity_based_speed * delta
 		
-		# Reset offset to prevent overflow
-		var dash_cycle = 25.0  # dash_length + gap_length
+		var dash_cycle = 25.0
 		if animation_offset > dash_cycle:
 			animation_offset -= dash_cycle
 		
-		# Redraw with new offset every frame
-		create_animated_trajectory(cached_points, cached_states)
+		# Need to pass cached velocity segments too
+		var dummy_velocities = []
+		for i in range(cached_points.size()):
+			dummy_velocities.append(current_velocity.length())
+		create_velocity_matched_trajectory(cached_points, cached_states, dummy_velocities)
 
 func create_trajectory_line():
 	"""Create a single Line2D for the trajectory"""
@@ -46,14 +50,9 @@ func create_trajectory_line():
 
 func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
 	"""Predict trajectory using EXACT same physics as spacecraft"""
-	# Store the initial velocity for animation speed calculation
 	current_velocity = initial_velocity
-	
-	# Calculate animation speed based on velocity magnitude
-	# Scale it down since the trajectory is in local coordinates and might be smaller
 	velocity_based_speed = current_velocity.length() * animation_speed_multiplier
 	
-	# Don't clear animation_offset here - only clear the line points
 	if trajectory_line:
 		trajectory_line.clear_points()
 	
@@ -68,53 +67,54 @@ func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
 	
 	var trajectory_points = []
 	var point_states = []
-	var velocity_segments = []  # Store velocity for each segment
+	var velocity_segments = []
 	
 	# Get planets
 	var planets = find_all_planets()
 	
 	# Simulate using exact game physics
 	for step in range(total_steps):
-		# Add current position and velocity
 		trajectory_points.append(to_local(sim_position))
 		velocity_segments.append(sim_velocity.length())
 		
-		# Check planet collisions
+		# Check planet collisions - account for spacecraft collision radius
 		var collision_detected = false
-		
 		for planet in planets:
 			if not planet or not is_instance_valid(planet):
 				continue
 			
 			var distance_to_planet = sim_position.distance_to(planet.global_position)
-			
-			if distance_to_planet <= planet.planet_radius:
+			# Collision when spacecraft edge touches planet edge
+			if distance_to_planet <= (planet.planet_radius + spacecraft_collision_radius):
 				collision_detected = true
-				point_states.append(2)  # Mark as collision/destruction
+				point_states.append(2)  # Collision
 				break
 		
 		if collision_detected:
 			break
 		
-		# Check gravity assist entry (exact same logic as spacecraft)
+		# Check gravity assist entry (FIXED: account for spacecraft collision radius)
 		if not sim_gravity_assist:
 			for planet in planets:
 				if not planet or not is_instance_valid(planet):
 					continue
 				
 				var distance_to_planet = sim_position.distance_to(planet.global_position)
-				if distance_to_planet <= planet.gravity_radius:
+				# FIXED: Expand gravity zone by spacecraft collision radius
+				# This way gravity assist triggers when spacecraft EDGE touches the zone
+				var effective_gravity_radius = planet.gravity_radius + spacecraft_collision_radius
+				if distance_to_planet <= effective_gravity_radius:
 					# Enter gravity assist - use your exact GravityAssist class
 					sim_gravity_assist = GravityAssist.new(planet, sim_velocity)
 					break
 		
-		# Track state
+		# Track state for visualization
 		if sim_gravity_assist:
 			point_states.append(1)  # Gravity
 		else:
 			point_states.append(0)  # Normal
 		
-		# Apply gravity assist physics (exact same as spacecraft)
+		# Apply gravity assist physics (KEEP ORIGINAL WORKING LOGIC)
 		if sim_gravity_assist:
 			sim_velocity = sim_gravity_assist.update_curve(time_step, sim_position)
 			

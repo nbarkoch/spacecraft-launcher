@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://dyct1qho3vncc"]
+
+[ext_resource type="PackedScene" uid="uid://p8a8uk5vtjdd" path="res://scenes/planet.tscn" id="1_x1jtw"]
+[ext_resource type="Texture2D" uid="uid://dtmvh5pe62uiu" path="res://sprites/planet_c.png" id="2_e50es"]
+
+[node name="CyanPlanet" type="Node2D"]
+
+[node name="Planet" parent="." instance=ExtResource("1_x1jtw")]
+sprite_texture = ExtResource("2_e50es")
+gravity_strength = 5.0
+gravity_radius = 60.0
+planet_radius = 30.0
+glow_color = Color(0.235294, 0.380392, 0.698039, 0)
+curve_strength_multiplier = 1.3
+curve_duration_multiplier = 1.3
+rotation_intensity = 1.7
+zone_color = Color(1, 1, 1, 0.501961)
