@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://jx76bqm121v4"]
 
 [ext_resource type="Script" path="res://scripts/spacecraft.gd" id="1_47ukr"]
-[ext_resource type="Texture2D" uid="uid://wkp10dks6qp5" path="res://sprites/spacecraft2.png" id="1_slxgx"]
+[ext_resource type="Texture2D" uid="uid://fc4r0ui4j3nx" path="res://sprites/spacecraft3.png" id="2_x4pyo"]
 
 [sub_resource type="Curve" id="Curve_mmcyj"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.745174, 0), 0.0, 0.0, 0, 0]
@@ -20,7 +20,6 @@ script = ExtResource("1_47ukr")
 
 [node name="FireParticles" type="CPUParticles2D" parent="."]
 position = Vector2(0, 12)
-scale = Vector2(1, 1)
 amount = 50
 lifetime = 0.3
 randomness = 0.09
@@ -39,4 +38,4 @@ shape = SubResource("CapsuleShape2D_20kmt")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.22, 0.221429)
-texture = ExtResource("1_slxgx")
+texture = ExtResource("2_x4pyo")

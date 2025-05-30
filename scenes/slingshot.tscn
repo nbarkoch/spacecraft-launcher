@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://ogg3oaxoy66n"]
 
 [ext_resource type="Script" path="res://scripts/slingshot.gd" id="1_1asle"]
-[ext_resource type="Texture2D" uid="uid://bblomn75uc111" path="res://sprites/slingshot.png" id="2_olcri"]
+[ext_resource type="Texture2D" uid="uid://dl3rgran2s3ib" path="res://sprites/slingshot2.png" id="2_jam6n"]
 [ext_resource type="Script" path="res://scripts/trajectory_predictor.gd" id="3_tp123"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0jt4s"]
@@ -11,21 +11,21 @@ radius = 58.0345
 script = ExtResource("1_1asle")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-3.8147e-06, 0)
-scale = Vector2(0.450311, 0.445455)
-texture = ExtResource("2_olcri")
+position = Vector2(0, -8)
+scale = Vector2(0.176251, 0.18427)
+texture = ExtResource("2_jam6n")
 
 [node name="LeftLine" type="Line2D" parent="."]
-position = Vector2(0, 21)
+position = Vector2(0, 13)
 points = PackedVector2Array(0, -44, -20, -44)
 width = 4.0
-default_color = Color(0.427451, 0.427451, 0.427451, 1)
+default_color = Color(0.235294, 0.956863, 0.992157, 0.466667)
 
 [node name="RightLine" type="Line2D" parent="."]
-position = Vector2(0, 21)
+position = Vector2(0, 13)
 points = PackedVector2Array(0, -44, 20, -44)
 width = 4.0
-default_color = Color(0.427451, 0.427451, 0.427451, 1)
+default_color = Color(0.235294, 0.956863, 0.992157, 0.466667)
 
 [node name="TouchArea" type="Area2D" parent="."]
 
@@ -33,7 +33,7 @@ default_color = Color(0.427451, 0.427451, 0.427451, 1)
 shape = SubResource("CircleShape2D_0jt4s")
 
 [node name="SlingshotCenter" type="Marker2D" parent="."]
-position = Vector2(0, -23)
+position = Vector2(0, -31)
 
 [node name="TrajectoryPredictor" type="Node2D" parent="."]
 script = ExtResource("3_tp123")

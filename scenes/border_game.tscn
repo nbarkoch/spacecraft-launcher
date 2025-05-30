@@ -12,6 +12,7 @@ shader_parameter/top_color = Color(0, 0.114, 0.31, 1)
 shader_parameter/bottom_color = Color(0, 0.318, 0.494, 1)
 
 [node name="BorderGame" type="Area2D"]
+z_index = -2
 collision_layer = 0
 script = ExtResource("1_vqse4")
 
