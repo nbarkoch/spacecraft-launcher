@@ -12,6 +12,7 @@ var leftLine
 var rightLine
 var spacecraft
 var trajectory_predictor
+const MULTIPLIER = 6
 
 func _ready():
 	slingshotState = SlingshotState.idle
@@ -53,7 +54,7 @@ func _process(delta):
 					spacecraft.rotation = launch_direction.angle() + PI/2
 				
 				# Calculate and show trajectory prediction
-				var velocity = (center_pos - mouse_pos) * 10
+				var velocity = (center_pos - mouse_pos) * MULTIPLIER
 				trajectory_predictor.show_trajectory()
 				trajectory_predictor.update_prediction(mouse_pos, velocity)
 				
@@ -68,7 +69,7 @@ func _process(delta):
 				trajectory_predictor.hide_trajectory()
 				
 				# Calculate velocity
-				var velocity = (center_pos - mouse_pos) * 10
+				var velocity = (center_pos - mouse_pos) * MULTIPLIER
 				
 				# Rotation is already set from pulling phase
 				# Release spacecraft
