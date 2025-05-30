@@ -7,8 +7,7 @@
 
 [node name="Planet" parent="." instance=ExtResource("1_s3yc5")]
 sprite_texture = ExtResource("3_nwi0i")
-gravity_strength = 50.0
-gravity_radius = 50.0
-planet_radius = 20.0
 glow_color = Color(0.235294, 0.380392, 0.698039, 0)
+gravity_radius = 50.0
+gravity_strength = 3.0
 zone_color = Color(1, 1, 1, 0.501961)

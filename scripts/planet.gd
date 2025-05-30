@@ -1,33 +1,27 @@
-# scripts/planet.gd (With orbit behavior controls)
+# scripts/planet.gd (SIMPLIFIED - Real Physics)
 extends StaticBody2D
 class_name Planet
 
-# Required parameters
+# Visual properties
 @export var sprite_texture: Texture2D
-@export var gravity_strength: float = 0.0
-@export var gravity_radius: float = 0.0
-@export var planet_radius: float = 0.0
 @export var glow_color: Color = Color.TRANSPARENT
 @export var glow_intensity: float = 0.0
 @export var glow_radius: float = 0.0
 
-# Orbit behavior configuration
-@export var curve_strength_multiplier: float = 1.0  # How much to curve (higher = tighter curves)
-@export var curve_duration_multiplier: float = 1.0  # How long the curve lasts (higher = longer effect)
-@export var speed_boost_multiplier: float = 1.1     # Speed boost when exiting (1.0 = no boost, 2.0 = double speed)
-@export var rotation_intensity: float = 1.0         # How much the planet makes ships rotate
+# Physics properties
+@export var planet_radius: float = 20.0
+@export var gravity_radius: float = 60.0
+@export var gravity_strength: float = 300.0  # Simple force strength
 
-# Visualization
+# Visual feedback
 @export var show_gravity_zone: bool = true
-@export var zone_color: Color = Color.TRANSPARENT
+@export var zone_color: Color = Color(1, 1, 1, 0.3)
 @export var zone_rotation_speed: float = 15.0
 
 var gravity_visualizer: GravityZoneVisualizer
 
 func _ready():
 	add_to_group("Planets")
-	
-	# IMPORTANT: Create unique resources for this instance
 	create_unique_resources()
 	
 	if sprite_texture and $Sprite:
@@ -39,9 +33,7 @@ func _ready():
 	setup_shader_material()
 
 func create_unique_resources():
-	"""Create unique resources for this planet instance to prevent sharing"""
-	
-	# Make unique collision shapes
+	"""Create unique resources for this planet instance"""
 	if $GravityZone/GravityZoneCollision.shape:
 		$GravityZone/GravityZoneCollision.shape = $GravityZone/GravityZoneCollision.shape.duplicate()
 	
@@ -51,11 +43,11 @@ func create_unique_resources():
 	if $CollisionShape.shape:
 		$CollisionShape.shape = $CollisionShape.shape.duplicate()
 	
-	# Make unique shader material
 	if $Sprite.material:
 		$Sprite.material = $Sprite.material.duplicate()
 
 func setup_collision_shapes():
+	"""Set up collision shapes based on exported parameters"""
 	if gravity_radius > 0:
 		$GravityZone/GravityZoneCollision.shape.radius = gravity_radius
 	if planet_radius > 0:
@@ -63,6 +55,7 @@ func setup_collision_shapes():
 		$CollisionShape.shape.radius = planet_radius
 
 func setup_gravity_visualization():
+	"""Create visual representation of gravity zone"""
 	if gravity_radius <= 0 or zone_color.a == 0:
 		return
 		
@@ -76,6 +69,7 @@ func setup_gravity_visualization():
 	move_child(gravity_visualizer, 0)
 
 func setup_shader_material():
+	"""Set up planet glow effect"""
 	var material = $Sprite.material as ShaderMaterial
 	if material and glow_color.a > 0 and glow_intensity > 0:
 		material.set_shader_parameter("glow_color", glow_color)
@@ -89,31 +83,20 @@ func setup_shader_material():
 		$Sprite.scale = Vector2(scale_factor, scale_factor)
 
 func _on_gravity_zone_body_entered(body):
-	if gravity_strength <= 0:
-		return
-		
+	"""Handle spacecraft entering gravity zone"""
 	if body is Spacecraft and not body.gravity_assist:
-		var spacecraft_velocity = body.linear_velocity
-		# Create gravity assist with this planet's specific configuration
-		var assist = GravityAssist.new(self, spacecraft_velocity)
+		# Create simple gravity assist
+		var assist = GravityAssist.new(self, body.linear_velocity, body.global_position)
 		body.enter_gravity_assist(assist)
 
+func _on_gravity_zone_body_exited(body):
+	"""Handle spacecraft leaving gravity zone"""
+	if body is Spacecraft and body.gravity_assist:
+		body.exit_gravity_assist()
+
 func _on_planet_area_body_entered(body):
+	"""Handle spacecraft collision with planet surface"""
 	if body is Spacecraft:
 		body.exit_gravity_assist()
 		await get_tree().create_timer(1.5).timeout
 		body.destroy()
-
-func toggle_visualization(visible: bool):
-	show_gravity_zone = visible
-	if gravity_visualizer:
-		gravity_visualizer.visible = visible
-
-func set_visualization_color(color: Color):
-	zone_color = color
-	if gravity_visualizer:
-		gravity_visualizer.set_color(color)
-
-func _on_gravity_zone_body_exited(body):
-	if body is Spacecraft and body.gravity_assist:
-		body.exit_gravity_assist()

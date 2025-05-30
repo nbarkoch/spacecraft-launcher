@@ -1,68 +1,40 @@
-# scripts/orbit_config.gd (Updated)
+# scripts/orbit_config.gd (SIMPLIFIED - Real Physics)
 class_name GravityAssist
 extends Resource
 
 var planet: Planet
-var entry_velocity: Vector2
-var current_velocity: Vector2
-var curve_strength: float
-var curve_duration: float
-var curve_timer: float = 0.0
-var speed_boost: float
-var rotation_factor: float
+var is_active: bool = false
 
-func _init(p_planet: Planet, spacecraft_velocity: Vector2):
+func _init(p_planet: Planet, spacecraft_velocity: Vector2, spacecraft_position: Vector2):
 	planet = p_planet
-	entry_velocity = spacecraft_velocity
-	current_velocity = spacecraft_velocity
-	
-	var speed = spacecraft_velocity.length()
-	
-	# Base curve characteristics based on speed
-	var base_curve_strength: float
-	var base_curve_duration: float
-	
-	if speed > 600:
-		# Fast = wide gentle curve
-		base_curve_strength = 1.0
-		base_curve_duration = 0.5
-	elif speed > 500:
-		# Medium = moderate curve  
-		base_curve_strength = 2.0
-		base_curve_duration = 1.0
-	else:
-		# Slow = tight curve
-		base_curve_strength = 4.0
-		base_curve_duration = 2.0
-	
-	# Apply planet-specific multipliers
-	curve_strength = base_curve_strength * planet.curve_strength_multiplier
-	curve_duration = base_curve_duration * planet.curve_duration_multiplier
-	speed_boost = planet.speed_boost_multiplier
-	rotation_factor = planet.rotation_intensity
+	is_active = true
 
 func update_curve(delta: float, spacecraft_pos: Vector2) -> Vector2:
-	"""Update the curved motion, returns new velocity"""
-	curve_timer += delta
+	"""Apply simple gravitational force toward planet center"""
+	if not is_active or not planet:
+		return Vector2.ZERO
 	
-	# Calculate direction toward planet center
-	var to_planet = (planet.global_position - spacecraft_pos).normalized()
+	# Calculate direction to planet center
+	var to_planet = planet.global_position - spacecraft_pos
+	var distance = to_planet.length()
 	
-	# Calculate curve force (gets weaker over time)
-	var curve_progress = curve_timer / curve_duration
-	var remaining_strength = 1.0 - curve_progress
+	# Avoid division by zero
+	if distance < 1.0:
+		return Vector2.ZERO
 	
-	# Apply curve force to current velocity with rotation intensity
-	var curve_force = to_planet * curve_strength * remaining_strength * rotation_factor * delta * 60.0
-	current_velocity += curve_force
+	# Calculate gravitational force (inverse square law, simplified)
+	var force_magnitude = planet.gravity_strength * delta * 60.0 / (distance * 0.01)
 	
-	return current_velocity
+	# Apply force toward planet center
+	var force_direction = to_planet.normalized()
+	var gravity_force = force_direction * force_magnitude
+	
+	return gravity_force
 
 func is_curve_complete() -> bool:
-	"""Check if the gravity assist curve is finished"""
-	return curve_timer >= curve_duration
+	"""Never complete - let the spacecraft exit naturally when it leaves the zone"""
+	return false
 
 func get_exit_velocity() -> Vector2:
-	"""Get final velocity when leaving gravity assist"""
-	# Apply planet-specific speed boost
-	return current_velocity * speed_boost
+	"""No special exit velocity - just current velocity"""
+	return Vector2.ZERO
