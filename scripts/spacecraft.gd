@@ -43,17 +43,13 @@ func enter_gravity_assist(assist: GravityAssist):
 	print("Started gravity assist")
 
 func apply_gravity_assist(delta):
-	"""Apply gravitational force - SIMPLE PHYSICS"""
 	if not gravity_assist:
 		return
 	
-	# Get gravity force from the assist
 	var gravity_force = gravity_assist.update_curve(delta, global_position)
-	
-	# Apply the force to current velocity (this is real physics!)
 	linear_velocity += gravity_force
 	
-	# Rotate spacecraft to face movement direction
+	# Rotate spacecraft
 	if linear_velocity.length() > 0:
 		var movement_direction = linear_velocity.normalized()
 		rotation = movement_direction.angle() + PI/2

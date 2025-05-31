@@ -56,7 +56,7 @@ func _process(delta):
 				# Calculate and show trajectory prediction
 				var velocity = (center_pos - mouse_pos) * MULTIPLIER
 				trajectory_predictor.show_trajectory()
-				trajectory_predictor.update_prediction(mouse_pos, velocity)
+				trajectory_predictor.update_prediction(mouse_pos, velocity * 0.825)
 				
 			if Input.is_action_just_released("FINGER_TAP"):
 				var mouse_pos = get_global_mouse_position()
@@ -107,4 +107,3 @@ func _on_touch_area_input_event(viewport, event, shape_idx):
 		
 		if spacecraft:
 			slingshotState = SlingshotState.pulling
-			print("Spacecraft captured and reset for new launch")

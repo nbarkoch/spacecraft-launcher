@@ -84,14 +84,15 @@ func setup_shader_material():
 
 func _on_gravity_zone_body_entered(body):
 	"""Handle spacecraft entering gravity zone"""
-	if body is Spacecraft and not body.gravity_assist:
+	if body is Spacecraft:
+		body.exit_gravity_assist()
 		# Create simple gravity assist
 		var assist = GravityAssist.new(self, body.linear_velocity, body.global_position)
 		body.enter_gravity_assist(assist)
 
 func _on_gravity_zone_body_exited(body):
 	"""Handle spacecraft leaving gravity zone"""
-	if body is Spacecraft and body.gravity_assist:
+	if body is Spacecraft and body.gravity_assist and body.gravity_assist.planet == self:
 		body.exit_gravity_assist()
 
 func _on_planet_area_body_entered(body):

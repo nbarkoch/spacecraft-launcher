@@ -37,9 +37,5 @@ position = Vector2(0, -31)
 
 [node name="TrajectoryPredictor" type="Node2D" parent="."]
 script = ExtResource("3_tp123")
-max_prediction_time = 3.0
-line_width = 2.5
-normal_color = Color(1, 1, 1, 0.8)
-gravity_color = Color(0.3, 0.7, 1, 0.9)
 
 [connection signal="input_event" from="TouchArea" to="." method="_on_touch_area_input_event"]
