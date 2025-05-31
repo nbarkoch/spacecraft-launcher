@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://vvpan4smuxbd"]
+[gd_scene load_steps=10 format=3 uid="uid://vvpan4smuxbd"]
 
-[ext_resource type="Texture2D" uid="uid://ct055fbtvwdyy" path="res://sprites/target.png" id="1_sxvcv"]
 [ext_resource type="Script" path="res://scripts/target_area.gd" id="1_tmo7r"]
 [ext_resource type="Shader" path="res://shaders/planet_glow.gdshader" id="2_texvw"]
+[ext_resource type="Texture2D" uid="uid://drsqf5fq3bab6" path="res://sprites/target_ring.png" id="3_l5qre"]
+[ext_resource type="Texture2D" uid="uid://dpg5eqdm1jquv" path="res://sprites/target_flag.png" id="4_8nhl3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wgi2b"]
 radius = 15.0333
@@ -15,6 +16,114 @@ shader_parameter/glow_color = Vector4(1, 1, 0.5, 1)
 shader_parameter/glow_softness = 0.391
 shader_parameter/planet_size = 0.368
 
+[sub_resource type="Animation" id="Animation_h5bfd"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteRing:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.176596, 0.175591)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("FlagClipContainer/SpriteFlag:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(12, 12)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("FlagClipContainer/SpriteFlag:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("FlagClipContainer:size")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(24, 26)]
+}
+
+[sub_resource type="Animation" id="Animation_hjxfj"]
+resource_name = "enter"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpriteRing:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0.176596, 0.175591), Vector2(0.21, 0.21), Vector2(0.13, 0.13), Vector2(0.187, 0.187), Vector2(0.177, 0.177)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("FlagClipContainer/SpriteFlag:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(12, 12), Vector2(12, 29)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("FlagClipContainer/SpriteFlag:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.41483]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("FlagClipContainer:size")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(24, 26), Vector2(28, 25), Vector2(21, 21)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5lx2b"]
+_data = {
+"RESET": SubResource("Animation_h5bfd"),
+"enter": SubResource("Animation_hjxfj")
+}
+
 [node name="TargetArea" type="Area2D"]
 z_index = -1
 collision_layer = 2
@@ -23,10 +132,36 @@ script = ExtResource("1_tmo7r")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_wgi2b")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="SpriteRing" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_emrac")
 position = Vector2(0, 1.19209e-07)
 scale = Vector2(0.176596, 0.175591)
-texture = ExtResource("1_sxvcv")
+texture = ExtResource("3_l5qre")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_5lx2b")
+}
+movie_quit_on_finish = true
+
+[node name="FlagClipContainer" type="Control" parent="."]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -12.0
+offset_right = 12.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SpriteFlag" type="Sprite2D" parent="FlagClipContainer"]
+position = Vector2(12, 12)
+scale = Vector2(0.173333, 0.173333)
+texture = ExtResource("4_8nhl3")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
