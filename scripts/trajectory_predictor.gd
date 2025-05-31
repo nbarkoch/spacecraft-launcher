@@ -63,22 +63,34 @@ func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
 			if spacecraft_edge_distance <= planet.gravity_radius:
 				currently_in_gravity.append(planet)
 		
-		# Remove planets that spacecraft has exited
-		for i in range(active_gravity_planets.size() - 1, -1, -1):
-			var planet = active_gravity_planets[i]
-			if not planet in currently_in_gravity:
-				active_gravity_planets.remove_at(i)
-		
-		# Add planets that spacecraft has entered
+		# Handle zone transitions (matching planet script behavior)
+		# Check for new planet entries (this triggers exit_gravity_assist + new assist)
+		var new_planets = []
 		for planet in currently_in_gravity:
 			if not planet in active_gravity_planets:
-				active_gravity_planets.append(planet)
+				new_planets.append(planet)
 		
-		# Apply gravity forces from all active planets
+		# If entering any new gravity zone, clear all previous and use the new one
+		# This simulates the planet script calling exit_gravity_assist() then creating new assist
+		if new_planets.size() > 0:
+			active_gravity_planets.clear()
+			# Use the first new planet encountered (deterministic behavior)
+			active_gravity_planets.append(new_planets[0])
+		
+		# Remove planets that spacecraft has exited (only if no new entries)
+		if new_planets.size() == 0:
+			for i in range(active_gravity_planets.size() - 1, -1, -1):
+				var planet = active_gravity_planets[i]
+				if not planet in currently_in_gravity:
+					active_gravity_planets.remove_at(i)
+		
+		# Apply gravity forces from the single active planet (if any)
 		var total_gravity_force = Vector2.ZERO
 		var in_gravity = active_gravity_planets.size() > 0
 		
-		for planet in active_gravity_planets:
+		# Only apply gravity from one planet at a time (matching the game logic)
+		if active_gravity_planets.size() > 0:
+			var planet = active_gravity_planets[0]
 			var to_planet = planet.global_position - position
 			var distance = to_planet.length()
 			
@@ -89,7 +101,7 @@ func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
 				var gravity_force = force_direction * force_magnitude
 				
 				total_gravity_force += gravity_force
-				
+		
 		# Set trajectory color
 		if in_gravity:
 			trajectory_line.default_color = gravity_color
@@ -102,7 +114,7 @@ func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
 		# Move position - EXACT like RigidBody2D but with micro steps
 		position += velocity * time_step
 		
-		# Check for planet collision
+		# Check for planet collision (using planet_radius, not gravity_radius)
 		var collision_detected = false
 		for planet in planets:
 			if not planet or not is_instance_valid(planet):
