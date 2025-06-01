@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dw3q2rdxoga8g"]
+[gd_scene load_steps=9 format=3 uid="uid://dw3q2rdxoga8g"]
 
 [ext_resource type="PackedScene" uid="uid://ogg3oaxoy66n" path="res://scenes/slingshot.tscn" id="1_c5tod"]
 [ext_resource type="PackedScene" uid="uid://bp4wny2hgl85v" path="res://scenes/border_game.tscn" id="1_rwg3j"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://et54j7lrftig" path="res://scenes/planets/planet_g.tscn" id="5_qgthy"]
 [ext_resource type="PackedScene" uid="uid://vvpan4smuxbd" path="res://scenes/target_area.tscn" id="6_64vpg"]
 [ext_resource type="PackedScene" uid="uid://d0ac4c4klebkb" path="res://scenes/meteroid.tscn" id="7_kueth"]
+[ext_resource type="PackedScene" uid="uid://bryh4m50q0dgo" path="res://scenes/coin.tscn" id="8_4lg0d"]
 
 [node name="Game" type="Node2D"]
 
@@ -35,3 +36,6 @@ position = Vector2(-65, 70)
 
 [node name="Meteroid2" parent="." instance=ExtResource("7_kueth")]
 position = Vector2(93, 29)
+
+[node name="Coin" parent="." instance=ExtResource("8_4lg0d")]
+position = Vector2(-35, -44)

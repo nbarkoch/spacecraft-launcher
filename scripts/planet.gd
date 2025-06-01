@@ -99,5 +99,6 @@ func _on_planet_area_body_entered(body):
 	"""Handle spacecraft collision with planet surface"""
 	if body is Spacecraft:
 		body.exit_gravity_assist()
+		body.is_dead = true
 		await get_tree().create_timer(1.5).timeout
 		body.destroy()

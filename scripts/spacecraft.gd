@@ -3,7 +3,7 @@ class_name Spacecraft
 
 # Gravity assist
 var gravity_assist: GravityAssist = null
-
+var is_dead = false
 # Fire effect
 @onready var fire_particles: CPUParticles2D = $FireParticles
 
@@ -43,7 +43,7 @@ func enter_gravity_assist(assist: GravityAssist):
 	print("Started gravity assist")
 
 func apply_gravity_assist(delta):
-	if not gravity_assist:
+	if not gravity_assist or is_dead:
 		return
 	
 	var gravity_force = gravity_assist.update_curve(delta, global_position)
