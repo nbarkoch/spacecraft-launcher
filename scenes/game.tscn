@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://dw3q2rdxoga8g"]
+[gd_scene load_steps=10 format=3 uid="uid://dw3q2rdxoga8g"]
 
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_0s5jx"]
 [ext_resource type="PackedScene" uid="uid://ogg3oaxoy66n" path="res://scenes/slingshot.tscn" id="1_c5tod"]
 [ext_resource type="PackedScene" uid="uid://bp4wny2hgl85v" path="res://scenes/border_game.tscn" id="1_rwg3j"]
 [ext_resource type="PackedScene" uid="uid://jx76bqm121v4" path="res://scenes/spacecraft.tscn" id="2_l0j4p"]
@@ -10,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bryh4m50q0dgo" path="res://scenes/coin.tscn" id="8_4lg0d"]
 
 [node name="Game" type="Node2D"]
+script = ExtResource("1_0s5jx")
 
 [node name="BorderGame" parent="." instance=ExtResource("1_rwg3j")]
 

@@ -1,15 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://jx76bqm121v4"]
+[gd_scene load_steps=4 format=3 uid="uid://jx76bqm121v4"]
 
 [ext_resource type="Script" path="res://scripts/spacecraft.gd" id="1_47ukr"]
 [ext_resource type="Texture2D" uid="uid://fc4r0ui4j3nx" path="res://sprites/spacecraft3.png" id="2_x4pyo"]
-
-[sub_resource type="Curve" id="Curve_mmcyj"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1e-05, 1), 0.0, 0.0, 0, 0, Vector2(0.745174, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="Gradient" id="Gradient_c6378"]
-offsets = PackedFloat32Array(0, 0.484848, 1)
-colors = PackedColorArray(0.796078, 0.592157, 0, 0.517647, 0.960784, 0.470588, 0, 0.482353, 0.894118, 0.239216, 0, 0.313726)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_20kmt"]
 radius = 6.0
@@ -17,24 +9,6 @@ radius = 6.0
 [node name="Spacecraft" type="RigidBody2D" groups=["Spacecrafts"]]
 gravity_scale = 0.0
 script = ExtResource("1_47ukr")
-
-[node name="FireParticles" type="CPUParticles2D" parent="."]
-position = Vector2(0, 12)
-amount = 50
-lifetime = 0.3
-randomness = 0.09
-emission_shape = 4
-emission_points = PackedVector2Array()
-emission_colors = PackedColorArray()
-spread = 28.17
-gravity = Vector2(0, 0)
-initial_velocity_min = 0.3
-initial_velocity_max = 0.8
-damping_max = 79.137
-scale_amount_min = 0.3
-scale_amount_max = 7.0
-scale_amount_curve = SubResource("Curve_mmcyj")
-color_ramp = SubResource("Gradient_c6378")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_20kmt")

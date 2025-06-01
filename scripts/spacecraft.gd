@@ -4,15 +4,23 @@ class_name Spacecraft
 # Gravity assist
 var gravity_assist: GravityAssist = null
 var is_dead = false
-# Fire effect
-@onready var fire_particles: CPUParticles2D = $FireParticles
+var trail: SpacecraftTrail = null
 
 func _ready():
 	self.freeze_mode = RigidBody2D.FREEZE_MODE_KINEMATIC
 	self.freeze = true
 	self.gravity_scale = 0
 	add_to_group("Spacecrafts")
+	await get_tree().process_frame
+	setup_trail()
+	
 
+func setup_trail():
+	trail = SpacecraftTrail.new()
+	trail.z_index = -1
+	get_tree().current_scene.add_child(trail)
+	trail.spacecraft_ref = self
+	
 func _physics_process(delta):
 	# Only apply gravity assist if we have one
 	if gravity_assist:
@@ -22,15 +30,14 @@ func _physics_process(delta):
 
 func update_fire_effect():
 	"""Update fire effect based on spacecraft movement"""
-	if not fire_particles:
-		return
+
 		
 	var is_moving = linear_velocity.length() > 10.0
 	
-	if is_moving and not freeze:
-		fire_particles.emitting = true
-	else:
-		fire_particles.emitting = false
+	#if is_moving and not freeze:
+		#fire_particles.emitting = true
+	#else:
+		#fire_particles.emitting = false
 
 func release():
 	"""Release spacecraft from slingshot"""
