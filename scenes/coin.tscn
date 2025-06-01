@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://bryh4m50q0dgo"]
+[gd_scene load_steps=16 format=3 uid="uid://bryh4m50q0dgo"]
 
 [ext_resource type="Texture2D" uid="uid://bm5lux7wue7t8" path="res://sprites/coin_anim.png" id="1_3l7rd"]
 [ext_resource type="Script" path="res://scripts/coin.gd" id="1_yc21c"]
 [ext_resource type="Texture2D" uid="uid://g3lbvs45lr1l" path="res://sprites/s_star.png" id="2_8j4ft"]
+[ext_resource type="PackedScene" uid="uid://bnscgwyelyck3" path="res://scenes/ring_effect.tscn" id="3_ec37v"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_46swt"]
 atlas = ExtResource("1_3l7rd")
@@ -85,17 +86,22 @@ scale = Vector2(0.230769, 0.230769)
 sprite_frames = SubResource("SpriteFrames_4ytrr")
 animation = &"new_animation"
 autoplay = "new_animation"
-frame_progress = 0.0403356
+frame_progress = 0.802482
 
 [node name="CollisionShape" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_vw6yo")
 
 [node name="CollectionEffect" type="Node2D" parent="."]
 
+[node name="RingEffect" parent="CollectionEffect" instance=ExtResource("3_ec37v")]
+animation_duration = 0.3
+ring_size = 40.0
+initial_width = 5.0
+
 [node name="StarParticles" type="CPUParticles2D" parent="CollectionEffect"]
 emitting = false
 amount = 5
-lifetime = 0.8
+lifetime = 0.6
 one_shot = true
 explosiveness = 1.0
 texture = ExtResource("2_8j4ft")
@@ -107,6 +113,7 @@ initial_velocity_max = 150.0
 damping_min = 2.0
 damping_max = 4.0
 scale_amount_min = 0.5
+scale_amount_max = 1.25
 scale_amount_curve = SubResource("Curve_a10ua")
 color = Color(1, 0.875258, 0.625109, 0.921569)
 
