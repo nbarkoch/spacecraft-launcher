@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://fc4r0ui4j3nx" path="res://sprites/spacecraft3.png" id="2_x4pyo"]
 
 [sub_resource type="Curve" id="Curve_mmcyj"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.745174, 0), 0.0, 0.0, 0, 0]
-point_count = 2
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1e-05, 1), 0.0, 0.0, 0, 0, Vector2(0.745174, 0), 0.0, 0.0, 0, 0]
+point_count = 3
 
 [sub_resource type="Gradient" id="Gradient_c6378"]
 offsets = PackedFloat32Array(0, 0.484848, 1)
@@ -23,6 +23,9 @@ position = Vector2(0, 12)
 amount = 50
 lifetime = 0.3
 randomness = 0.09
+emission_shape = 4
+emission_points = PackedVector2Array()
+emission_colors = PackedColorArray()
 spread = 28.17
 gravity = Vector2(0, 0)
 initial_velocity_min = 0.3

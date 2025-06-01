@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://d0ac4c4klebkb"]
+[gd_scene load_steps=10 format=3 uid="uid://d0ac4c4klebkb"]
 
 [ext_resource type="Texture2D" uid="uid://dto3dwx4gq8a4" path="res://sprites/meteroids.png" id="1_ejkk3"]
+[ext_resource type="Script" path="res://scripts/meteroid.gd" id="1_g1etq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_af5sn"]
 radius = 13.3417
@@ -56,8 +57,15 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_u7kpt"]
+radius = 13.0
+
 [node name="Meteroid" type="RigidBody2D"]
 gravity_scale = 0.0
+script = ExtResource("1_g1etq")
+orbit_radius = 15.0
+wobble_amplitude = 0.0
+wobble_frequency = 0.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_af5sn")
@@ -67,3 +75,10 @@ position = Vector2(-1.90735e-06, -3.8147e-06)
 scale = Vector2(0.24, 0.2425)
 sprite_frames = SubResource("SpriteFrames_eiki1")
 animation = &"brown"
+
+[node name="CollisionDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionDetector"]
+shape = SubResource("CircleShape2D_u7kpt")
+
+[connection signal="body_entered" from="CollisionDetector" to="." method="_on_collision_detected"]
