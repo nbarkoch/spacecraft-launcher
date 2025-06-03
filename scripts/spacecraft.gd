@@ -26,19 +26,19 @@ func setup_trail():
 	trail.spacecraft_ref = self
 	
 func _physics_process(delta):
-	# Only apply gravity assist if we have one
-	if gravity_assist:
-		apply_gravity_assist(delta)
+	# Store reference to avoid null issues during the frame
+	var current_assist = gravity_assist
 	
-	#update_fire_effect()
-
-#func update_fire_effect():
-	#"""Update fire effect based on spacecraft movement"""
-	#var is_moving = linear_velocity.length() > 10.0
-	#if is_moving and not freeze:
-		#fire_particles.emitting = true
-	#else:
-		#fire_particles.emitting = false
+	# Only apply gravity assist if we have one
+	if current_assist:
+		apply_gravity_assist(delta)
+		
+		# FIXED: Check if gravity assist should be terminated (safe check)
+		if current_assist == gravity_assist and current_assist.is_curve_complete():
+			print("Gravity assist completed - forcing exit")
+			exit_gravity_assist()
+	
+	update_debug_info()
 
 func release():
 	"""Release spacecraft from slingshot"""
@@ -48,7 +48,6 @@ func release():
 func enter_gravity_assist(assist: GravityAssist):
 	"""Start gravity assist"""
 	gravity_assist = assist
-	print("Started gravity assist")
 
 func apply_gravity_assist(delta):
 	if not gravity_assist or is_dead:
@@ -63,9 +62,9 @@ func apply_gravity_assist(delta):
 		rotation = movement_direction.angle() + PI/2
 
 func exit_gravity_assist():
-	"""Stop gravity assist"""
+	"""Stop gravity assist - IMPROVED VERSION"""
 	if gravity_assist:
-		print("Gravity assist complete")
+		gravity_assist.is_active = false
 		gravity_assist = null
 
 func destroy():
@@ -76,7 +75,7 @@ func destroy():
 	get_tree().reload_current_scene()
 
 var debug_label: Label
-var debug_enabled: bool = true
+var debug_enabled: bool = false
 
 func setup_debug_overlay():
 	if not debug_enabled:
@@ -110,9 +109,14 @@ func update_debug_info():
 		var ideal_orbit = gravity_assist.ideal_orbit_radius
 		var distance_from_ideal = abs(distance_to_planet - ideal_orbit)
 		
+		debug_text += "=== GRAVITY ASSIST ACTIVE ===\n"
+		debug_text += "Time in orbit: " + str(round(gravity_assist.entry_time * 10) / 10.0) + "s\n"
+		debug_text += "Initial prediction: " + str(round(gravity_assist.predicted_orbit_duration * 10) / 10.0) + "s\n"
+		debug_text += "Current prediction: " + str(round(gravity_assist.get_current_predicted_duration() * 10) / 10.0) + "s\n"
+		debug_text += "Time remaining: " + str(round((gravity_assist.get_current_predicted_duration() - gravity_assist.entry_time) * 10) / 10.0) + "s\n"
+		debug_text += "Should exit: " + str(gravity_assist.should_exit) + "\n"
 		debug_text += "Distance to planet: " + str(round(distance_to_planet)) + "\n"
 		debug_text += "Ideal orbit radius: " + str(round(ideal_orbit)) + "\n"
-		debug_text += "Distance from ideal: " + str(round(distance_from_ideal)) + "\n"
 		
 		# Check tangential movement
 		var to_planet = planet.global_position - global_position
@@ -120,13 +124,8 @@ func update_debug_info():
 		var vel_dir = linear_velocity.normalized() if linear_velocity.length() > 0 else Vector2.ZERO
 		var dot_product = abs(radial_dir.dot(vel_dir)) if vel_dir != Vector2.ZERO else 0
 		
-		debug_text += "Tangential check: " + str(round(dot_product * 100) / 100.0) + "\n"
+		debug_text += "Tangential factor: " + str(round(dot_product * 100) / 100.0) + "\n"
 		debug_text += "(0.0 = perfect tangential, 1.0 = radial)\n"
-		
-		if distance_from_ideal <= gravity_assist.snap_distance and dot_product <= 0.7:
-			debug_text += "SNAP ACTIVE!"
-		else:
-			debug_text += "No snap"
 	else:
 		debug_text += "No gravity assist active"
 	

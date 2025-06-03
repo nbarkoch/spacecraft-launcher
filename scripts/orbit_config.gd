@@ -1,4 +1,4 @@
-# scripts/orbit_config.gd (WITH PLANET PARAMETER SUPPORT)
+# scripts/orbit_config.gd (UPDATED WITH TIME-BASED AUTO RELEASE)
 class_name GravityAssist
 extends Resource
 
@@ -12,6 +12,11 @@ var emergency_force_multiplier: float = 12.0
 var angle_correction_strength: float = 15.0
 var optimal_angle_tolerance: float = 7.0
 
+# NEW: Time-based release system
+var max_orbit_duration: float = 3.0  # מהכוכב
+var predicted_orbit_duration: float = 0.0  # מחושב
+var time_based_exit_enabled: bool = true
+
 # Internal state
 var spacecraft_ref: Spacecraft = null
 var entry_time: float = 0.0
@@ -20,12 +25,11 @@ var entry_position: Vector2 = Vector2.ZERO
 var entry_speed: float = 0.0
 var entry_angle_to_center: float = 0.0
 var should_exit: bool = false
-var max_orbit_time: float = 4.0
 var ideal_orbit_radius: float = 0.0
 
-# Exit calculation parameters
-var natural_exit_energy: float = 0.0  # "Energy" needed to escape
-var accumulated_guidance: float = 0.0  # How much guidance we've given
+# Legacy exit calculation parameters (kept for fallback)
+var natural_exit_energy: float = 0.0
+var accumulated_guidance: float = 0.0
 
 func _init(p_planet: Planet, spacecraft_velocity: Vector2, spacecraft_position: Vector2):
 	planet = p_planet
@@ -45,46 +49,36 @@ func _init(p_planet: Planet, spacecraft_velocity: Vector2, spacecraft_position: 
 		angle_correction_strength = planet.angle_correction_strength
 		optimal_angle_tolerance = planet.optimal_angle_tolerance
 		
+		# NEW: Calculate time-based exit duration
+		predicted_orbit_duration = planet.calculate_predicted_orbit_duration(spacecraft_velocity)
+		max_orbit_duration = predicted_orbit_duration
+		
 		ideal_orbit_radius = planet.planet_radius + (planet.gravity_radius - planet.planet_radius) * 0.6
 		spacecraft_ref = get_spacecraft_reference()
 		
-		# Calculate entry conditions for smart exit
+		# Legacy calculations for fallback
 		calculate_entry_conditions()
 		calculate_natural_exit_energy()
+		
 
 func calculate_entry_conditions():
 	"""Analyze entry conditions for smart exit calculation"""
-	# Calculate angle of entry relative to planet center
 	var to_planet = planet.global_position - entry_position
 	entry_angle_to_center = entry_velocity.angle_to(to_planet)
 	
-	# Normalize angle to 0-180 degrees (how "head-on" vs "tangential" the entry is)
 	entry_angle_to_center = abs(entry_angle_to_center)
 	if entry_angle_to_center > PI:
 		entry_angle_to_center = 2 * PI - entry_angle_to_center
 
 func calculate_natural_exit_energy():
-	"""Calculate how much 'energy' is needed for natural exit based on entry"""
-	# Base energy from entry speed (faster = easier to escape)
+	"""Calculate fallback exit energy"""
 	var speed_factor = clamp(entry_speed / 100.0, 0.3, 2.0)
-	
-	# Angle factor (tangential entry = easier escape, head-on = harder)
-	var angle_factor = 1.0 + (entry_angle_to_center / PI) * 2.0  # 1.0-3.0
-	
-	# Distance factor (closer entry = more energy gained)
+	var angle_factor = 1.0 + (entry_angle_to_center / PI) * 2.0
 	var entry_distance = entry_position.distance_to(planet.global_position)
 	var distance_factor = clamp(planet.gravity_radius / entry_distance, 0.5, 2.0)
 	
-	# Final natural exit energy (this is what we need to "accumulate" before exit)
 	natural_exit_energy = 100.0 * angle_factor / (speed_factor * distance_factor)
 	natural_exit_energy = clamp(natural_exit_energy, 50.0, 400.0)
-	
-	print("Entry analysis - Speed: ", entry_speed, " Angle: ", rad_to_deg(entry_angle_to_center), 
-		  " Exit energy needed: ", natural_exit_energy)
-
-func calculate_exit_time():
-	"""Fallback time-based exit"""
-	max_orbit_time = clamp(200.0 / max(entry_speed, 30.0), 2.0, 8.0)
 
 func update_curve(delta: float, spacecraft_pos: Vector2) -> Vector2:
 	if not is_active or not planet or not spacecraft_ref:
@@ -105,19 +99,14 @@ func update_curve(delta: float, spacecraft_pos: Vector2) -> Vector2:
 	# Guidance forces (reduced when should exit)
 	var guidance_force = Vector2.ZERO
 	if not should_exit:
-		# Collision prevention (if enabled)
 		if collision_safety_distance > 0:
 			guidance_force += collision_prevention(spacecraft_pos, distance, delta)
-		# Strong angle correction to golden path
 		guidance_force += angle_correction(spacecraft_pos, to_planet, delta)
-		# Orbital magnet
 		guidance_force += orbital_magnet(spacecraft_pos, distance, delta)
 		
-		# Track how much guidance we're giving (for exit calculation)
 		accumulated_guidance += guidance_force.length() * delta
-		
 	else:
-		# Reduce guidance when exiting
+		# Reduced guidance when exiting
 		guidance_force = angle_correction(spacecraft_pos, to_planet, delta) * 0.1
 	
 	return gravity_force + guidance_force
@@ -144,21 +133,16 @@ func angle_correction(spacecraft_pos: Vector2, to_planet: Vector2, delta: float)
 	
 	var radial_dir = to_planet.normalized()
 	var velocity_dir = velocity.normalized()
-	
-	# Calculate how radial the movement is
 	var radial_component = abs(radial_dir.dot(velocity_dir))
 	
-	# Only correct if too radial (using planet's tolerance)
 	var angle_degrees = rad_to_deg(acos(clamp(1.0 - radial_component, 0.0, 1.0)))
 	if angle_degrees < optimal_angle_tolerance:
 		return Vector2.ZERO
 	
-	# Calculate ideal tangential direction
 	var tangential = Vector2(-radial_dir.y, radial_dir.x)
 	if velocity.dot(tangential) < 0:
 		tangential = -tangential
 	
-	# Apply correction using planet's strength
 	var correction = (tangential - velocity_dir).normalized()
 	var strength = angle_correction_strength * (radial_component - 0.2) * delta * 60.0
 	
@@ -172,49 +156,39 @@ func orbital_magnet(spacecraft_pos: Vector2, distance: float, delta: float) -> V
 	
 	var direction = Vector2.ZERO
 	if distance_from_ideal > 0:
-		direction = (planet.global_position - spacecraft_pos).normalized()  # Pull inward
+		direction = (planet.global_position - spacecraft_pos).normalized()
 	else:
-		direction = (spacecraft_pos - planet.global_position).normalized()  # Push outward
+		direction = (spacecraft_pos - planet.global_position).normalized()
 	
 	var strength = magnet_strength * (1.0 - abs(distance_from_ideal) / 30.0) * delta * 60.0
 	return direction * strength
 
 func check_exit_conditions():
-	"""Smart exit based on entry conditions and accumulated guidance"""
+	"""FIXED: Exit conditions based on ENTRY velocity, not current velocity"""
 	if should_exit:
 		return
 	
-	# Primary exit condition: Have we given enough guidance energy?
-	if accumulated_guidance >= natural_exit_energy:
+	# FIXED: Use ENTRY velocity for consistent duration calculation!
+	# The exit time should be based on the original launch velocity, not current orbital velocity
+	if entry_time >= predicted_orbit_duration:
 		should_exit = true
-		print("Smart exit triggered - guidance energy reached: ", accumulated_guidance, "/", natural_exit_energy)
 		return
 	
-	# Secondary exit condition: Moving away at good speed
-	var velocity = spacecraft_ref.linear_velocity
-	var speed = velocity.length()
+	# SECONDARY: Early exit if moving away very fast (using current velocity for movement check)
+	var current_velocity = spacecraft_ref.linear_velocity
+	var speed = current_velocity.length()
 	var to_planet = planet.global_position - spacecraft_ref.global_position
-	var moving_away = to_planet.dot(velocity) < 0
+	var moving_away = to_planet.dot(current_velocity) < 0
 	
-	# If moving away fast AND we've given at least 50% of needed guidance
-	if moving_away and speed > 60.0 and accumulated_guidance >= natural_exit_energy * 0.5:
+	# Early exit only if moving VERY fast away and past 70% of predicted time
+	if moving_away and speed > 120.0 and entry_time >= predicted_orbit_duration * 0.7:
 		should_exit = true
-		print("Smart exit triggered - moving away with sufficient guidance")
 		return
 	
-	# Fallback: Time-based exit (emergency)
-	if entry_time >= max_orbit_time:
-		should_exit = true
-		print("Fallback exit triggered - time limit reached")
-		return
-	
-	# Emergency exit: stuck too long
-	if entry_time > max_orbit_time * 2.0:
-		should_exit = true
-		print("Emergency exit triggered - stuck too long")
+
 
 func is_curve_complete() -> bool:
-	return should_exit or entry_time > max_orbit_time * 1.5
+	return should_exit
 
 func get_exit_velocity() -> Vector2:
 	return Vector2.ZERO
@@ -224,3 +198,45 @@ func get_spacecraft_reference() -> Spacecraft:
 		return null
 	var spacecrafts = planet.get_tree().get_nodes_in_group("Spacecrafts")
 	return spacecrafts[0] if spacecrafts.size() > 0 else null
+
+# NEW: Methods for prediction and visualization
+func get_predicted_arc_angle() -> float:
+	"""Calculate predicted arc angle in degrees based on CURRENT velocity"""
+	if not spacecraft_ref:
+		return 0.0
+	
+	# Use CURRENT velocity for prediction
+	var current_velocity = spacecraft_ref.linear_velocity
+	var current_duration = planet.calculate_predicted_orbit_duration(current_velocity)
+	var current_speed = current_velocity.length()
+	
+	if current_duration <= 0 or current_speed <= 0:
+		return 0.0
+	
+	# תנועה מעגלית: זווית = (מהירות זוויתית) * זמן
+	var orbital_speed = current_speed * 0.7  # הנחה שהמהירות יורדת ב-30% באורביט
+	var angular_velocity = orbital_speed / ideal_orbit_radius  # רדיאנים לשנייה
+	var total_angle_radians = angular_velocity * current_duration
+	
+	return rad_to_deg(total_angle_radians)
+
+func get_arc_rotation_speed() -> float:
+	"""Get visual rotation speed for arc based on CURRENT orbital motion"""
+	if not spacecraft_ref:
+		return 30.0
+	
+	var current_velocity = spacecraft_ref.linear_velocity
+	var current_duration = planet.calculate_predicted_orbit_duration(current_velocity)
+	
+	if current_duration <= 0:
+		return 30.0
+	
+	var arc_angle = get_predicted_arc_angle()
+	return arc_angle / current_duration  # מעלות לשנייה
+
+func get_current_predicted_duration() -> float:
+	"""Get current predicted duration based on current velocity"""
+	if not spacecraft_ref:
+		return predicted_orbit_duration
+	
+	return planet.calculate_predicted_orbit_duration(spacecraft_ref.linear_velocity)

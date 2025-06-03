@@ -1,4 +1,4 @@
-# scripts/planet.gd (CLEAN AND SIMPLE)
+# scripts/planet.gd (UPDATED WITH ORBIT DURATION CONTROL)
 extends StaticBody2D
 class_name Planet
 
@@ -20,6 +20,12 @@ class_name Planet
 @export_range(1.0, 15.0, 0.5) var emergency_force_multiplier: float = 12.0
 @export_range(0.0, 20.0, 0.1) var angle_correction_strength: float = 15.0
 @export_range(5.0, 60.0, 5.0) var optimal_angle_tolerance: float = 7.0
+
+# NEW: Orbit Duration Control
+@export_group("Orbit Duration Control")
+@export_range(0.1, 5.0, 0.1) var min_orbit_duration_factor: float = 1.0
+@export_range(0.5, 10.0, 0.1) var max_orbit_duration_factor: float = 3.0
+@export_range(50.0, 300.0, 10.0) var base_speed_threshold: float = 180.0  # מהירות בסיס לחישוב
 
 # Visual feedback
 @export var show_gravity_zone: bool = true
@@ -90,6 +96,23 @@ func setup_shader_material():
 		var scale_factor = (planet_radius * 2.0) / 145.0
 		$Sprite.scale = Vector2(scale_factor, scale_factor)
 
+func calculate_predicted_orbit_duration(spacecraft_velocity: Vector2) -> float:
+	"""Calculate EXACT predicted orbit duration based on velocity and planet factors"""
+	var speed = spacecraft_velocity.length()
+	if speed <= 0:
+		return max_orbit_duration_factor
+	
+	# חישוב מדויק: מהירות גבוהה = זמן קצר יותר באורביט
+	var speed_factor = base_speed_threshold / max(speed, 10.0)
+	
+	# חישוב זמן מדויק (לא מוגבל לטווח!)
+	var predicted_duration = speed_factor * min_orbit_duration_factor
+	
+	# הגבלה רק למקרי קיצון (מהירות אפס או אינסופית)
+	predicted_duration = clamp(predicted_duration, 0.1, max_orbit_duration_factor * 2.0)
+	
+	return predicted_duration
+
 func _on_gravity_zone_body_entered(body):
 	"""Handle spacecraft entering gravity zone"""
 	if body is Spacecraft:
@@ -98,21 +121,16 @@ func _on_gravity_zone_body_entered(body):
 		# Create gravity assist with this planet's settings
 		var assist = GravityAssist.new(self, body.linear_velocity, body.global_position)
 		body.enter_gravity_assist(assist)
-		
-		print("Planet ", name, ": Spacecraft entered gravity zone")
 
 func _on_gravity_zone_body_exited(body):
 	"""Handle spacecraft leaving gravity zone"""
 	if body is Spacecraft and body.gravity_assist and body.gravity_assist.planet == self:
-		print("Planet ", name, ": Spacecraft exited gravity zone")
 		body.exit_gravity_assist()
 
 func _on_planet_area_body_entered(body):
 	"""Handle spacecraft collision with planet surface"""
 	if body is Spacecraft:
-		print("Planet ", name, ": Spacecraft crashed into surface!")
 		body.exit_gravity_assist()
 		body.is_dead = true
 		await get_tree().create_timer(1.5).timeout
 		body.destroy()
-

@@ -41,4 +41,3 @@ func capture_spacecraft(spacecraft: Spacecraft):
 	# Update game state
 	GameManager.currentState = GameManager.GameState.success
 	
-	print("Spacecraft captured and destroyed!")

@@ -83,7 +83,6 @@ func create_unique_resources():
 	if animated_sprite and animated_sprite.material:
 		animated_sprite.material = animated_sprite.material.duplicate()
 	
-	print("Created unique resources for meteroid: ", name)
 
 
 
@@ -215,8 +214,6 @@ func _on_collision_detected(body):
 		# Mark as disturbed and start recovery timer
 		is_disturbed = true
 		disturbance_timer = max_disturbance_time
-		
-		print("Meteroid knocked off orbit, will return in ", max_disturbance_time, " seconds")
 		
 		# Optional: Apply reaction force to spacecraft (Newton's 3rd law)
 		var reaction_force = -collision_impulse * 0.1  # Smaller reaction
