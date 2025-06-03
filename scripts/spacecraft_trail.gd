@@ -68,6 +68,7 @@ func _process(delta):
 func start_dissipation():
 	"""Begin the trail dissipation effect - MOVE points to dissipating trail"""
 	dissipating_points = trail_points.duplicate()
+	await get_tree().process_frame
 	trail_points.clear()  # Clear active trail
 	trail_line.visible = false
 	
