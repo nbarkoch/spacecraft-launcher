@@ -3,7 +3,7 @@ class_name SpacecraftTrail
 
 var spacecraft_ref = null
 var trail_points = []
-var max_points = 15
+var max_points = 30
 var trail_lines = []
 
 func _ready():
@@ -26,7 +26,7 @@ func _process(_delta):
 func should_add_point(pos: Vector2) -> bool:
 	if trail_points.size() == 0:
 		return true
-	return pos.distance_to(trail_points[-1]) > 6.0
+	return pos.distance_to(trail_points[-1]) > 2.0
 
 func update_trail_segments():
 	# מחק קווים ישנים
@@ -47,7 +47,6 @@ func update_trail_segments():
 		line.width = width
 		line.default_color = Color(1.0, 1.0, 1.0, alpha)
 		line.antialiased = true
-		line.joint_mode = Line2D.LINE_JOINT_ROUND
 		line.begin_cap_mode = Line2D.LINE_CAP_ROUND
 		line.end_cap_mode = Line2D.LINE_CAP_ROUND
 		line.z_index = -1
