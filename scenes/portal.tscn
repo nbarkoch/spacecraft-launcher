@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://b6qrsvysawymj"]
+
+[ext_resource type="Texture2D" uid="uid://cf358231s6rv3" path="res://sprites/portal.png" id="1_4y86b"]
+[ext_resource type="Script" path="res://scripts/portal.gd" id="1_hb07n"]
+[ext_resource type="Shader" path="res://shaders/planet_glow.gdshader" id="2_rc3a1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8vc1e"]
+shader = ExtResource("2_rc3a1")
+shader_parameter/glow_intensity = 0.26
+shader_parameter/glow_radius = 0.124
+shader_parameter/glow_color = Vector4(0.106, 0.133, 1, 1)
+shader_parameter/glow_softness = 0.254
+shader_parameter/planet_size = 0.32
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1kapx"]
+radius = 13.0
+
+[node name="Portal" type="Area2D"]
+z_index = -2
+z_as_relative = false
+collision_layer = 2
+script = ExtResource("1_hb07n")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_8vc1e")
+rotation = 6.29366
+scale = Vector2(0.205, 0.2025)
+texture = ExtResource("1_4y86b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1kapx")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+z_index = -1
+amount = 13
+lifetime = 0.5
+speed_scale = 0.3
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 47.59
+initial_velocity_max = 47.59
+color = Color(0.752941, 0.286275, 0.972549, 1)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

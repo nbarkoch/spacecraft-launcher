@@ -6,10 +6,13 @@ var gravity_assist: GravityAssist = null
 var is_dead = false
 var trail: SpacecraftTrail = null
 
-func _ready():
+func stop():
 	self.freeze_mode = RigidBody2D.FREEZE_MODE_KINEMATIC
 	self.freeze = true
 	self.gravity_scale = 0
+	
+func _ready():
+	stop()
 	add_to_group("Spacecrafts")
 	await get_tree().process_frame
 	setup_trail()
@@ -26,14 +29,11 @@ func _physics_process(delta):
 	if gravity_assist:
 		apply_gravity_assist(delta)
 	
-	update_fire_effect()
+	#update_fire_effect()
 
-func update_fire_effect():
-	"""Update fire effect based on spacecraft movement"""
-
-		
-	var is_moving = linear_velocity.length() > 10.0
-	
+#func update_fire_effect():
+	#"""Update fire effect based on spacecraft movement"""
+	#var is_moving = linear_velocity.length() > 10.0
 	#if is_moving and not freeze:
 		#fire_particles.emitting = true
 	#else:
