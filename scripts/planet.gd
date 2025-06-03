@@ -1,4 +1,4 @@
-# scripts/planet.gd (SIMPLIFIED - Real Physics)
+# scripts/planet.gd (CLEAN AND SIMPLE)
 extends StaticBody2D
 class_name Planet
 
@@ -11,7 +11,15 @@ class_name Planet
 # Physics properties
 @export var planet_radius: float = 20.0
 @export var gravity_radius: float = 60.0
-@export var gravity_strength: float = 300.0  # Simple force strength
+@export var gravity_strength: float = 300.0
+
+# Enhanced Gravity Assist Properties
+@export_group("Gravity Assist Settings")
+@export_range(0.0, 5.0, 0.1) var magnet_strength: float = 1.0
+@export_range(0.0, 50.0, 1.0) var collision_safety_distance: float = 0.0
+@export_range(1.0, 15.0, 0.5) var emergency_force_multiplier: float = 12.0
+@export_range(0.0, 20.0, 0.1) var angle_correction_strength: float = 15.0
+@export_range(5.0, 60.0, 5.0) var optimal_angle_tolerance: float = 7.0
 
 # Visual feedback
 @export var show_gravity_zone: bool = true
@@ -86,19 +94,25 @@ func _on_gravity_zone_body_entered(body):
 	"""Handle spacecraft entering gravity zone"""
 	if body is Spacecraft:
 		body.exit_gravity_assist()
-		# Create simple gravity assist
+		
+		# Create gravity assist with this planet's settings
 		var assist = GravityAssist.new(self, body.linear_velocity, body.global_position)
 		body.enter_gravity_assist(assist)
+		
+		print("Planet ", name, ": Spacecraft entered gravity zone")
 
 func _on_gravity_zone_body_exited(body):
 	"""Handle spacecraft leaving gravity zone"""
 	if body is Spacecraft and body.gravity_assist and body.gravity_assist.planet == self:
+		print("Planet ", name, ": Spacecraft exited gravity zone")
 		body.exit_gravity_assist()
 
 func _on_planet_area_body_entered(body):
 	"""Handle spacecraft collision with planet surface"""
 	if body is Spacecraft:
+		print("Planet ", name, ": Spacecraft crashed into surface!")
 		body.exit_gravity_assist()
 		body.is_dead = true
 		await get_tree().create_timer(1.5).timeout
 		body.destroy()
+
