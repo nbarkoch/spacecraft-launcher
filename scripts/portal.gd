@@ -27,7 +27,7 @@ func start_idle_rotation():
 	rotation_tween = create_tween()
 	rotation_tween.set_loops()  # Infinite loop
 	# Use tween_method to continuously update rotation
-	rotation_tween.tween_method(update_rotation, 0.0, 2 * PI, 4.0)
+	rotation_tween.tween_method(update_rotation, 0.0, -2 * PI, 12.0)
 	
 func trigger_jump_effect():
 	# Kill any existing jump tween
