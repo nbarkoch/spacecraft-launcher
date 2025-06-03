@@ -9,7 +9,8 @@ func _ready():
 func play_effect():
 	$CollectionEffect/StarParticles.restart()
 	$CollectionEffect/LightBurst.restart()
-	$AnimatedSprite2D.queue_free()
+	if $AnimatedSprite2D:
+		$AnimatedSprite2D.queue_free()
 	var ring_effect = $CollectionEffect/RingEffect
 	if ring_effect:
 		ring_effect.trigger()
