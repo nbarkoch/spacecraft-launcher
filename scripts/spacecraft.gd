@@ -24,6 +24,7 @@ func setup_trail():
 	trail.z_index = -1
 	get_tree().current_scene.add_child(trail)
 	trail.spacecraft_ref = self
+
 	
 func _physics_process(delta):
 	# Store reference to avoid null issues during the frame
