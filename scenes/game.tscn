@@ -27,7 +27,7 @@ zoom = Vector2(2, 2)
 position = Vector2(0, 162)
 
 [node name="GreenPlanet" parent="." instance=ExtResource("5_qgthy")]
-position = Vector2(36, -40)
+position = Vector2(46, -32)
 
 [node name="CyanPlanet" parent="." instance=ExtResource("5_q18na")]
 position = Vector2(-32, -124)
@@ -36,7 +36,7 @@ position = Vector2(-32, -124)
 position = Vector2(55, -166)
 
 [node name="Meteroid" parent="." instance=ExtResource("7_kueth")]
-position = Vector2(-65, 70)
+position = Vector2(-74, 110)
 start_angle = 70.0
 orbit_rotation = 180.0
 orbit_tilt = 50.0
@@ -46,10 +46,16 @@ position = Vector2(93, 29)
 rotation = 2.00996
 
 [node name="Coin" parent="." instance=ExtResource("8_4lg0d")]
-position = Vector2(-35, -44)
+position = Vector2(13, -82)
+
+[node name="Coin2" parent="." instance=ExtResource("8_4lg0d")]
+position = Vector2(66, -124)
+
+[node name="Coin3" parent="." instance=ExtResource("8_4lg0d")]
+position = Vector2(-77, -127)
 
 [node name="Portal" parent="." instance=ExtResource("10_7pem7")]
-position = Vector2(63, 66)
+position = Vector2(-72, -166)
 
 [node name="Portal2" parent="." instance=ExtResource("10_7pem7")]
-position = Vector2(-62, -21)
+position = Vector2(80, -84)
