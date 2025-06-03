@@ -8,8 +8,8 @@ size = Vector2(345, 549.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4x834"]
 shader = ExtResource("1_y4uhd")
-shader_parameter/top_color = Color(0, 0.114, 0.31, 1)
-shader_parameter/bottom_color = Color(0, 0.318, 0.494, 1)
+shader_parameter/top_color = Color(0, 0.0705882, 0.286275, 1)
+shader_parameter/bottom_color = Color(0, 0.192157, 0.556863, 1)
 
 [node name="BorderGame" type="Area2D"]
 z_index = -2
@@ -23,9 +23,9 @@ shape = SubResource("RectangleShape2D_kc0ic")
 [node name="GradientBackground" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_4x834")
 offset_left = -200.0
-offset_top = -400.0
+offset_top = -318.0
 offset_right = 200.0
-offset_bottom = 400.0
+offset_bottom = 304.0
 mouse_filter = 2
 
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
