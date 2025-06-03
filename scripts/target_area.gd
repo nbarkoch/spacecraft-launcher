@@ -31,12 +31,14 @@ func capture_spacecraft(spacecraft: Spacecraft):
 	tween.parallel().tween_property(spacecraft, "global_position", global_position, 0.1)
 	tween.parallel().tween_property(spacecraft, "scale", Vector2(1.1, 1.1), 0.05)
 	await tween.finished
+	
 	tween = create_tween()
 	tween.parallel().tween_property(spacecraft, "scale", Vector2(0.0, 0.0), 0.25)
 	tween.parallel().tween_property(spacecraft, "modulate", Color(1, 1, 1, 0), 0.25)
 	# Delete spacecraft when animation completes
 	await tween.finished
 	#spacecraft.queue_free()
+	spacecraft.stop()
 	
 	# Update game state
 	GameManager.currentState = GameManager.GameState.success

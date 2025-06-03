@@ -71,6 +71,7 @@ func teleport_spacecraft(spacecraft):
 	# Teleport using physics server
 	reset_physics_position(spacecraft, destination.global_position)
 	
+	spacecraft.stop() # stop the trail
 	destination.trigger_jump_effect()
 	
 	# Grow back
@@ -83,6 +84,7 @@ func teleport_spacecraft(spacecraft):
 	spacecraft.linear_velocity = vel
 	spacecraft.angular_velocity = ang_vel
 	spacecraft.rotation = rot
+	spacecraft.release() # restart the trail
 
 func find_other_portal():
 	var portals = get_tree().get_nodes_in_group(portal_group)

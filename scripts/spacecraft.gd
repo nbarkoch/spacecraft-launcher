@@ -10,6 +10,9 @@ func stop():
 	self.freeze_mode = RigidBody2D.FREEZE_MODE_KINEMATIC
 	self.freeze = true
 	self.gravity_scale = 0
+	if trail:
+		trail.start_dissipation()
+	
 	
 func _ready():
 	stop()
@@ -44,7 +47,8 @@ func _physics_process(delta):
 func release():
 	"""Release spacecraft from slingshot"""
 	self.freeze = false
-	print("Spacecraft released from slingshot!")
+	trail.reset_trail()
+	
 
 func enter_gravity_assist(assist: GravityAssist):
 	"""Start gravity assist"""
