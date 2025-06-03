@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://fc4r0ui4j3nx" path="res://sprites/spacecraft3.png" id="2_x4pyo"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_20kmt"]
-radius = 5.0
+radius = 6.0
 height = 26.0
 
 [node name="Spacecraft" type="RigidBody2D" groups=["Spacecrafts"]]
