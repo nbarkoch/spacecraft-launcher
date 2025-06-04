@@ -12,6 +12,7 @@ var c_level_index = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	start_timer()	
 	level_started()
 
 func inc_score():
@@ -26,8 +27,6 @@ func _process(delta):
 		game_duration = Time.get_unix_time_from_system() - game_start_time
 	
 func level_started():
-	start_timer()
-	score = 0
 	if self.room:
 		var slingshot = self.room.level.slingshot
 		if slingshot:
@@ -70,6 +69,8 @@ func retry_level():
 
 func load_level(index: int):
 	c_level_index = index
+	score = 0
+	start_timer()	
 	level_started()
 	var content_scene = load("res://scenes/levels/level_" + str(index + 1) +".tscn")
 	var new_content = content_scene.instantiate()
@@ -77,6 +78,8 @@ func load_level(index: int):
 		self.room.level.content.queue_free()
 		self.get_parent().add_child(new_content)
 	self.room.level.content = new_content
+	
+	
 	
 func start_timer():
 	game_start_time = Time.get_unix_time_from_system()

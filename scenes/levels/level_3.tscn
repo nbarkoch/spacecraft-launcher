@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://jedfcjt506cw"]
+
+[ext_resource type="PackedScene" uid="uid://bryh4m50q0dgo" path="res://scenes/pickable/coin.tscn" id="1_wfpk8"]
+[ext_resource type="PackedScene" uid="uid://dyct1qho3vncc" path="res://scenes/planets/planet_c.tscn" id="2_4bsan"]
+[ext_resource type="PackedScene" uid="uid://vvpan4smuxbd" path="res://scenes/elements/target_area.tscn" id="3_tvqdm"]
+
+[node name="Level3" type="Node2D"]
+
+[node name="Coin" parent="." instance=ExtResource("1_wfpk8")]
+position = Vector2(-11, -50)
+
+[node name="CyanPlanet" parent="." instance=ExtResource("2_4bsan")]
+position = Vector2(34, -49)
+
+[node name="TargetArea" parent="." instance=ExtResource("3_tvqdm")]
+position = Vector2(35, -102)
+
+[node name="Coin2" parent="." instance=ExtResource("1_wfpk8")]
+position = Vector2(12, 13)
