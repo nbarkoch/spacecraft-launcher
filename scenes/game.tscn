@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dw3q2rdxoga8g"]
+[gd_scene load_steps=8 format=3 uid="uid://dw3q2rdxoga8g"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_0s5jx"]
 [ext_resource type="PackedScene" uid="uid://ogg3oaxoy66n" path="res://scenes/slingshot.tscn" id="1_c5tod"]
@@ -7,8 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://et54j7lrftig" path="res://scenes/planets/planet_g.tscn" id="5_qgthy"]
 [ext_resource type="PackedScene" uid="uid://vvpan4smuxbd" path="res://scenes/target_area.tscn" id="6_64vpg"]
 [ext_resource type="PackedScene" uid="uid://bryh4m50q0dgo" path="res://scenes/coin.tscn" id="8_4lg0d"]
-[ext_resource type="PackedScene" uid="uid://dlon561vtbbje" path="res://scenes/black_hole.tscn" id="9_5b77w"]
-[ext_resource type="PackedScene" uid="uid://b6qrsvysawymj" path="res://scenes/portal.tscn" id="10_7pem7"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_0s5jx")
@@ -33,12 +31,3 @@ position = Vector2(1, -163)
 
 [node name="Coin2" parent="." instance=ExtResource("8_4lg0d")]
 position = Vector2(0, -56)
-
-[node name="Portal" parent="." instance=ExtResource("10_7pem7")]
-position = Vector2(64, 0)
-
-[node name="Portal2" parent="." instance=ExtResource("10_7pem7")]
-position = Vector2(-66, 1)
-
-[node name="BlackHole" parent="." instance=ExtResource("9_5b77w")]
-position = Vector2(59, 63)

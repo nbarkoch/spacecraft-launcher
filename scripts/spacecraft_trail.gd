@@ -32,12 +32,9 @@ func setup_line():
 	gradient.add_point(1.0, Color(1.0, 1.0, 1.0, 1.0))    # Bright white at spacecraft
 	line.gradient = gradient
 	
-	# Create width curve - FIXED: 0.0 = oldest (thin), 1.0 = newest (thick)
 	var width_curve = Curve.new()
-	width_curve.add_point(Vector2(0.0, 0.0))  # Thin at OLD end
-	width_curve.add_point(Vector2(0.3, 0.3))  # Getting thicker
-	width_curve.add_point(Vector2(0.7, 0.7))  # Much thicker
-	width_curve.add_point(Vector2(1.0, 1.0))  # Full thickness at spacecraft
+	width_curve.add_point(Vector2(0.0, 0.0))  
+	width_curve.add_point(Vector2(1.0, 1.0))
 	line.width_curve = width_curve
 	
 	# Basic setup

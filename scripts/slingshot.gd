@@ -98,7 +98,7 @@ func _process(delta):
 				
 				# Update trajectory prediction
 				trajectory_predictor.show_trajectory()
-				trajectory_predictor.update_prediction(current_mouse_pos, velocity * 0.76)
+				trajectory_predictor.update_prediction(current_mouse_pos, velocity * 0.78)
 				
 				# NEW: Update planet arc visualizations
 				update_planet_arcs(velocity)
