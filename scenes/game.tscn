@@ -6,4 +6,4 @@
 [node name="Game" type="Node2D"]
 script = ExtResource("1_0s5jx")
 
-[node name="Level1" parent="." instance=ExtResource("2_hgig4")]
+[node name="Room" parent="." instance=ExtResource("2_hgig4")]

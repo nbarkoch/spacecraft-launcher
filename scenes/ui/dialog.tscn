@@ -1,0 +1,381 @@
+[gd_scene load_steps=20 format=3 uid="uid://pbmlhjda8wt8"]
+
+[ext_resource type="Script" path="res://scripts/dialog.gd" id="1_q4pwv"]
+[ext_resource type="Texture2D" uid="uid://brb4co0vnd3ol" path="res://sprites/ui/dialog.png" id="2_hy6nv"]
+[ext_resource type="FontFile" uid="uid://bhapbj7j3oa1x" path="res://fonts/Oswald-SemiBold.ttf" id="4_75y0u"]
+[ext_resource type="Texture2D" uid="uid://bratrvpmdx1wv" path="res://sprites/ui/s_next_icn.png" id="4_ihba7"]
+[ext_resource type="Texture2D" uid="uid://k2dvwv8t0drt" path="res://sprites/ui/s_coins.png" id="4_ttc53"]
+[ext_resource type="Texture2D" uid="uid://dfxjlswuf1ygm" path="res://sprites/ui/s_retry_icn.png" id="5_kiod3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yvijb"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dhor5"]
+content_margin_left = 50.0
+content_margin_top = 80.0
+content_margin_right = 50.0
+content_margin_bottom = 25.0
+texture = ExtResource("2_hy6nv")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hjy4q"]
+
+[sub_resource type="Animation" id="Animation_ng4gr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_av7nt"]
+resource_name = "button_click"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.5, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0.75, 0.75), Vector2(1.1, 1.1), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ittry"]
+_data = {
+"RESET": SubResource("Animation_ng4gr"),
+"button_click": SubResource("Animation_av7nt")
+}
+
+[sub_resource type="Animation" id="Animation_y08fw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_ueo7b"]
+resource_name = "button_click"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.5, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0.75, 0.75), Vector2(1.1, 1.1), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pkh1e"]
+_data = {
+"RESET": SubResource("Animation_y08fw"),
+"button_click": SubResource("Animation_ueo7b")
+}
+
+[sub_resource type="Animation" id="Animation_n87jh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control/Panel:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
+
+[sub_resource type="Animation" id="Animation_xdvhn"]
+resource_name = "enter"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.965936, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 0.615686)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control/Panel:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05), Vector2(1.1, 1.1), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_vgkvi"]
+resource_name = "exit"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control/Panel:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.1, 1.1), Vector2(1e-05, 1e-05)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ColorRect:color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0.615686), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_n0q4t"]
+_data = {
+"RESET": SubResource("Animation_n87jh"),
+"enter": SubResource("Animation_xdvhn"),
+"exit": SubResource("Animation_vgkvi")
+}
+
+[node name="Dialog" type="CanvasLayer"]
+process_mode = 3
+layer = 2
+script = ExtResource("1_q4pwv")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -120.0
+offset_right = 120.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1e-05, 1e-05)
+pivot_offset = Vector2(120, 120)
+theme_override_styles/panel = SubResource("StyleBoxEmpty_yvijb")
+
+[node name="PanelContainer" type="PanelContainer" parent="Control/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_dhor5")
+
+[node name="SummaryContainer" type="VBoxContainer" parent="Control/Panel/PanelContainer"]
+layout_mode = 2
+
+[node name="PusherDown" type="Control" parent="Control/Panel/PanelContainer/SummaryContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CurrentLine" type="HBoxContainer" parent="Control/Panel/PanelContainer/SummaryContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/Panel/PanelContainer/SummaryContainer/CurrentLine"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.921569, 0.580392, 1)
+theme_override_fonts/font = ExtResource("4_75y0u")
+text = "CURRENT:"
+vertical_alignment = 1
+
+[node name="Filler" type="Control" parent="Control/Panel/PanelContainer/SummaryContainer/CurrentLine"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Result" type="Label" parent="Control/Panel/PanelContainer/SummaryContainer/CurrentLine"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.921569, 0.580392, 1)
+theme_override_fonts/font = ExtResource("4_75y0u")
+text = "12"
+vertical_alignment = 1
+
+[node name="BestLine" type="HBoxContainer" parent="Control/Panel/PanelContainer/SummaryContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/Panel/PanelContainer/SummaryContainer/BestLine"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.921569, 0.580392, 1)
+theme_override_fonts/font = ExtResource("4_75y0u")
+text = "BEST:"
+vertical_alignment = 1
+
+[node name="Filler" type="Control" parent="Control/Panel/PanelContainer/SummaryContainer/BestLine"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Result" type="Label" parent="Control/Panel/PanelContainer/SummaryContainer/BestLine"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.921569, 0.580392, 1)
+theme_override_fonts/font = ExtResource("4_75y0u")
+text = "12"
+vertical_alignment = 1
+
+[node name="PusherUp" type="Control" parent="Control/Panel/PanelContainer/SummaryContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScoreLine" type="HBoxContainer" parent="Control/Panel/PanelContainer/SummaryContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Image" type="TextureRect" parent="Control/Panel/PanelContainer/SummaryContainer/ScoreLine"]
+layout_mode = 2
+texture = ExtResource("4_ttc53")
+
+[node name="x" type="Label" parent="Control/Panel/PanelContainer/SummaryContainer/ScoreLine"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_75y0u")
+theme_override_font_sizes/font_size = 12
+text = "x
+"
+
+[node name="Label" type="Label" parent="Control/Panel/PanelContainer/SummaryContainer/ScoreLine"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_75y0u")
+text = "0
+"
+
+[node name="Title" type="Label" parent="Control/Panel"]
+layout_mode = 2
+offset_left = 50.0
+offset_top = 11.0
+offset_right = 190.0
+offset_bottom = 66.0
+theme_override_colors/font_color = Color(1, 0.921569, 0.580392, 1)
+theme_override_fonts/font = ExtResource("4_75y0u")
+theme_override_font_sizes/font_size = 25
+text = "SUMMARY
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonsPanel" type="Panel" parent="Control/Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -70.0
+offset_top = -5.0
+offset_right = 70.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(70, 0)
+theme_override_styles/panel = SubResource("StyleBoxEmpty_hjy4q")
+
+[node name="NextButton" type="TextureButton" parent="Control/Panel/ButtonsPanel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -50.0
+offset_bottom = 50.0
+grow_horizontal = 0
+pivot_offset = Vector2(25, 25)
+texture_normal = ExtResource("4_ihba7")
+stretch_mode = 0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Control/Panel/ButtonsPanel/NextButton"]
+libraries = {
+"": SubResource("AnimationLibrary_ittry")
+}
+speed_scale = 2.0
+
+[node name="RetryButton" type="TextureButton" parent="Control/Panel/ButtonsPanel"]
+clip_contents = true
+layout_mode = 0
+offset_right = 50.0
+offset_bottom = 50.0
+pivot_offset = Vector2(25, 25)
+size_flags_vertical = 4
+texture_normal = ExtResource("5_kiod3")
+stretch_mode = 0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Control/Panel/ButtonsPanel/RetryButton"]
+libraries = {
+"": SubResource("AnimationLibrary_pkh1e")
+}
+speed_scale = 2.0
+
+[node name="DialogAnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_n0q4t")
+}
+speed_scale = 2.0
+
+[connection signal="pressed" from="Control/Panel/ButtonsPanel/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="animation_finished" from="Control/Panel/ButtonsPanel/NextButton/AnimationPlayer" to="." method="_on_next_animation_finished"]
+[connection signal="pressed" from="Control/Panel/ButtonsPanel/RetryButton" to="." method="_on_retry_button_pressed"]
+[connection signal="animation_finished" from="Control/Panel/ButtonsPanel/RetryButton/AnimationPlayer" to="." method="_on_retry_animation_finished"]
+[connection signal="animation_finished" from="DialogAnimationPlayer" to="." method="_on_dialog_finished"]

@@ -1,15 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://b8r63iojc6grm"]
+[gd_scene load_steps=3 format=3 uid="uid://b8r63iojc6grm"]
 
 [ext_resource type="PackedScene" uid="uid://o76834xyqxe0" path="res://scenes/base/level.tscn" id="1_hkupi"]
-[ext_resource type="PackedScene" uid="uid://vvpan4smuxbd" path="res://scenes/elements/target_area.tscn" id="1_l6avl"]
-[ext_resource type="PackedScene" uid="uid://bryh4m50q0dgo" path="res://scenes/pickable/coin.tscn" id="3_44qlg"]
+[ext_resource type="PackedScene" uid="uid://dp2dfd3suv5ir" path="res://scenes/levels/level1.tscn" id="2_u5vm2"]
 
-[node name="Level1" type="Node2D"]
+[node name="Room" type="Node2D"]
 
 [node name="Level" parent="." instance=ExtResource("1_hkupi")]
 
-[node name="TargetArea" parent="." instance=ExtResource("1_l6avl")]
-position = Vector2(51, -140)
-
-[node name="Coin" parent="." instance=ExtResource("3_44qlg")]
-position = Vector2(36, -108)
+[node name="Content" parent="." instance=ExtResource("2_u5vm2")]

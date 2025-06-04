@@ -405,8 +405,11 @@ func update_planet_arcs_simple(predicted_velocity: Vector2):
 			planet.gravity_visualizer.update_orbit_prediction(arc_angle, speed_factor)
 
 func reset():
+	slingshotState = SlingshotState.idle
 	if spacecraft:
 		spacecraft.stop()
-		slingshotState = SlingshotState.idle
+		spacecraft.scale = Vector2.ONE
+		spacecraft.modulate =  Color(1, 1, 1, 1)
 		spacecraft.reset(0, slingshot_center.global_position)
+		
 	
