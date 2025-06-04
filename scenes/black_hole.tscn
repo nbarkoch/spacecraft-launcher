@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://dlon561vtbbje"]
+
+[ext_resource type="Shader" path="res://shaders/planet_glow.gdshader" id="1_2cq0v"]
+[ext_resource type="Texture2D" uid="uid://8sm2ii0ef4lv" path="res://sprites/black_hole.png" id="1_3b0y3"]
+[ext_resource type="Script" path="res://scripts/black_hole.gd" id="1_k0i5a"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ovmvx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y21gl"]
+shader = ExtResource("1_2cq0v")
+shader_parameter/glow_intensity = 0.127
+shader_parameter/glow_radius = 0.125
+shader_parameter/glow_color = Vector4(0.075, 0.341, 0.839, 1)
+shader_parameter/glow_softness = 0.433
+shader_parameter/planet_size = 0.34
+
+[node name="BlackHole" type="Area2D"]
+z_index = -2
+script = ExtResource("1_k0i5a")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ovmvx")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+amount = 13
+lifetime = 0.5
+speed_scale = 0.2
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 50.0
+color = Color(0.992157, 0.580392, 0.00784314, 0.545098)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_y21gl")
+position = Vector2(1.42109e-14, -1.42109e-14)
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("1_3b0y3")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
