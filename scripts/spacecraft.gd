@@ -74,7 +74,25 @@ func exit_gravity_assist():
 
 func destroy():
 	"""Destroy spacecraft when it hits a planet"""
-	print("Spacecraft destroyed!")
+
+	var explosion_position = global_position
+	var scene_parent = get_tree().current_scene
+	
+	# Create explosion effect
+	SpacecraftExplosion.create_explosion_at(explosion_position, scene_parent)
+	
+	# Create debris with slight delay to sync with explosion
+	await get_tree().create_timer(0.1).timeout
+	RuinedSpacecraft.create_at_position(explosion_position, scene_parent, rotation)
+	
+	visible = false
+	
+	# Stop physics
+	freeze = true
+	linear_velocity = Vector2.ZERO
+
+	# Wait a moment before calling level failed to let explosion play
+	await get_tree().create_timer(0.3).timeout
 	LevelManager.level_failed()
 
 var debug_label: Label
@@ -146,3 +164,4 @@ func reset(new_rotation, new_position):
 	linear_velocity = Vector2.ZERO
 	angular_velocity = 0.0
 	is_dead = false
+	visible = true

@@ -14,6 +14,7 @@ func _on_body_entered(body):
 		capture_spacecraft(body)
 		$AnimationPlayer.play("enter")
 		LevelManager.level_completed()
+		
 
 func capture_spacecraft(spacecraft: Spacecraft):
 	# Stop spacecraft movement immediately

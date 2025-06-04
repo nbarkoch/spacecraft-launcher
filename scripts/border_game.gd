@@ -5,5 +5,5 @@ func _ready():
 	pass # Replace with function body.
 
 func _on_body_exited(body):
-	if body is Spacecraft:
+	if body is Spacecraft and not body.freeze:
 		body.destroy()
