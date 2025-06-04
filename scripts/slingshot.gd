@@ -1,4 +1,7 @@
 extends Node2D
+
+class_name SlingShot
+
 enum SlingshotState {
 	idle,
 	pulling,
@@ -10,7 +13,7 @@ enum SlingshotState {
 var slingshotState
 var leftLine
 var rightLine
-var spacecraft
+var spacecraft: Spacecraft = null
 var trajectory_predictor
 const MULTIPLIER = 6
 
@@ -20,6 +23,7 @@ const DISTANCE_SNAP_INTERVAL = 15.0  # כל 15 פיקסלים
 const SNAP_RADIUS = 8.0  # בתוך כמה פיקסלים יש משיכה
 const SNAP_STRENGTH = 0.4  # עוצמת המשיכה (0-1)
 
+@onready var slingshot_center: Marker2D = $SlingshotCenter
 # FIXED: Removed problematic mouse smoothing variables
 # var raw_mouse_pos = Vector2.ZERO
 # const MOUSE_SMOOTHING = 0.3
@@ -65,7 +69,7 @@ func _process(delta):
 			if Input.is_action_pressed("FINGER_TAP"):
 				# FIXED: Use direct mouse position without problematic smoothing
 				var mouse_pos = get_global_mouse_position()
-				var center_pos = $SlingshotCenter.global_position
+				var center_pos = slingshot_center.global_position
 				
 				# FIXED: Apply constraints directly to mouse position
 				var constrained_mouse_pos = mouse_pos
@@ -104,7 +108,7 @@ func _process(delta):
 				update_planet_arcs(velocity)
 				
 			if Input.is_action_just_released("FINGER_TAP"):
-				var center_pos = $SlingshotCenter.global_position
+				var center_pos = slingshot_center.global_position
 				# FIXED: Use target position for consistent release
 				var final_mouse_pos = target_mouse_pos
 				
@@ -122,16 +126,21 @@ func _process(delta):
 				spacecraft.angular_velocity = 0.0
 				spacecraft.gravity_assist = null
 				spacecraft.freeze = true
+				
 				spacecraft.release()
+				
+				
+				var launch_direction = center_pos - final_mouse_pos
+				var s_rotation = launch_direction.angle() + PI/2
+				spacecraft.reset(s_rotation, center_pos)
 				await get_tree().process_frame
 				spacecraft.apply_impulse(velocity)
-				
 				GameManager.currentState = GameManager.GameState.action
 				
 		SlingshotState.released:
 			# Reset line positions
-			leftLine.points[0] = leftLine.to_local($SlingshotCenter.global_position)
-			rightLine.points[0] = rightLine.to_local($SlingshotCenter.global_position)
+			leftLine.points[0] = leftLine.to_local(slingshot_center.global_position)
+			rightLine.points[0] = rightLine.to_local(slingshot_center.global_position)
 			
 			hide_all_planet_arcs()
 			# Check if spacecraft is done (destroyed or out of bounds)
@@ -322,7 +331,7 @@ func predict_spacecraft_trajectory(start_pos: Vector2, velocity: Vector2, planet
 func update_planet_arcs(predicted_velocity: Vector2):
 	"""Update arc visualizations with accurate predictions"""
 	var spacecraft_speed = predicted_velocity.length()
-	var slingshot_pos = $SlingshotCenter.global_position
+	var slingshot_pos = slingshot_center.global_position
 	
 	for planet in all_planets:
 		if not planet or not is_instance_valid(planet):
@@ -367,7 +376,7 @@ func update_planet_arcs_simple(predicted_velocity: Vector2):
 		if not planet or not is_instance_valid(planet):
 			continue
 		
-		var distance_to_planet = $SlingshotCenter.global_position.distance_to(planet.global_position)
+		var distance_to_planet = slingshot_center.global_position.distance_to(planet.global_position)
 		
 		# Only show arcs for planets we might hit
 		if distance_to_planet > max_display_distance:
@@ -394,3 +403,10 @@ func update_planet_arcs_simple(predicted_velocity: Vector2):
 		
 		if planet.gravity_visualizer:
 			planet.gravity_visualizer.update_orbit_prediction(arc_angle, speed_factor)
+
+func reset():
+	if spacecraft:
+		spacecraft.stop()
+		slingshotState = SlingshotState.idle
+		spacecraft.reset(0, slingshot_center.global_position)
+	

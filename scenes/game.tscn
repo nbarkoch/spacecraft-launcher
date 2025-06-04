@@ -1,33 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://dw3q2rdxoga8g"]
+[gd_scene load_steps=3 format=3 uid="uid://dw3q2rdxoga8g"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_0s5jx"]
-[ext_resource type="PackedScene" uid="uid://ogg3oaxoy66n" path="res://scenes/slingshot.tscn" id="1_c5tod"]
-[ext_resource type="PackedScene" uid="uid://bp4wny2hgl85v" path="res://scenes/border_game.tscn" id="1_rwg3j"]
-[ext_resource type="PackedScene" uid="uid://jx76bqm121v4" path="res://scenes/spacecraft.tscn" id="2_l0j4p"]
-[ext_resource type="PackedScene" uid="uid://et54j7lrftig" path="res://scenes/planets/planet_g.tscn" id="5_qgthy"]
-[ext_resource type="PackedScene" uid="uid://vvpan4smuxbd" path="res://scenes/target_area.tscn" id="6_64vpg"]
-[ext_resource type="PackedScene" uid="uid://bryh4m50q0dgo" path="res://scenes/coin.tscn" id="8_4lg0d"]
+[ext_resource type="PackedScene" uid="uid://b8r63iojc6grm" path="res://scenes/levels/1.tscn" id="2_hgig4"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_0s5jx")
 
-[node name="BorderGame" parent="." instance=ExtResource("1_rwg3j")]
-z_index = -20
-
-[node name="Slingshot" parent="." instance=ExtResource("1_c5tod")]
-position = Vector2(0, 181)
-
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2, 2)
-
-[node name="Spacecraft" parent="." instance=ExtResource("2_l0j4p")]
-position = Vector2(0, 162)
-
-[node name="GreenPlanet" parent="." instance=ExtResource("5_qgthy")]
-position = Vector2(-30, -103)
-
-[node name="TargetArea" parent="." instance=ExtResource("6_64vpg")]
-position = Vector2(1, -163)
-
-[node name="Coin2" parent="." instance=ExtResource("8_4lg0d")]
-position = Vector2(0, -56)
+[node name="Level1" parent="." instance=ExtResource("2_hgig4")]

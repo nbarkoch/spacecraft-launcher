@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://o76834xyqxe0"]
+
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_yb3am"]
+[ext_resource type="PackedScene" uid="uid://bp4wny2hgl85v" path="res://scenes/base/border_game.tscn" id="2_tg0io"]
+[ext_resource type="PackedScene" uid="uid://ogg3oaxoy66n" path="res://scenes/base/slingshot.tscn" id="3_dfu4i"]
+[ext_resource type="PackedScene" uid="uid://jx76bqm121v4" path="res://scenes/base/spacecraft.tscn" id="4_s6ybg"]
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_yb3am")
+
+[node name="BorderGame" parent="." instance=ExtResource("2_tg0io")]
+
+[node name="Slingshot" parent="." instance=ExtResource("3_dfu4i")]
+position = Vector2(0, 178)
+
+[node name="Spacecraft" parent="." instance=ExtResource("4_s6ybg")]
+position = Vector2(0, 147)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)

@@ -63,7 +63,6 @@ func interpolate_trajectory_points(delta):
 		if i < trajectory_colors.size():
 			trajectory_colors[i] = trajectory_colors[i].lerp(get_target_color_for_point(i), interpolation_speed * 2.0)
 	
-	# עדכן את הקו
 	update_line_display()
 
 func adjust_points_count():

@@ -75,9 +75,7 @@ func exit_gravity_assist():
 func destroy():
 	"""Destroy spacecraft when it hits a planet"""
 	print("Spacecraft destroyed!")
-	queue_free()
-	GameManager.currentState = GameManager.GameState.idle
-	get_tree().reload_current_scene()
+	LevelManager.level_failed()
 
 var debug_label: Label
 var debug_enabled: bool = false
@@ -135,3 +133,16 @@ func update_debug_info():
 		debug_text += "No gravity assist active"
 	
 	debug_label.text = debug_text
+
+func reset(new_rotation, new_position):
+	exit_gravity_assist()
+	global_position = new_position
+	rotation = new_rotation
+	var body_rid = get_rid()
+	var new_transform = Transform2D(rotation, new_position)
+	PhysicsServer2D.body_set_state(body_rid, PhysicsServer2D.BODY_STATE_TRANSFORM, new_transform)
+	PhysicsServer2D.body_set_state(body_rid, PhysicsServer2D.BODY_STATE_LINEAR_VELOCITY, Vector2.ZERO)
+	PhysicsServer2D.body_set_state(body_rid, PhysicsServer2D.BODY_STATE_ANGULAR_VELOCITY, 0.0)
+	linear_velocity = Vector2.ZERO
+	angular_velocity = 0.0
+	is_dead = false

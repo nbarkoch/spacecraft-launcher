@@ -13,7 +13,7 @@ func _on_body_entered(body):
 		spacecraft_captured = true
 		capture_spacecraft(body)
 		$AnimationPlayer.play("enter")
-		print("level complete")
+		LevelManager.level_completed()
 
 func capture_spacecraft(spacecraft: Spacecraft):
 	# Stop spacecraft movement immediately
@@ -40,6 +40,4 @@ func capture_spacecraft(spacecraft: Spacecraft):
 	#spacecraft.queue_free()
 	spacecraft.stop()
 	
-	# Update game state
-	GameManager.currentState = GameManager.GameState.success
 	

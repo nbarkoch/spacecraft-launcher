@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dyct1qho3vncc"]
 
-[ext_resource type="PackedScene" uid="uid://p8a8uk5vtjdd" path="res://scenes/planet.tscn" id="1_x1jtw"]
+[ext_resource type="PackedScene" uid="uid://p8a8uk5vtjdd" path="res://scenes/base/planet.tscn" id="1_x1jtw"]
 [ext_resource type="Texture2D" uid="uid://dtmvh5pe62uiu" path="res://sprites/planet_c.png" id="2_e50es"]
 
 [node name="CyanPlanet" type="Node2D"]

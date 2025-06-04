@@ -46,7 +46,7 @@ func trigger_jump_effect():
 	await jump_tween.finished
 
 
-func teleport_spacecraft(spacecraft):
+func teleport_spacecraft(spacecraft: Spacecraft):
 	var destination = find_other_portal()
 	if not destination:
 		return
@@ -68,8 +68,7 @@ func teleport_spacecraft(spacecraft):
 	tween.parallel().tween_property(spacecraft, "scale", Vector2(0.1, 0.1), 0.3)
 	await tween.finished
 	
-	# Teleport using physics server
-	reset_physics_position(spacecraft, destination.global_position)
+	spacecraft.reset(spacecraft.rotation, destination.global_position)
 	
 	spacecraft.stop() # stop the trail
 	destination.trigger_jump_effect()

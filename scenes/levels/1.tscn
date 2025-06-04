@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://b8r63iojc6grm"]
+
+[ext_resource type="PackedScene" uid="uid://o76834xyqxe0" path="res://scenes/base/level.tscn" id="1_hkupi"]
+[ext_resource type="PackedScene" uid="uid://b6qrsvysawymj" path="res://scenes/elements/portal.tscn" id="2_gli41"]
+
+[node name="Level1" type="Node2D"]
+
+[node name="Level" parent="." instance=ExtResource("1_hkupi")]
+
+[node name="Portal" parent="." instance=ExtResource("2_gli41")]
+position = Vector2(55, -73)
+
+[node name="Portal2" parent="." instance=ExtResource("2_gli41")]
+position = Vector2(-48, -71)
