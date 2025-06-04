@@ -24,7 +24,7 @@ zoom = Vector2(2, 2)
 position = Vector2(0, 162)
 
 [node name="GreenPlanet" parent="." instance=ExtResource("5_qgthy")]
-position = Vector2(-1, 1)
+position = Vector2(-30, -103)
 
 [node name="TargetArea" parent="." instance=ExtResource("6_64vpg")]
 position = Vector2(1, -163)
