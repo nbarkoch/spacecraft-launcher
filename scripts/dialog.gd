@@ -14,7 +14,7 @@ var current_result: String = ""
 var best_result: String = ""
 var current_score: int = 0
 
-static func create_dilaog(parent: Node, cur_res: String, best_res: String, cur_score: int) -> Dialog:
+static func create_dilaog(cur_res: String, best_res: String, cur_score: int) -> Dialog:
 	var dialog_scene = preload("res://scenes/ui/dialog.tscn")
 	var dialog = dialog_scene.instantiate() as Dialog
 	dialog.current_result = cur_res

@@ -1,40 +1,43 @@
 extends Node2D
 
-
-var level: Level = null
-var dialog: Dialog = null
-
 # timer
 var game_start_time: float = 0.0	
 var game_duration: float = 0.0
 var is_timer_running: bool = false
 var score = 0
 
+var room: Room
+var dialog: Dialog = null
+var c_level_index = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	level_started()
 
+func inc_score():
+	score += 1
 
+func set_room(room):
+	self.room = room
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if is_timer_running:
 		game_duration = Time.get_unix_time_from_system() - game_start_time
-
-func set_level(level: Level):
-	self.level = level
 	
 func level_started():
 	start_timer()
-	if self.level:
-		var slingshot = level.slingshot
+	score = 0
+	if self.room:
+		var slingshot = self.room.level.slingshot
 		if slingshot:
 			slingshot.reset()
 
 func level_completed():
 	stop_timer()
 	var formatted_duration = format_time(game_duration)
-	dialog = Dialog.create_dilaog(self.level, formatted_duration, formatted_duration, score)
-	self.level.add_child(dialog)
+	dialog = Dialog.create_dilaog(formatted_duration, formatted_duration, score)
+	self.room.add_child(dialog)
 	await get_tree().process_frame
 	dialog.enter()
 	
@@ -55,13 +58,26 @@ func dialogAnimationExitFinished():
 	dialog.queue_free()
 
 func to_next_level():
-	pass
+	if dialog:
+		dialog.exit()
+	load_level(c_level_index + 1)
 	
 func retry_level():
-	dialog.exit()
-	self.level.reset()
+	if dialog:
+		dialog.exit()
+	load_level(c_level_index)
 
 
+func load_level(index: int):
+	c_level_index = index
+	level_started()
+	var content_scene = load("res://scenes/levels/level_" + str(index + 1) +".tscn")
+	var new_content = content_scene.instantiate()
+	if self.room.level.content:
+		self.room.level.content.queue_free()
+		self.get_parent().add_child(new_content)
+	self.room.level.content = new_content
+	
 func start_timer():
 	game_start_time = Time.get_unix_time_from_system()
 	game_duration = 0.0

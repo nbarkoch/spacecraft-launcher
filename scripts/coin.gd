@@ -21,3 +21,4 @@ func play_effect():
 func _on_body_entered(body):
 	if body is Spacecraft:
 		play_effect()
+		LevelManager.inc_score()
