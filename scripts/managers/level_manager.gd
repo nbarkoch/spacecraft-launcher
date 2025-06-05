@@ -8,7 +8,7 @@ var score = 0
 
 var room: Room
 var dialog: Dialog = null
-var current_level_num = 5
+var current_level_num = 7
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

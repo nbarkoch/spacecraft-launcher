@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://djomn421s8kg4"]
+
+[ext_resource type="PackedScene" uid="uid://dyct1qho3vncc" path="res://scenes/planets/planet_c.tscn" id="1_11e2y"]
+[ext_resource type="PackedScene" uid="uid://et54j7lrftig" path="res://scenes/planets/planet_g.tscn" id="2_c1k4v"]
+[ext_resource type="PackedScene" uid="uid://vvpan4smuxbd" path="res://scenes/elements/target_area.tscn" id="3_mvnu8"]
+[ext_resource type="PackedScene" uid="uid://bryh4m50q0dgo" path="res://scenes/pickable/coin.tscn" id="4_bxano"]
+
+[node name="Level6" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="CyanPlanet" parent="." instance=ExtResource("1_11e2y")]
+position = Vector2(42, -127)
+
+[node name="GreenPlanet" parent="." instance=ExtResource("2_c1k4v")]
+
+[node name="TargetArea" parent="." instance=ExtResource("3_mvnu8")]
+position = Vector2(60, -178)
+
+[node name="Coin" parent="." instance=ExtResource("4_bxano")]
+position = Vector2(85, -130)
+
+[node name="Coin2" parent="." instance=ExtResource("4_bxano")]
+position = Vector2(30, -69)
