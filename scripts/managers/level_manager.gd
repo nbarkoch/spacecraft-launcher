@@ -10,12 +10,6 @@ var room: Room
 var dialog: Dialog = null
 var current_level_num = 7
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	load_level(current_level_num)
-	start_timer()	
-	level_started()
-
 func inc_score():
 	score += 1
 
@@ -71,19 +65,19 @@ func retry_level():
 func go_home():
 	print("should go home")
 
-func load_level(index: int):
-	current_level_num = index
+func load_level(level_num: int):
+	current_level_num = level_num
 	score = 0
 	start_timer()	
 	level_started()
-	var content_scene = load("res://scenes/levels/level_" + str(index) +".tscn")
+	var content_scene = load("res://scenes/levels/level_" + str(level_num) +".tscn")
 	var new_content = content_scene.instantiate()
 	await get_tree().process_frame
-	if self.room.level.content:
-		self.room.level.content.queue_free()
-		self.get_parent().add_child(new_content)
-	self.room.level.content = new_content
-	
+	if self.room:
+		if self.room.level.content:
+			self.room.level.content.queue_free()
+			self.get_parent().add_child(new_content)
+		self.room.level.content = new_content
 	
 	
 func start_timer():

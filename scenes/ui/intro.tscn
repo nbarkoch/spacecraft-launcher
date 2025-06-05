@@ -1,0 +1,73 @@
+[gd_scene load_steps=5 format=3 uid="uid://qaxosj5rynfu"]
+
+[ext_resource type="Texture2D" uid="uid://bn5akt1xr1iup" path="res://sprites/ui/intro.png" id="1_c47dw"]
+[ext_resource type="Texture2D" uid="uid://c3mt6yqqhvb6a" path="res://sprites/ui/gameName.png" id="2_tinb1"]
+
+[sub_resource type="Gradient" id="Gradient_fj1w2"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_d0081"]
+gradient = SubResource("Gradient_fj1w2")
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
+
+[node name="Intro" type="CanvasLayer"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.133333, 0.305882, 1)
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -148.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_c47dw")
+expand_mode = 1
+
+[node name="Control" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="FogPanel" type="TextureRect" parent="Control/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -323.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_d0081")
+
+[node name="TextureRect" type="TextureRect" parent="Control/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -198.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_tinb1")
+expand_mode = 1
