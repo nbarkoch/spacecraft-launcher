@@ -1,7 +1,7 @@
 [gd_scene load_steps=16 format=3 uid="uid://bryh4m50q0dgo"]
 
 [ext_resource type="Texture2D" uid="uid://bm5lux7wue7t8" path="res://sprites/coin_anim.png" id="1_3l7rd"]
-[ext_resource type="Script" path="res://scripts/coin.gd" id="1_yc21c"]
+[ext_resource type="Script" path="res://scripts/pickable/coin.gd" id="1_yc21c"]
 [ext_resource type="Texture2D" uid="uid://g3lbvs45lr1l" path="res://sprites/s_star.png" id="2_8j4ft"]
 [ext_resource type="PackedScene" uid="uid://bnscgwyelyck3" path="res://scenes/effects/ring_effect.tscn" id="3_ec37v"]
 

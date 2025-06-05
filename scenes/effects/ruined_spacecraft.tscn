@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://ddaia32kf3csf"]
 
 [ext_resource type="Texture2D" uid="uid://blhry4m608exd" path="res://sprites/spacecraft_b3.png" id="1_hwnp5"]
-[ext_resource type="Script" path="res://scripts/ruined_spacecraft.gd" id="1_og12y"]
+[ext_resource type="Script" path="res://scripts/effects/ruined_spacecraft.gd" id="1_og12y"]
 [ext_resource type="Texture2D" uid="uid://bhmgg1ulb10u1" path="res://sprites/spacecraft_b4.png" id="2_nh5g8"]
 [ext_resource type="Texture2D" uid="uid://i4jfje7iw6e5" path="res://sprites/spacecraft_b1.png" id="3_kr5mf"]
 [ext_resource type="Texture2D" uid="uid://b04wcbywx4r7g" path="res://sprites/spacecraft_b2.png" id="4_r0hwu"]

@@ -1,14 +1,14 @@
 [gd_scene load_steps=5 format=3 uid="uid://ogg3oaxoy66n"]
 
-[ext_resource type="Script" path="res://scripts/slingshot.gd" id="1_1asle"]
+[ext_resource type="Script" path="res://scripts/base/slingshot.gd" id="1_l84lg"]
 [ext_resource type="Texture2D" uid="uid://dl3rgran2s3ib" path="res://sprites/slingshot2.png" id="2_jam6n"]
-[ext_resource type="Script" path="res://scripts/trajectory_predictor.gd" id="3_tp123"]
+[ext_resource type="Script" path="res://scripts/visualizers/trajectory_predictor.gd" id="3_ekkhv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0jt4s"]
 radius = 58.0345
 
 [node name="Slingshot" type="Node2D"]
-script = ExtResource("1_1asle")
+script = ExtResource("1_l84lg")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -8)
@@ -36,6 +36,6 @@ shape = SubResource("CircleShape2D_0jt4s")
 position = Vector2(0, -31)
 
 [node name="TrajectoryPredictor" type="Node2D" parent="."]
-script = ExtResource("3_tp123")
+script = ExtResource("3_ekkhv")
 
 [connection signal="input_event" from="TouchArea" to="." method="_on_touch_area_input_event"]

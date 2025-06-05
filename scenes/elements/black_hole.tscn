@@ -2,7 +2,7 @@
 
 [ext_resource type="Shader" path="res://shaders/planet_glow.gdshader" id="1_2cq0v"]
 [ext_resource type="Texture2D" uid="uid://8sm2ii0ef4lv" path="res://sprites/black_hole.png" id="1_3b0y3"]
-[ext_resource type="Script" path="res://scripts/black_hole.gd" id="1_k0i5a"]
+[ext_resource type="Script" path="res://scripts/elements/black_hole.gd" id="1_k0i5a"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ovmvx"]
 

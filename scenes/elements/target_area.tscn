@@ -1,6 +1,6 @@
 [gd_scene load_steps=17 format=3 uid="uid://vvpan4smuxbd"]
 
-[ext_resource type="Script" path="res://scripts/target_area.gd" id="1_tmo7r"]
+[ext_resource type="Script" path="res://scripts/elements/target_area.gd" id="1_tmo7r"]
 [ext_resource type="Shader" path="res://shaders/planet_glow.gdshader" id="2_texvw"]
 [ext_resource type="Texture2D" uid="uid://drsqf5fq3bab6" path="res://sprites/target_ring.png" id="3_l5qre"]
 [ext_resource type="Texture2D" uid="uid://cd332yxfu10gj" path="res://sprites/target_flag_anim.png" id="4_al6on"]

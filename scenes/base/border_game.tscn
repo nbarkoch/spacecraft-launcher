@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://bp4wny2hgl85v"]
 
-[ext_resource type="Script" path="res://scripts/border_game.gd" id="1_vqse4"]
+[ext_resource type="Script" path="res://scripts/base/border_game.gd" id="1_888eq"]
 [ext_resource type="Shader" path="res://shaders/gradient_background.gdshader" id="1_y4uhd"]
-[ext_resource type="Script" path="res://scripts/stars_background.gd" id="4_lpoch"]
+[ext_resource type="Script" path="res://scripts/visualizers/stars_background.gd" id="3_lm1qi"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kc0ic"]
 size = Vector2(345, 549.5)
@@ -15,7 +15,7 @@ shader_parameter/bottom_color = Color(0, 0.192157, 0.556863, 1)
 [node name="BorderGame" type="Area2D"]
 z_index = -2
 collision_layer = 0
-script = ExtResource("1_vqse4")
+script = ExtResource("1_888eq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1, 0)
@@ -36,6 +36,6 @@ offset_right = 199.0
 offset_bottom = 302.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
-script = ExtResource("4_lpoch")
+script = ExtResource("3_lm1qi")
 
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]

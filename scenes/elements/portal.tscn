@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://b6qrsvysawymj"]
 
 [ext_resource type="Texture2D" uid="uid://cf358231s6rv3" path="res://sprites/portal.png" id="1_4y86b"]
-[ext_resource type="Script" path="res://scripts/portal.gd" id="1_hb07n"]
+[ext_resource type="Script" path="res://scripts/elements/portal.gd" id="1_hb07n"]
 [ext_resource type="Shader" path="res://shaders/planet_glow.gdshader" id="2_rc3a1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8vc1e"]

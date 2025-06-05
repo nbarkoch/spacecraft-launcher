@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bnscgwyelyck3"]
 
-[ext_resource type="Script" path="res://scripts/ring_effect.gd" id="1_l8o0l"]
+[ext_resource type="Script" path="res://scripts/effects/ring_effect.gd" id="1_l8o0l"]
 [ext_resource type="Shader" path="res://shaders/ring_effect.gdshader" id="1_qymrt"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ied3j"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://d0ac4c4klebkb"]
 
 [ext_resource type="Texture2D" uid="uid://dto3dwx4gq8a4" path="res://sprites/meteroids.png" id="1_ejkk3"]
-[ext_resource type="Script" path="res://scripts/meteroid.gd" id="1_g1etq"]
+[ext_resource type="Script" path="res://scripts/elements/meteroid.gd" id="1_g1etq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_af5sn"]
 radius = 13.3417
