@@ -24,7 +24,6 @@ func _ready():
 
 func setup_trail():
 	trail = SpacecraftTrail.new()
-	trail.z_index = -1
 	get_tree().current_scene.add_child(trail)
 	trail.spacecraft_ref = self
 
@@ -82,7 +81,8 @@ func destroy():
 	SpacecraftExplosion.create_explosion_at(explosion_position, scene_parent)
 	
 	# Create debris with slight delay to sync with explosion
-	await get_tree().create_timer(0.1).timeout
+	
+
 	RuinedSpacecraft.create_at_position(explosion_position, scene_parent, rotation)
 	
 	visible = false
