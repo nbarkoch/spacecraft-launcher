@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://jx76bqm121v4"]
+[gd_scene load_steps=5 format=3 uid="uid://jx76bqm121v4"]
 
 [ext_resource type="Script" path="res://scripts/base/spacecraft.gd" id="1_47ukr"]
+[ext_resource type="PackedScene" uid="uid://dd3cnecb8bjn6" path="res://scenes/effects/spacecraft_fire_effect.tscn" id="2_md080"]
 [ext_resource type="Texture2D" uid="uid://fc4r0ui4j3nx" path="res://sprites/spacecraft3.png" id="2_x4pyo"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_20kmt"]
@@ -13,6 +14,10 @@ script = ExtResource("1_47ukr")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_20kmt")
+
+[node name="SpacecraftFireEffect" parent="." instance=ExtResource("2_md080")]
+position = Vector2(0, 17)
+scale = Vector2(0.19, 0.18)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.22, 0.221429)

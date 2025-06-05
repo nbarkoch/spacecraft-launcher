@@ -6,6 +6,7 @@ var gravity_assist: GravityAssist = null
 var is_dead = false
 var trail: SpacecraftTrail = null
 
+
 func stop():
 	self.freeze_mode = RigidBody2D.FREEZE_MODE_KINEMATIC
 	self.freeze = true
@@ -42,6 +43,7 @@ func _physics_process(delta):
 			exit_gravity_assist()
 	
 	update_debug_info()
+	update_fire_effect()
 
 func release():
 	"""Release spacecraft from slingshot"""
@@ -70,6 +72,7 @@ func exit_gravity_assist():
 	if gravity_assist:
 		gravity_assist.is_active = false
 		gravity_assist = null
+
 
 func destroy():
 	"""Destroy spacecraft when it hits a planet"""
@@ -165,3 +168,16 @@ func reset(new_rotation, new_position):
 	angular_velocity = 0.0
 	is_dead = false
 	visible = true
+
+@onready var fire_effect: SpacecraftFireEffect = $SpacecraftFireEffect
+
+
+func update_fire_effect():
+	"""Update fire effect based on spacecraft movement"""
+	var is_moving = linear_velocity.length() > 10.0
+	var should_be_active = is_moving and not freeze
+	
+	if should_be_active and not fire_effect.is_fire_active():
+		fire_effect.start_fire()
+	elif not should_be_active and fire_effect.is_fire_active():
+		fire_effect.stop_fire()

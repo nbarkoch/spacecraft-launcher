@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://dd3cnecb8bjn6"]
+
+[ext_resource type="Script" path="res://scripts/effects/spacecraft_fire_effect.gd" id="1_qh168"]
+[ext_resource type="Texture2D" uid="uid://bkbveoejx7yj8" path="res://sprites/spacecraft_fire.png" id="2_v0p70"]
+
+[node name="SpacecraftFireEffect" type="Sprite2D"]
+scale = Vector2(0.24, 0.24)
+texture = ExtResource("2_v0p70")
+script = ExtResource("1_qh168")

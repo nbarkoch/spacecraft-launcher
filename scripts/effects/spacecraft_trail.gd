@@ -38,7 +38,7 @@ func setup_border_line():
 	var color1 = Color(0.380, 0.706, 0.788, 0.0) * darkness_factor
 	var color2 = Color(0.380, 0.706, 0.788, 0.3) * darkness_factor
 	var color3 = Color(0.988, 0.973, 0.651, 0.5) * darkness_factor
-	var color4 = Color(1.0, 1, 1, 0.9) * darkness_factor
+	var color4 = Color(  1.0,     1,     1, 0.7) * darkness_factor
 	
 	# Keep original alpha values
 	color1.a = 0.0
@@ -58,7 +58,7 @@ func setup_border_line():
 	line.width_curve = width_curve
 	
 	# Border is wider
-	line.width = 9.0  # Wider than main trail
+	line.width = 7.0  # Wider than main trail
 	line.antialiased = true
 	line.z_index = -1  # Behind main trail
 	line.begin_cap_mode = Line2D.LINE_CAP_ROUND
@@ -74,7 +74,7 @@ func setup_line():
 	gradient.add_point(0.0, Color(0.380, 0.706, 0.788, 0.0))    # Transparent blue at OLD end
 	gradient.add_point(0.5, Color(0.380, 0.706, 0.788, 0.3))    # More opaque
 	gradient.add_point(0.8, Color(0.988, 0.973, 0.651, 0.5)) 
-	gradient.add_point(1.0, Color(  1.0,   0.8,   0.4, 0.9))   
+	gradient.add_point(1.0, Color(  1.0,   0.8,   0.4, 0.7))   
 	   # Bright white at spacecraft
 	line.gradient = gradient
 	var width_curve = Curve.new()
@@ -84,7 +84,7 @@ func setup_line():
 	line.width_curve = width_curve
 	
 	# Basic setup
-	line.width = 6.0  # Base width (will be modified by curve)
+	line.width = 5.0  # Base width (will be modified by curve)
 	line.antialiased = true
 	line.z_index = -1
 	line.begin_cap_mode = Line2D.LINE_CAP_ROUND
