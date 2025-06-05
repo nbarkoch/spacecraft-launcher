@@ -7,6 +7,7 @@ var current_player: AudioStreamPlayer
 var fade_tween: Tween
 var song_timer: Timer
 
+const default_volume = -25.0
 const SWITCH_DURATION: float = 8.0  # Switch before song ends
 const FADE_DELAY: float = 2.5  # Delay before old song starts fading out
 
@@ -36,7 +37,7 @@ func _ready():
 	song_timer.timeout.connect(_on_song_should_switch)
 	song_timer.one_shot = true
 	
-	audio_player1.volume_db = -15.0
+	audio_player1.volume_db = default_volume
 	audio_player2.volume_db = -60.0  # Start silent
 	
 	current_player = audio_player1
@@ -79,7 +80,7 @@ func stop_music():
 	fade_tween.finished.connect(func(): 
 		audio_player1.stop()
 		audio_player2.stop()
-		audio_player1.volume_db = -15.0
+		audio_player1.volume_db = default_volume
 		audio_player2.volume_db = -60.0
 	)
 
@@ -110,10 +111,10 @@ func switch_to_song(song_path: String):
 	
 	if is_first_play:
 		# First time playing - start immediately at full volume, no fade
-		new_player.volume_db = -15.0
+		new_player.volume_db = default_volume
 	else:
 		# Crossfade with delay - new song fades in immediately, old song fades out after delay
-		fade_tween.parallel().tween_property(new_player, "volume_db", -15.0, SWITCH_DURATION)  # New song fades in immediately
+		fade_tween.parallel().tween_property(new_player, "volume_db", default_volume, SWITCH_DURATION)  # New song fades in immediately
 		fade_tween.parallel().tween_property(current_player, "volume_db", -60.0, SWITCH_DURATION).set_delay(FADE_DELAY)  # Old song fades out after delay
 	
 	# Switch current player reference

@@ -56,6 +56,7 @@ func level_failed():
 func dialogAnimationExitFinished():
 	get_tree().paused = false
 	dialog.queue_free()
+	dialog = null
 
 func to_next_level():
 	if dialog:
@@ -67,6 +68,8 @@ func retry_level():
 		dialog.exit()
 	load_level(current_level_num)
 
+func go_home():
+	print("should go home")
 
 func load_level(index: int):
 	current_level_num = index

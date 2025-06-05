@@ -49,6 +49,11 @@ func _ready():
 	# NEW: Find all planets for arc visualization
 	await get_tree().process_frame
 	find_all_planets()
+	if not spacecraft or not is_instance_valid(spacecraft):
+		var spacecrafts = get_tree().get_nodes_in_group("Spacecrafts")
+		if spacecrafts.size() > 0:
+			spacecraft = spacecrafts[0] as Spacecraft
+			reset()
 
 func find_all_planets():
 	"""Find and store references to all planets in the scene"""
@@ -126,7 +131,6 @@ func _process(delta):
 				spacecraft.angular_velocity = 0.0
 				spacecraft.gravity_assist = null
 				spacecraft.freeze = true
-				
 				spacecraft.release()
 				
 				
@@ -226,10 +230,7 @@ func apply_distance_snap(distance: float) -> float:
 func _on_touch_area_input_event(viewport, event, shape_idx):
 	if slingshotState == SlingshotState.idle and Input.is_action_pressed("FINGER_TAP"):
 		# Find spacecraft when starting to pull
-		if not spacecraft or not is_instance_valid(spacecraft):
-			var spacecrafts = get_tree().get_nodes_in_group("Spacecrafts")
-			if spacecrafts.size() > 0:
-				spacecraft = spacecrafts[0] as Spacecraft
+		
 		
 		if spacecraft:
 			slingshotState = SlingshotState.pulling

@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://ogg3oaxoy66n"]
+[gd_scene load_steps=6 format=3 uid="uid://ogg3oaxoy66n"]
 
 [ext_resource type="Script" path="res://scripts/base/slingshot.gd" id="1_l84lg"]
-[ext_resource type="Texture2D" uid="uid://dl3rgran2s3ib" path="res://sprites/slingshot2.png" id="2_jam6n"]
+[ext_resource type="Texture2D" uid="uid://cp4hux5qu7uuy" path="res://sprites/slingshot3.png" id="2_qqmov"]
 [ext_resource type="Script" path="res://scripts/visualizers/trajectory_predictor.gd" id="3_ekkhv"]
+[ext_resource type="Texture2D" uid="uid://b7epak382jhhc" path="res://sprites/ui/bottom2.png" id="3_k85xf"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0jt4s"]
 radius = 58.0345
@@ -13,7 +14,13 @@ script = ExtResource("1_l84lg")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -8)
 scale = Vector2(0.176251, 0.18427)
-texture = ExtResource("2_jam6n")
+texture = ExtResource("2_qqmov")
+
+[node name="BottomUI" type="Sprite2D" parent="."]
+position = Vector2(-100, -21)
+scale = Vector2(0.34188, 0.47)
+texture = ExtResource("3_k85xf")
+centered = false
 
 [node name="LeftLine" type="Line2D" parent="."]
 position = Vector2(0, 13)
