@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://bjft0cev063i3"]
+
+[ext_resource type="PackedScene" uid="uid://d0ac4c4klebkb" path="res://scenes/elements/meteroid.tscn" id="1_4ry4j"]
+[ext_resource type="PackedScene" uid="uid://vvpan4smuxbd" path="res://scenes/elements/target_area.tscn" id="2_wl5tl"]
+[ext_resource type="PackedScene" uid="uid://et54j7lrftig" path="res://scenes/planets/planet_g.tscn" id="3_07p8m"]
+[ext_resource type="PackedScene" uid="uid://bryh4m50q0dgo" path="res://scenes/pickable/coin.tscn" id="4_b1f5c"]
+
+[node name="Level4" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="Meteroid" parent="." instance=ExtResource("1_4ry4j")]
+position = Vector2(61, 78)
+
+[node name="TargetArea" parent="." instance=ExtResource("2_wl5tl")]
+position = Vector2(-50, -100)
+
+[node name="GreenPlanet" parent="." instance=ExtResource("3_07p8m")]
+
+[node name="Meteroid2" parent="." instance=ExtResource("1_4ry4j")]
+position = Vector2(-54, 39)
+
+[node name="Coin" parent="." instance=ExtResource("4_b1f5c")]
+position = Vector2(0, -60)
+
+[node name="Coin2" parent="." instance=ExtResource("4_b1f5c")]
+position = Vector2(49, -1)

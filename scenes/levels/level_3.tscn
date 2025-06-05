@@ -17,3 +17,6 @@ position = Vector2(35, -102)
 
 [node name="Coin2" parent="." instance=ExtResource("1_wfpk8")]
 position = Vector2(12, 13)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
