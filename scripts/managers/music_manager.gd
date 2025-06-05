@@ -7,7 +7,7 @@ var current_player: AudioStreamPlayer
 var fade_tween: Tween
 var song_timer: Timer
 
-const default_volume = -25.0
+const default_volume = -10.0
 const SWITCH_DURATION: float = 8.0  # Switch before song ends
 const FADE_DELAY: float = 2.5  # Delay before old song starts fading out
 

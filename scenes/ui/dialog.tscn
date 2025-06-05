@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://scripts/ui/dialog.gd" id="1_q4pwv"]
 [ext_resource type="Texture2D" uid="uid://brb4co0vnd3ol" path="res://sprites/ui/dialog.png" id="2_hy6nv"]
 [ext_resource type="FontFile" uid="uid://bhapbj7j3oa1x" path="res://fonts/Oswald-SemiBold.ttf" id="4_75y0u"]
-[ext_resource type="Texture2D" uid="uid://bratrvpmdx1wv" path="res://sprites/ui/s_next_icn.png" id="4_ihba7"]
 [ext_resource type="Texture2D" uid="uid://k2dvwv8t0drt" path="res://sprites/ui/s_coins.png" id="4_ttc53"]
-[ext_resource type="Texture2D" uid="uid://dfxjlswuf1ygm" path="res://sprites/ui/s_retry_icn.png" id="5_kiod3"]
+[ext_resource type="Texture2D" uid="uid://8v1slix1ynb1" path="res://sprites/ui/b_next_icn.png" id="5_8urb0"]
+[ext_resource type="Texture2D" uid="uid://dshm04twkerfu" path="res://sprites/ui/b_retry_icn.png" id="6_uhrjp"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yvijb"]
 
@@ -343,7 +343,8 @@ offset_left = -50.0
 offset_bottom = 50.0
 grow_horizontal = 0
 pivot_offset = Vector2(25, 25)
-texture_normal = ExtResource("4_ihba7")
+texture_normal = ExtResource("5_8urb0")
+ignore_texture_size = true
 stretch_mode = 0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Control/Panel/ButtonsPanel/NextButton"]
@@ -359,7 +360,8 @@ offset_right = 50.0
 offset_bottom = 50.0
 pivot_offset = Vector2(25, 25)
 size_flags_vertical = 4
-texture_normal = ExtResource("5_kiod3")
+texture_normal = ExtResource("6_uhrjp")
+ignore_texture_size = true
 stretch_mode = 0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Control/Panel/ButtonsPanel/RetryButton"]

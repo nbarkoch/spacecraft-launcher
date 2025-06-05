@@ -17,7 +17,7 @@ scale = Vector2(0.176251, 0.18427)
 texture = ExtResource("2_qqmov")
 
 [node name="BottomUI" type="Sprite2D" parent="."]
-position = Vector2(-100, -21)
+position = Vector2(-100, -17)
 scale = Vector2(0.34188, 0.47)
 texture = ExtResource("3_k85xf")
 centered = false

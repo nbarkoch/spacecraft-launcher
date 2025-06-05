@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://scripts/base/room.gd" id="1_0sxad"]
 [ext_resource type="PackedScene" uid="uid://o76834xyqxe0" path="res://scenes/base/level.tscn" id="1_ttsjj"]
 [ext_resource type="PackedScene" uid="uid://dp2dfd3suv5ir" path="res://scenes/levels/level_1.tscn" id="2_1mnsd"]
-[ext_resource type="Texture2D" uid="uid://bas5lvsai56ie" path="res://sprites/ui/s_home_icn.png" id="5_1fvk8"]
-[ext_resource type="Texture2D" uid="uid://dfxjlswuf1ygm" path="res://sprites/ui/s_retry_icn.png" id="6_hi6ya"]
+[ext_resource type="Texture2D" uid="uid://dxo0ps8h1q6dk" path="res://sprites/ui/b_home_icn.png" id="4_0uoca"]
+[ext_resource type="Texture2D" uid="uid://dshm04twkerfu" path="res://sprites/ui/b_retry_icn.png" id="5_bss7i"]
 
 [sub_resource type="Animation" id="Animation_ng4gr"]
 length = 0.001
@@ -67,13 +67,13 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -57.0
-offset_right = 58.0
-offset_bottom = -7.0
+offset_left = 11.0
+offset_top = -61.0
+offset_right = 61.0
+offset_bottom = -11.0
 grow_vertical = 0
 pivot_offset = Vector2(25, 25)
-texture_normal = ExtResource("5_1fvk8")
+texture_normal = ExtResource("4_0uoca")
 ignore_texture_size = true
 stretch_mode = 0
 
@@ -88,13 +88,13 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 342.0
-offset_top = -57.0
-offset_right = 392.0
-offset_bottom = -7.0
+offset_left = 338.0
+offset_top = -61.0
+offset_right = 388.0
+offset_bottom = -11.0
 grow_vertical = 0
 pivot_offset = Vector2(25, 25)
-texture_normal = ExtResource("6_hi6ya")
+texture_normal = ExtResource("5_bss7i")
 ignore_texture_size = true
 stretch_mode = 0
 
