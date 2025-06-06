@@ -1,4 +1,4 @@
-# scripts/planet.gd (UPDATED WITH ORBIT DURATION CONTROL)
+# scripts/planet.gd (UPDATED WITH GRAVITY-BASED COLOR SYSTEM)
 extends StaticBody2D
 class_name Planet
 
@@ -25,6 +25,12 @@ const MIN_GRAVITY = 50.0
 const MAX_GRAVITY = 800.0
 const NEUTRAL_GRAVITY = 300.0
 const BASE_ORBIT_DURATION = 3.0
+
+# NEW: Gravity color constants
+const LOW_GRAVITY_COLOR = Color.WHITE      # White for low gravity
+const HIGH_GRAVITY_COLOR = Color.RED       # Red for high gravity
+const LOW_GRAVITY_THRESHOLD = 150.0        # Below this = white
+const HIGH_GRAVITY_THRESHOLD = 600.0       # Above this = red
 
 func _ready():
 	add_to_group("Planets")
@@ -106,10 +112,7 @@ func _on_planet_area_body_entered(body):
 	if body is Spacecraft:
 		body.exit_gravity_assist()
 		body.is_dead = true
-		#await get_tree().create_timer(1.5).timeout
 		body.destroy()
-		
-		
 
 func get_gravity_behavior_type() -> String:
 	"""Determine what type of behavior this planet has based on gravity"""
@@ -173,22 +176,47 @@ func calculate_predicted_orbit_duration(spacecraft_velocity: Vector2, spacecraft
 	# Clamp to reasonable bounds
 	return clamp(duration, 0.1, 8.0)
 
-func update_visual_feedback():
-	"""Update planet appearance based on gravity behavior"""
-	var behavior = get_gravity_behavior_type()
+func calculate_gravity_color() -> Color:
+	"""Calculate zone color based on gravity strength with smooth gradient"""
+	# Normalize gravity strength between 0 and 1
+	var normalized_gravity = 0.0
 	
-	# Update zone color to indicate planet behavior
-	match behavior:
-		"helpful":
-			zone_color = Color("#7FC1CE") * 0.4  # Green = safe
-		"normal":
-			zone_color = Color.BLUE * 0.3   # Blue = normal
-		"challenging":
-			zone_color = Color.YELLOW * 0.3 # Yellow = warning
-		"evil":
-			zone_color = Color.RED * 0.4    # Red = danger
+	if gravity_strength <= LOW_GRAVITY_THRESHOLD:
+		# Low gravity = white
+		normalized_gravity = 0.0
+	elif gravity_strength >= HIGH_GRAVITY_THRESHOLD:
+		# High gravity = red
+		normalized_gravity = 1.0
+	else:
+		# Between thresholds = interpolate
+		var range = HIGH_GRAVITY_THRESHOLD - LOW_GRAVITY_THRESHOLD
+		var position_in_range = gravity_strength - LOW_GRAVITY_THRESHOLD
+		normalized_gravity = position_in_range / range
+	
+	# Create smooth color transition: White -> Orange -> Red
+	var result_color: Color
+	
+	if normalized_gravity <= 0.5:
+		# First half: White to Orange
+		var orange_color = Color(1.0, 0.5, 0.0)  # Orange
+		var t = normalized_gravity * 2.0  # Scale to 0-1 for first half
+		result_color = LOW_GRAVITY_COLOR.lerp(orange_color, t)
+	else:
+		# Second half: Orange to Red
+		var orange_color = Color(1.0, 0.5, 0.0)  # Orange
+		var t = (normalized_gravity - 0.5) * 2.0  # Scale to 0-1 for second half
+		result_color = orange_color.lerp(HIGH_GRAVITY_COLOR, t)
+	
+	# Maintain semi-transparency
+	result_color.a = 0.2
+	
+	return result_color
+
+func update_visual_feedback():
+	"""Update planet appearance based on gravity behavior with smooth color gradient"""
+	# NEW: Calculate color based on gravity strength
+	zone_color = calculate_gravity_color()
 	
 	# Update gravity visualizer if it exists
 	if gravity_visualizer:
 		gravity_visualizer.set_color(zone_color)
-
