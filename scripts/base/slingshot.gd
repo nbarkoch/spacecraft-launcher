@@ -132,7 +132,7 @@ func _process(delta):
 				spacecraft.gravity_assist = null
 				spacecraft.freeze = true
 				spacecraft.release()
-				
+				Input.vibrate_handheld(10)
 				var launch_direction = center_pos - final_mouse_pos
 				var s_rotation = launch_direction.angle() + PI/2
 				spacecraft.reset(s_rotation, center_pos)

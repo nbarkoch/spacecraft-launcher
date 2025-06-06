@@ -34,6 +34,9 @@ func level_completed():
 	self.room.add_child(dialog)
 	await get_tree().process_frame
 	await get_tree().create_timer(0.7).timeout
+	Input.vibrate_handheld(100)
+	await get_tree().create_timer(0.1).timeout
+	Input.vibrate_handheld(100)
 	dialog.enter()
 	
 func format_time(seconds: float) -> String:

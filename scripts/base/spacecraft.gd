@@ -84,7 +84,7 @@ func destroy():
 	SpacecraftExplosion.create_explosion_at(explosion_position, scene_parent)
 	
 	# Create debris with slight delay to sync with explosion
-	
+	Input.vibrate_handheld(200)
 
 	RuinedSpacecraft.create_at_position(explosion_position, scene_parent, rotation)
 	
