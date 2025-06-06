@@ -184,3 +184,75 @@ func set_arc_color(new_color: Color):
 	arc_color = new_color
 	if arc_line:
 		arc_line.default_color = arc_color
+
+# NEW: Methods for prediction and visualization
+func get_predicted_arc_angle(velocity: Vector2) -> float:
+	"""Calculate predicted arc angle using the SAME logic as orbit_config"""
+
+	var speed = velocity.length()
+	
+	if speed <= 0:
+		return 0.0
+	
+	# Use the SAME calculation as calculate_orbit_duration
+	var orbit_radius = radius  # Use visualizer's radius
+	var orbit_circumference = 2 * PI * orbit_radius
+	
+	var angle_degrees = 0.0
+	
+	# Same logic as in orbit_config
+	if speed <= 50.0:
+		angle_degrees = 360.0  # Full orbit for slow speeds
+	elif speed <= 150.0:
+		var speed_factor = (speed - 50.0) / 100.0
+		angle_degrees = 360.0 - (speed_factor * 315.0)  # 360° down to 45°
+	else:
+		# For high speeds, calculate based on time and reduced orbital speed
+		var predicted_time = 0.0
+		if speed <= 300.0:
+			var speed_factor = (speed - 150.0) / 150.0
+			predicted_time = 2.0 - (speed_factor * 1.5)  # 2.0 down to 0.5
+		else:
+			predicted_time = 0.5
+		
+		# Calculate what angle this time represents
+		var orbital_speed = speed * 0.5  # Assume some orbital slowdown
+		var arc_length = orbital_speed * predicted_time
+		angle_degrees = (arc_length / orbit_circumference) * 360.0
+		angle_degrees = min(angle_degrees, 45.0)  # Cap at 45°
+	
+	return clamp(angle_degrees, 5.0, 360.0)
+
+func get_arc_rotation_speed(velocity: Vector2) -> float:
+	"""Get visual rotation speed for arc based on current orbital motion"""
+	
+	var speed = velocity.length()
+	
+	if speed <= 0:
+		return 30.0
+	
+	# Base rotation speed on the predicted time duration
+	var predicted_time = 0.0
+	if speed <= 50.0:
+		var orbit_circumference = 2 * PI * radius
+		var orbital_speed = speed * 0.7
+		predicted_time = orbit_circumference / orbital_speed
+	elif speed <= 150.0:
+		var speed_factor = (speed - 50.0) / 100.0
+		var angle_degrees = 360.0 - (speed_factor * 315.0)
+		var orbit_circumference = 2 * PI * radius
+		var arc_length = orbit_circumference * (angle_degrees / 360.0)
+		predicted_time = arc_length / speed
+	else:
+		if speed <= 300.0:
+			var speed_factor = (speed - 150.0) / 150.0
+			predicted_time = 2.0 - (speed_factor * 1.5)
+		else:
+			predicted_time = 0.5
+	
+	# Calculate rotation speed: angle per second
+	var arc_angle = get_predicted_arc_angle(velocity)
+	if predicted_time > 0:
+		return arc_angle / predicted_time
+	else:
+		return 30.0

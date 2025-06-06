@@ -33,6 +33,7 @@ func level_completed():
 	dialog = Dialog.create_dilaog(formatted_duration, formatted_duration, score)
 	self.room.add_child(dialog)
 	await get_tree().process_frame
+	await get_tree().create_timer(0.7).timeout
 	dialog.enter()
 	
 func format_time(seconds: float) -> String:
