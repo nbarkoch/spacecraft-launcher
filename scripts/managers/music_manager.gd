@@ -15,7 +15,9 @@ const FADE_DELAY: float = 2.5  # Delay before old song starts fading out
 var room_songs: Array[String] = [
 	"res://music/room_song1.mp3",
 	"res://music/room_song2.mp3", 
-	"res://music/room_song3.mp3"
+	"res://music/room_song3.mp3",
+	"res://music/room_song4.mp3",
+	"res://music/room_song5.mp3",
 ]
 var current_room_song: int = 0
 var is_room_music_playing: bool = false

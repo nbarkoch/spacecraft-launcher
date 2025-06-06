@@ -105,7 +105,7 @@ func _process(delta):
 				trajectory_predictor.show_trajectory()
 				var initial_speed = velocity.length()
 				var velocity_factor =  clamp(initial_speed / 130.0, 0.74, 1)
-				var velocity_at_gravity_zone = velocity * velocity_factor
+				var velocity_at_gravity_zone = velocity * velocity_factor * 0.9
 				
 				
 				trajectory_predictor.update_prediction(current_mouse_pos, velocity_at_gravity_zone)
@@ -235,6 +235,7 @@ func _on_touch_area_input_event(viewport, event, shape_idx):
 			# Refresh planet list when starting to pull
 			find_all_planets()
 
+# COPY: EXACT same functions from ORIGINAL slingshot.gd - DON'T TOUCH THE ORIGINAL!
 func calculate_exact_orbit_duration(planet: Planet, velocity: Vector2) -> float:
 	"""Use the EXACT same calculation as the NEW orbit_config"""
 	var speed = velocity.length()
@@ -313,88 +314,8 @@ func calculate_exact_arc_angle(planet: Planet, velocity: Vector2, duration: floa
 		
 		return clamp(final_angle, 5.0, 360.0)
 
-func predict_spacecraft_trajectory(start_pos: Vector2, velocity: Vector2, planet: Planet) -> Dictionary:
-	"""Predict if and when spacecraft will enter planet's gravity zone"""
-	
-	var time_step = 1.0 / 60.0
-	var max_time = 10.0  # Maximum prediction time
-	var sim_pos = start_pos
-	var sim_vel = velocity
-	
-	# Simulate trajectory until we hit gravity zone or time runs out
-	for step in range(int(max_time / time_step)):
-		var time_elapsed = step * time_step
-		
-		# Update position
-		sim_pos += sim_vel * time_step
-		
-		# Check if we entered gravity zone
-		var distance_to_planet = sim_pos.distance_to(planet.global_position)
-		if distance_to_planet <= planet.gravity_radius:
-			return {
-				"will_enter": true,
-				"entry_time": time_elapsed,
-				"entry_position": sim_pos,
-				"entry_velocity": sim_vel,
-				"distance_at_entry": distance_to_planet
-			}
-		
-		# Check for collision with planet surface
-		if distance_to_planet <= planet.planet_radius + 6.0:  # spacecraft radius
-			return {
-				"will_enter": false,
-				"collision": true,
-				"collision_time": time_elapsed
-			}
-		
-		# Check if trajectory is moving away from planet
-		var to_planet = planet.global_position - sim_pos
-		if to_planet.dot(sim_vel) <= 0 and distance_to_planet > planet.gravity_radius * 2.0:
-			break  # Moving away, won't enter
-	
-	return {"will_enter": false}
-
-func predict_velocity_at_gravity_zone(start_pos: Vector2, initial_velocity: Vector2, planet: Planet) -> Vector2:
-	"""Simulate spacecraft movement to predict velocity when entering gravity zone"""
-	var time_step = 1.0 / 60.0
-	var max_time = 10.0  # Maximum prediction time
-	var sim_pos = start_pos
-	var sim_vel = initial_velocity
-	
-	# Simulate trajectory until we hit gravity zone
-	for step in range(int(max_time / time_step)):
-		# Apply strong velocity-dependent damping - much higher impact for high speeds
-		var speed = sim_vel.length()
-		var speed_factor = speed * 0.00008  # Increased from 0.000015 to 0.00008
-		var base_damping = 0.004  # Increased from 0.002 to 0.004
-		var damping_factor = 1.0 - (base_damping + speed_factor)
-		sim_vel *= damping_factor
-		
-		# Move position
-		sim_pos += sim_vel * time_step
-		
-		# Check if we entered gravity zone
-		var distance_to_planet = sim_pos.distance_to(planet.global_position)
-		if distance_to_planet <= planet.gravity_radius:
-			return sim_vel  # Return velocity at gravity zone entry
-		
-		# Check for collision with planet surface (stop prediction)
-		if distance_to_planet <= planet.planet_radius + 6.0:  # spacecraft radius
-			return Vector2.ZERO  # Won't enter gravity zone
-		
-		# Check if trajectory is moving away from planet
-		var to_planet = planet.global_position - sim_pos
-		if to_planet.dot(sim_vel) <= 0 and distance_to_planet > planet.gravity_radius * 2.0:
-			break  # Moving away, won't enter
-		
-		# Bounds check
-		if abs(sim_pos.x) > 1000 or abs(sim_pos.y) > 1000:
-			break
-	
-	return Vector2.ZERO  # Didn't reach gravity zone
-
 func update_planet_arcs(predicted_velocity: Vector2):
-	"""Update arc visualizations with REALISTIC velocity predictions"""
+	"""Update arc visualizations using COPIED GravityZoneVisualizer functions"""
 	var slingshot_pos = slingshot_center.global_position
 	
 	for planet in all_planets:
@@ -411,7 +332,7 @@ func update_planet_arcs(predicted_velocity: Vector2):
 		
 		# Predict ACTUAL velocity when spacecraft reaches gravity zone
 		var initial_speed = predicted_velocity.length()
-		var velocity_factor =  clamp(initial_speed / 130.0, 0.74, 1)
+		var velocity_factor = clamp(initial_speed / 130.0, 0.74, 1)
 		var velocity_at_gravity_zone = predicted_velocity * velocity_factor
 		
 		if velocity_at_gravity_zone.length() == 0:
@@ -420,7 +341,7 @@ func update_planet_arcs(predicted_velocity: Vector2):
 				planet.gravity_visualizer.hide_orbit_prediction()
 			continue
 		
-		# Calculate duration and arc angle using the ACTUAL entry velocity
+		# Use COPIED ORIGINAL slingshot functions - EXACT same calculation!
 		var predicted_duration = calculate_exact_orbit_duration(planet, velocity_at_gravity_zone)
 		var predicted_arc_angle = calculate_exact_arc_angle(planet, velocity_at_gravity_zone, predicted_duration)
 		
@@ -428,7 +349,7 @@ func update_planet_arcs(predicted_velocity: Vector2):
 		var entry_speed = velocity_at_gravity_zone.length()
 		var speed_factor = clamp(entry_speed / 100.0, 0.2, 3.0)
 		
-		# Show the arc visualization
+		# Show the arc visualization using existing GravityZoneVisualizer method
 		if planet.gravity_visualizer and planet.gravity_visualizer.has_method("update_orbit_prediction"):
 			planet.gravity_visualizer.update_orbit_prediction(predicted_arc_angle, speed_factor)
 

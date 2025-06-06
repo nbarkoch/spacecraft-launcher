@@ -10,7 +10,7 @@ size = Vector2(345, 549.5)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4x834"]
 shader = ExtResource("1_y4uhd")
 shader_parameter/top_color = Color(0, 0.0705882, 0.286275, 1)
-shader_parameter/bottom_color = Color(0, 0.192157, 0.556863, 1)
+shader_parameter/bottom_color = Color(0, 0.27451, 0.478431, 1)
 
 [node name="BorderGame" type="Area2D"]
 z_index = -2
