@@ -7,7 +7,7 @@ var is_active: bool = false
 # Core settings
 var collision_safety_distance: float = 25.0
 var emergency_force_multiplier: float = 12.0
-var angle_correction_strength: float = 12.0
+var angle_correction_strength: float = 15.0
 var optimal_angle_tolerance: float = 7.0
 var magnet_strength: float = 1.0
 

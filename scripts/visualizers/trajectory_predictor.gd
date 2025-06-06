@@ -205,7 +205,7 @@ func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
 				
 				# Predict ACTUAL velocity when spacecraft reaches gravity zone
 				# Simple factor - spacecraft loses about 20% of speed by the time it reaches gravity zone
-				orbit_entry_velocity = velocity * 0.96
+				orbit_entry_velocity = velocity * 0.98
 				
 				expected_orbit_duration = calculate_orbit_duration_like_config(orbit_entry_velocity, current_planet)
 			else:
