@@ -13,9 +13,9 @@ const MAX_GRAVITY: float = 800.0
 
 # Orbit Control Constants
 const COLLISION_SAFETY_DISTANCE: float = 25.0
-const EMERGENCY_FORCE_MULTIPLIER: float = 12.0
-const ANGLE_CORRECTION_STRENGTH: float = 15.0
-const OPTIMAL_ANGLE_TOLERANCE: float = 7.0
+const EMERGENCY_FORCE_MULTIPLIER: float = 3.0
+const ANGLE_CORRECTION_STRENGTH: float = 10.0
+const OPTIMAL_ANGLE_TOLERANCE: float = 12.0
 const MAGNET_STRENGTH: float = 1.0
 
 # Stabilizer Control Constants
@@ -61,7 +61,11 @@ const MIN_DISTANCE_FOR_FORCE: float = 1.0
 
 # Trajectory Prediction Constants
 const TRAJECTORY_TIME_STEP: float = 1.0 / 60.0
+<<<<<<< Updated upstream
 const MAX_TRAJECTORY_STEPS: int = 120
+=======
+const MAX_TRAJECTORY_STEPS: int = 140
+>>>>>>> Stashed changes
 const TRAJECTORY_POINT_INTERVAL: int = 2
 const VELOCITY_FACTOR_DIVISOR: float = 130.0
 const VELOCITY_FACTOR_MIN: float = 0.74
@@ -318,6 +322,7 @@ static func calculate_exact_arc_angle(planet: Planet, velocity: Vector2, duratio
 # =====================================================
 
 static func calculate_collision_prevention(spacecraft_pos: Vector2, distance: float, delta: float, planet: Planet) -> Vector2:
+<<<<<<< Updated upstream
 	var collision_safety_distance = 25.0
 	var distance_from_surface = distance - planet.planet_radius
 	if distance_from_surface > collision_safety_distance:
@@ -327,6 +332,15 @@ static func calculate_collision_prevention(spacecraft_pos: Vector2, distance: fl
 	var push_direction = (spacecraft_pos - planet.global_position).normalized()
 	var emergency_force_multiplier = 12.0
 	return push_direction * emergency_force_multiplier * danger_factor * delta * 60.0
+=======
+	var distance_from_surface = distance - planet.planet_radius
+	if distance_from_surface > COLLISION_SAFETY_DISTANCE:
+		return Vector2.ZERO
+	
+	var danger_factor = 1.0 - (distance_from_surface / COLLISION_SAFETY_DISTANCE)
+	var push_direction = (spacecraft_pos - planet.global_position).normalized()
+	return push_direction * EMERGENCY_FORCE_MULTIPLIER * danger_factor * delta * 60.0
+>>>>>>> Stashed changes
 
 static func calculate_angle_correction(spacecraft_velocity: Vector2, to_planet: Vector2, delta: float) -> Vector2:
 	var velocity = spacecraft_velocity
@@ -340,6 +354,7 @@ static func calculate_angle_correction(spacecraft_velocity: Vector2, to_planet: 
 	var radial_component = abs(radial_dir.dot(velocity_dir))
 	var angle_degrees = rad_to_deg(acos(clamp(1.0 - radial_component, 0.0, 1.0)))
 	
+<<<<<<< Updated upstream
 	# Simple graduated correction
 	var optimal_angle_tolerance = 7.0
 	var angle_error = max(0.0, angle_degrees - optimal_angle_tolerance)
@@ -347,6 +362,13 @@ static func calculate_angle_correction(spacecraft_velocity: Vector2, to_planet: 
 		return Vector2.ZERO
 	
 	var max_error = 90.0 - optimal_angle_tolerance
+=======
+	var angle_error = max(0.0, angle_degrees - OPTIMAL_ANGLE_TOLERANCE)
+	if angle_error <= 0.0:
+		return Vector2.ZERO
+	
+	var max_error = 90.0 - OPTIMAL_ANGLE_TOLERANCE
+>>>>>>> Stashed changes
 	var normalized_error = min(angle_error / max_error, 1.0)
 	var correction_intensity = normalized_error * normalized_error  # קבוע במקום pow()
 	
@@ -355,8 +377,12 @@ static func calculate_angle_correction(spacecraft_velocity: Vector2, to_planet: 
 		tangential = -tangential
 	
 	var correction = (tangential - velocity_dir).normalized()
+<<<<<<< Updated upstream
 	var angle_correction_strength = 15.0
 	var strength = angle_correction_strength * correction_intensity * delta * 60.0
+=======
+	var strength = ANGLE_CORRECTION_STRENGTH * correction_intensity * delta * 60.0
+>>>>>>> Stashed changes
 	
 	return correction * strength
 
@@ -378,8 +404,12 @@ static func calculate_orbital_magnet(spacecraft_pos: Vector2, distance: float, d
 	else:
 		direction = (spacecraft_pos - planet.global_position).normalized()
 	
+<<<<<<< Updated upstream
 	var magnet_strength = 1.0
 	var strength = magnet_strength * correction_intensity * delta * 60.0
+=======
+	var strength = MAGNET_STRENGTH * correction_intensity * delta * 60.0
+>>>>>>> Stashed changes
 	return direction * strength
 
 static func calculate_gentle_speed_boost(spacecraft_velocity: Vector2, entry_speed: float, distance: float, ideal_orbit_radius: float, delta: float) -> Vector2:
@@ -419,6 +449,7 @@ static func calculate_orbit_simulation_force(position: Vector2, velocity: Vector
 	var guidance_force = Vector2.ZERO
 	
 	# 1. Collision prevention (same as orbit_config.gd)
+<<<<<<< Updated upstream
 	var collision_safety_distance = 25.0
 	var distance_from_surface = distance - planet.planet_radius
 	if distance_from_surface <= collision_safety_distance:
@@ -426,6 +457,13 @@ static func calculate_orbit_simulation_force(position: Vector2, velocity: Vector
 		var push_direction = (position - planet.global_position).normalized()
 		var emergency_force_multiplier = 12.0
 		guidance_force += push_direction * emergency_force_multiplier * danger_factor * delta * 60.0
+=======
+	var distance_from_surface = distance - planet.planet_radius
+	if distance_from_surface <= COLLISION_SAFETY_DISTANCE:
+		var danger_factor = 1.0 - (distance_from_surface / COLLISION_SAFETY_DISTANCE)
+		var push_direction = (position - planet.global_position).normalized()
+		guidance_force += push_direction * EMERGENCY_FORCE_MULTIPLIER * danger_factor * delta * 60.0
+>>>>>>> Stashed changes
 	
 	# 2. Orbital magnet (same as orbit_config.gd)
 	if abs(distance_from_ideal) > 2.0 and abs(distance_from_ideal) < 50.0:
@@ -436,8 +474,12 @@ static func calculate_orbit_simulation_force(position: Vector2, velocity: Vector
 			direction = -to_planet.normalized()
 		
 		var correction_intensity = min(abs(distance_from_ideal) / 30.0, 1.0)
+<<<<<<< Updated upstream
 		var magnet_strength = 1.0
 		var force_strength = magnet_strength * correction_intensity * delta * 60.0
+=======
+		var force_strength = MAGNET_STRENGTH * correction_intensity * delta * 60.0
+>>>>>>> Stashed changes
 		guidance_force += direction * force_strength
 	
 	# 3. CRITICAL: Angle correction (same as orbit_config.gd) - THIS IS KEY!
@@ -448,12 +490,19 @@ static func calculate_orbit_simulation_force(position: Vector2, velocity: Vector
 		var radial_component = abs(radial_dir.dot(velocity_dir))
 		var angle_degrees = rad_to_deg(acos(clamp(1.0 - radial_component, 0.0, 1.0)))
 		
+<<<<<<< Updated upstream
 		# Use same optimal angle tolerance as orbit_config.gd
 		var optimal_angle_tolerance = 7.0
 		var angle_error = max(0.0, angle_degrees - optimal_angle_tolerance)
 		
 		if angle_error > 0.0:
 			var max_error = 90.0 - optimal_angle_tolerance
+=======
+		var angle_error = max(0.0, angle_degrees - OPTIMAL_ANGLE_TOLERANCE)
+		
+		if angle_error > 0.0:
+			var max_error = 90.0 - OPTIMAL_ANGLE_TOLERANCE
+>>>>>>> Stashed changes
 			var normalized_error = min(angle_error / max_error, 1.0)
 			var correction_intensity = normalized_error * normalized_error
 			
@@ -463,8 +512,12 @@ static func calculate_orbit_simulation_force(position: Vector2, velocity: Vector
 				tangential = -tangential
 			
 			var correction = (tangential - velocity_dir).normalized()
+<<<<<<< Updated upstream
 			var angle_correction_strength = 15.0  # Same as orbit_config.gd
 			var strength = angle_correction_strength * correction_intensity * delta * 60.0
+=======
+			var strength = ANGLE_CORRECTION_STRENGTH * correction_intensity * delta * 60.0
+>>>>>>> Stashed changes
 			guidance_force += correction * strength
 	
 	# 4. Gentle speed boost (same as orbit_config.gd)
