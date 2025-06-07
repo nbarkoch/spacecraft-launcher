@@ -235,87 +235,8 @@ func _on_touch_area_input_event(viewport, event, shape_idx):
 			# Refresh planet list when starting to pull
 			find_all_planets()
 
-# COPY: EXACT same functions from ORIGINAL slingshot.gd - DON'T TOUCH THE ORIGINAL!
-func calculate_exact_orbit_duration(planet: Planet, velocity: Vector2) -> float:
-	"""Use the EXACT same calculation as the NEW orbit_config"""
-	var speed = velocity.length()
-	
-	# Calculate orbit radius - same as in orbit_config
-	var planet_radius = planet.planet_radius
-	var gravity_radius = planet.gravity_radius
-	var ideal_orbit_radius = planet_radius + ((gravity_radius - planet_radius) / 2.0)
-	var orbit_radius = planet_radius + (ideal_orbit_radius - planet_radius) * 0.7
-	var orbit_circumference = 2 * PI * orbit_radius
-	
-	var base_duration = 0.0
-	var orbital_speed = speed * 0.6
-	var max_duration = orbit_circumference / orbital_speed
-	
-	# For very low speeds (≤50) - full 360° orbit
-	if speed <= 50.0:
-		base_duration = max_duration
-	else:
-		# Calculate stabilizer control factor (decreases with speed)
-		var stabilizer_control = calculate_stabilizer_control_slingshot(speed)
-		
-		# Max angle starts at 360° for speed 50, reduces based on speed and stabilizer control
-		var max_angle_at_50 = 360.0
-		var speed_reduction_factor = (speed - 50.0) / 250.0  # Spread reduction over 250 speed units
-		speed_reduction_factor = clamp(speed_reduction_factor, 0.0, 1.0)
-		
-		# Base angle reduces from 360° to ~10° based on speed
-		var base_angle = max_angle_at_50 * (1.0 - speed_reduction_factor * 0.97)  # Down to 3% (≈10°)
-		
-		# Apply stabilizer control - less control = less angle
-		var final_angle = base_angle * stabilizer_control
-		
-		# Calculate duration based on final angle
-		var arc_length = orbit_circumference * (final_angle / 360.0)
-		var effective_orbital_speed = speed * (0.7 + speed_reduction_factor * 0.3)  # 0.7 to 1.0
-		base_duration = arc_length / effective_orbital_speed
-	
-	# Apply gravity factor
-	var gravity_factor = 300.0 / max(planet.gravity_strength, 50.0)
-	
-	# Clamp with minimum 1.0 second and max as full orbit
-	return clamp(base_duration * gravity_factor, 1.0, max_duration * gravity_factor / 2)
-
-func calculate_stabilizer_control_slingshot(speed: float) -> float:
-	"""Calculate how much control the stabilizer has at this speed"""
-	var base_control = 1.0
-	var speed_penalty = (speed - 50.0) / 200.0  # Normalize speed above 50
-	speed_penalty = clamp(speed_penalty, 0.0, 3.0)
-	
-	# Exponential decay of control
-	var control_factor = base_control * exp(-speed_penalty * 1.2)
-	
-	return clamp(control_factor, 0.1, 0.95)
-
-func calculate_exact_arc_angle(planet: Planet, velocity: Vector2, duration: float) -> float:
-	"""Calculate arc angle by reconstructing the SAME logic used in duration calculation"""
-	var speed = velocity.length()
-	
-	if duration <= 0 or speed <= 0:
-		return 0.0
-	
-	# Use the SAME logic as in calculate_exact_orbit_duration to get the angle
-	if speed <= 50.0:
-		# For low speeds, the duration represents a full orbit, so show full circle
-		return 360.0
-	else:
-		# For higher speeds, calculate the angle that was used to determine the duration
-		var stabilizer_control = calculate_stabilizer_control_slingshot(speed)
-		var speed_reduction_factor = (speed - 50.0) / 250.0
-		speed_reduction_factor = clamp(speed_reduction_factor, 0.0, 1.0)
-		
-		# This is the SAME calculation used in duration - the intended angle
-		var base_angle = 360.0 * (1.0 - speed_reduction_factor * 0.97)
-		var final_angle = base_angle * stabilizer_control
-		
-		return clamp(final_angle, 5.0, 360.0)
-
 func update_planet_arcs(predicted_velocity: Vector2):
-	"""Update arc visualizations using COPIED GravityZoneVisualizer functions"""
+	"""Update arc visualizations using PhysicsUtils functions"""
 	var slingshot_pos = slingshot_center.global_position
 	
 	for planet in all_planets:
@@ -332,7 +253,7 @@ func update_planet_arcs(predicted_velocity: Vector2):
 		
 		# Predict ACTUAL velocity when spacecraft reaches gravity zone
 		var initial_speed = predicted_velocity.length()
-		var velocity_factor = clamp(initial_speed / 130.0, 0.74, 1)
+		var velocity_factor = clamp(initial_speed / PhysicsUtils.VELOCITY_FACTOR_DIVISOR, PhysicsUtils.VELOCITY_FACTOR_MIN, PhysicsUtils.VELOCITY_FACTOR_MAX)
 		var velocity_at_gravity_zone = predicted_velocity * velocity_factor
 		
 		if velocity_at_gravity_zone.length() == 0:
@@ -341,9 +262,9 @@ func update_planet_arcs(predicted_velocity: Vector2):
 				planet.gravity_visualizer.hide_orbit_prediction()
 			continue
 		
-		# Use COPIED ORIGINAL slingshot functions - EXACT same calculation!
-		var predicted_duration = calculate_exact_orbit_duration(planet, velocity_at_gravity_zone)
-		var predicted_arc_angle = calculate_exact_arc_angle(planet, velocity_at_gravity_zone, predicted_duration)
+		# Use PhysicsUtils functions - EXACT same calculation!
+		var predicted_duration = PhysicsUtils.calculate_exact_orbit_duration(planet, velocity_at_gravity_zone)
+		var predicted_arc_angle = PhysicsUtils.calculate_exact_arc_angle(planet, velocity_at_gravity_zone, predicted_duration)
 		
 		# Calculate speed factor for visual rotation based on actual entry speed
 		var entry_speed = velocity_at_gravity_zone.length()
