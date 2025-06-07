@@ -44,5 +44,12 @@ position = Vector2(0, -31)
 
 [node name="TrajectoryPredictor" type="Node2D" parent="."]
 script = ExtResource("3_ekkhv")
+max_prediction_time = null
+line_width = null
+normal_color = null
+gravity_color = null
+collision_color = null
+transition_speed = null
+point_interpolation_rate = null
 
 [connection signal="input_event" from="TouchArea" to="." method="_on_touch_area_input_event"]

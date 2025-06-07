@@ -235,8 +235,10 @@ func _on_touch_area_input_event(viewport, event, shape_idx):
 			# Refresh planet list when starting to pull
 			find_all_planets()
 
+# בתוך slingshot.gd - החלק של update_planet_arcs:
+
 func update_planet_arcs(predicted_velocity: Vector2):
-	"""Update arc visualizations using PhysicsUtils functions"""
+	"""עדכון הצגת הקשתות באמצעות PhysicsUtils"""
 	var slingshot_pos = slingshot_center.global_position
 	
 	for planet in all_planets:
@@ -245,32 +247,27 @@ func update_planet_arcs(predicted_velocity: Vector2):
 		
 		var distance_to_planet = slingshot_pos.distance_to(planet.global_position)
 		
-		# Hide arcs for distant planets
+		# הסתר קשתות עבור כדורים רחוקים
 		if distance_to_planet > max_display_distance:
 			if planet.gravity_visualizer and planet.gravity_visualizer.has_method("hide_orbit_prediction"):
 				planet.gravity_visualizer.hide_orbit_prediction()
 			continue
 		
-		# Predict ACTUAL velocity when spacecraft reaches gravity zone
-		var initial_speed = predicted_velocity.length()
-		var velocity_factor = clamp(initial_speed / PhysicsUtils.VELOCITY_FACTOR_DIVISOR, PhysicsUtils.VELOCITY_FACTOR_MIN, PhysicsUtils.VELOCITY_FACTOR_MAX)
-		var velocity_at_gravity_zone = predicted_velocity * velocity_factor
+		# חזה משך זמן ממשי כשהחללית מגיעה לאזור הגרביטציה
+		var predicted_duration = PhysicsUtils.calculate_orbit_duration(planet, predicted_velocity)
+		var predicted_arc_angle = PhysicsUtils.calculate_orbit_arc_angle(planet, predicted_velocity, predicted_duration)
 		
-		if velocity_at_gravity_zone.length() == 0:
-			# Won't enter gravity zone, hide arc
+		if predicted_velocity.length() == 0:
+			# לא יכנס לאזור הגרביטציה, הסתר קשת
 			if planet.gravity_visualizer and planet.gravity_visualizer.has_method("hide_orbit_prediction"):
 				planet.gravity_visualizer.hide_orbit_prediction()
 			continue
 		
-		# Use PhysicsUtils functions - EXACT same calculation!
-		var predicted_duration = PhysicsUtils.calculate_exact_orbit_duration(planet, velocity_at_gravity_zone)
-		var predicted_arc_angle = PhysicsUtils.calculate_exact_arc_angle(planet, velocity_at_gravity_zone, predicted_duration)
-		
-		# Calculate speed factor for visual rotation based on actual entry speed
-		var entry_speed = velocity_at_gravity_zone.length()
+		# חישוב פקטור מהירות לסיבוב ויזואלי על בסיס מהירות כניסה אמיתית
+		var entry_speed = predicted_velocity.length()
 		var speed_factor = clamp(entry_speed / 100.0, 0.2, 3.0)
 		
-		# Show the arc visualization using existing GravityZoneVisualizer method
+		# הצג את ויזואליזציית הקשת באמצעות GravityZoneVisualizer הקיים
 		if planet.gravity_visualizer and planet.gravity_visualizer.has_method("update_orbit_prediction"):
 			planet.gravity_visualizer.update_orbit_prediction(predicted_arc_angle, speed_factor)
 

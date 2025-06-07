@@ -112,13 +112,15 @@ func update_prediction(start_position: Vector2, initial_velocity: Vector2):
 	if is_predicting:
 		predict_trajectory(start_position, initial_velocity)
 
+# בתוך trajectory_predictor.gd - החלק של predict_trajectory:
+
 func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
-	"""Calculate trajectory using PhysicsUtils functions"""
+	"""חישוב מסלול באמצעות PhysicsUtils"""
 	var new_points = []
 	
 	var max_steps = min(int(max_prediction_time / PhysicsUtils.TRAJECTORY_TIME_STEP), PhysicsUtils.MAX_TRAJECTORY_STEPS)
 	
-	# Simulation state
+	# מצב סימולציה
 	var position = start_position
 	var velocity = initial_velocity
 	var in_gravity_zone: Planet = null
@@ -127,57 +129,55 @@ func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
 	var orbit_entry_velocity: Vector2 = Vector2.ZERO
 	var predicted_arc_angle = 0.0
 	
-	# Get all planets
+	# קבל את כל הכדורים
 	var planets = PhysicsUtils.find_all_planets(get_tree())
 	
-	# Simulate trajectory
+	# סימולציה של המסלול
 	for step in range(max_steps):
 		var sim_time = step * PhysicsUtils.TRAJECTORY_TIME_STEP
 		
-		# Add trajectory point every few steps
+		# הוסף נקודת מסלול כל כמה צעדים
 		if step % PhysicsUtils.TRAJECTORY_POINT_INTERVAL == 0:
 			new_points.append(to_local(position))
 		
-		# Apply realistic velocity damping (same as spacecraft)
+		# הפעל דעיכת מהירות ריאליסטית (זהה לחללית)
 		velocity *= PhysicsUtils.VELOCITY_DAMPING_PER_FRAME
 		
-		# Check if entering/exiting gravity zones
+		# בדוק אם נכנס/יוצא מאזורי גרביטציה
 		var current_planet = PhysicsUtils.get_planet_at_position(position, planets)
 		
 		if current_planet != in_gravity_zone:
 			if current_planet:
-				# Entering new gravity zone
+				# נכנס לאזור גרביטציה חדש
 				in_gravity_zone = current_planet
 				gravity_entry_time = sim_time
 				
-				# Predict ACTUAL velocity when spacecraft reaches gravity zone
-				var initial_speed = velocity.length()
-				var velocity_factor = clamp(initial_speed / PhysicsUtils.VELOCITY_FACTOR_DIVISOR, PhysicsUtils.VELOCITY_FACTOR_MIN, PhysicsUtils.VELOCITY_FACTOR_MAX)
-				orbit_entry_velocity = velocity * velocity_factor
+				# חזה מהירות אמיתית כשהחללית מגיעה לאזור הגרביטציה
+				orbit_entry_velocity = velocity * 0.9  # קירוב
 				
-				# Use PhysicsUtils functions with approach angle consideration
-				var predicted_duration = PhysicsUtils.calculate_exact_orbit_duration(current_planet, orbit_entry_velocity, position)
-				predicted_arc_angle = PhysicsUtils.calculate_exact_arc_angle(current_planet, orbit_entry_velocity, predicted_duration)
+				# השתמש בפונקציות PhysicsUtils עם התחשבות בזווית הגישה
+				var predicted_duration = PhysicsUtils.calculate_orbit_duration(current_planet, orbit_entry_velocity, position)
+				predicted_arc_angle = PhysicsUtils.calculate_orbit_arc_angle(current_planet, orbit_entry_velocity, predicted_duration)
 				
 				if predicted_duration > 0:
 					expected_orbit_duration = predicted_duration
 			else:
-				# Exiting gravity zone
+				# יוצא מאזור גרביטציה
 				in_gravity_zone = null
 		
-		# Apply appropriate forces
+		# הפעל כוחות מתאימים
 		if in_gravity_zone:
-			# Check if should exit based on predicted duration
+			# בדוק אם צריך לצאת על בסיס משך חזוי
 			var time_in_gravity = sim_time - gravity_entry_time
 			if time_in_gravity >= expected_orbit_duration:
-				# Force exit from gravity
+				# כפה יציאה מגרביטציה
 				in_gravity_zone = null
 			else:
-				# Apply gravity + orbit stabilization forces
-				var orbit_force = PhysicsUtils.calculate_orbit_simulation_force(position, velocity, in_gravity_zone, PhysicsUtils.TRAJECTORY_TIME_STEP, predicted_arc_angle)
+				# הפעל כוחות גרביטציה + ייצוב מסלול
+				var orbit_force = PhysicsUtils.calculate_orbit_simulation_force(position, velocity, in_gravity_zone, PhysicsUtils.TRAJECTORY_TIME_STEP)
 				velocity += orbit_force
 		else:
-			# Normal gravity simulation outside orbit
+			# סימולציית גרביטציה רגילה מחוץ למסלול
 			var total_gravity_force = Vector2.ZERO
 			for planet in planets:
 				if not planet or not is_instance_valid(planet):
@@ -190,10 +190,10 @@ func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
 			
 			velocity += total_gravity_force
 		
-		# Move position
+		# הזז מיקום
 		position += velocity * PhysicsUtils.TRAJECTORY_TIME_STEP
 		
-		# Check for planet collision
+		# בדוק התנגשות עם כדור
 		var collision_detected = false
 		for planet in planets:
 			if not planet or not is_instance_valid(planet):
@@ -207,13 +207,13 @@ func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
 		if collision_detected:
 			break
 		
-		# Bounds check
+		# בדיקת גבולות
 		if abs(position.x) > PhysicsUtils.MAX_SIMULATION_BOUNDS or abs(position.y) > PhysicsUtils.MAX_SIMULATION_BOUNDS:
 			break
 		
-		# Velocity limit check
+		# בדיקת מגבלת מהירות
 		if velocity.length() > PhysicsUtils.MAX_VELOCITY_LIMIT:
 			break
 	
-	# Update target trajectory points
+	# עדכן נקודות מסלול יעד
 	target_trajectory_points = new_points

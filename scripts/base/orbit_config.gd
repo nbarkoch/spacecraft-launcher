@@ -4,7 +4,7 @@ extends Resource
 var planet: Planet
 var is_active: bool = false
 
-# Core settings
+# Core settings - השתמש בערכים מ-PhysicsUtils
 var collision_safety_distance: float = PhysicsUtils.COLLISION_SAFETY_DISTANCE
 var emergency_force_multiplier: float = PhysicsUtils.EMERGENCY_FORCE_MULTIPLIER
 var angle_correction_strength: float = PhysicsUtils.ANGLE_CORRECTION_STRENGTH
@@ -30,8 +30,9 @@ func _init(p_planet: Planet, spacecraft: Spacecraft):
 	should_exit = false
 	
 	if planet:
-		predicted_orbit_duration = PhysicsUtils.calculate_orbit_duration(planet, spacecraft_velocity)
-		ideal_orbit_radius = planet.planet_radius + ((planet.gravity_radius - planet.planet_radius) / 2.0)
+		# השתמש בפונקציה המאוחדת מ-PhysicsUtils
+		predicted_orbit_duration = PhysicsUtils.calculate_orbit_duration(planet, spacecraft_velocity, spacecraft.global_position)
+		ideal_orbit_radius = PhysicsUtils.calculate_orbit_radius(planet)
 		spacecraft_ref = spacecraft
 
 func update_curve(delta: float, spacecraft_pos: Vector2) -> Vector2:
@@ -47,10 +48,10 @@ func update_curve(delta: float, spacecraft_pos: Vector2) -> Vector2:
 	if distance < PhysicsUtils.MIN_DISTANCE_FOR_FORCE:
 		return Vector2.ZERO
 	
-	# Base gravity
+	# גרביטציה בסיסית
 	var gravity_force = PhysicsUtils.calculate_gravity_force(spacecraft_pos, planet, delta)
 	
-	# Corrections only if not exiting
+	# תיקונים רק אם לא יוצאים
 	var guidance_force = Vector2.ZERO
 	if not should_exit:
 		guidance_force += PhysicsUtils.calculate_collision_prevention(spacecraft_pos, distance, delta, planet)

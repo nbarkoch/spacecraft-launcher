@@ -1,4 +1,3 @@
-# scripts/planet.gd (UPDATED WITH PHYSICS UTILS)
 extends StaticBody2D
 class_name Planet
 
@@ -102,27 +101,28 @@ func _on_planet_area_body_entered(body):
 		body.is_dead = true
 		body.destroy()
 
+# בתוך planet.gd - רק החלקים שצריכים עדכון:
+
 func get_gravity_behavior_type() -> String:
-	"""Determine what type of behavior this planet has based on gravity"""
+	"""קביעת סוג ההתנהגות של הכדור"""
 	return PhysicsUtils.get_gravity_behavior_type(gravity_strength)
 
 func get_prevention_multiplier() -> float:
-	"""Calculate how much collision prevention this planet provides"""
+	"""חישוב כמה מניעת התנגשות הכדור מספק"""
 	return PhysicsUtils.get_prevention_multiplier(gravity_strength)
 
 func calculate_approach_angle(spacecraft_pos: Vector2, spacecraft_velocity: Vector2) -> float:
-	"""Calculate how perpendicular the approach is (0° = head-on, 90° = tangential)"""
+	"""חישוב זווית הגישה"""
 	return PhysicsUtils.calculate_approach_angle(spacecraft_pos, spacecraft_velocity, global_position)
 
 func calculate_predicted_orbit_duration(spacecraft_velocity: Vector2, spacecraft_pos: Vector2) -> float:
-	"""Calculate orbit duration based on gravity, velocity, and approach angle"""
-	return PhysicsUtils.calculate_predicted_orbit_duration_with_angle(self, spacecraft_velocity, spacecraft_pos)
+	"""חישוב משך המסלול החזוי"""
+	return PhysicsUtils.calculate_orbit_duration(self, spacecraft_velocity, spacecraft_pos)
 
 func update_visual_feedback():
-	"""Update planet appearance based on gravity behavior with smooth color gradient"""
-	# NEW: Calculate color based on gravity strength
+	"""עדכון צבע הכדור על בסיס עוצמת הגרביטציה"""
 	zone_color = PhysicsUtils.calculate_gravity_color(gravity_strength)
 	
-	# Update gravity visualizer if it exists
 	if gravity_visualizer:
 		gravity_visualizer.set_color(zone_color)
+		

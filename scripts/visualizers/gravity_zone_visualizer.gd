@@ -185,10 +185,35 @@ func set_arc_color(new_color: Color):
 	if arc_line:
 		arc_line.default_color = arc_color
 
+# בתוך gravity_zone_visualizer.gd - עדכון הפונקציות בסוף הקובץ:
+
 func get_predicted_arc_angle(velocity: Vector2) -> float:
-	"""Calculate predicted arc angle using PhysicsUtils functions"""
-	return PhysicsUtils.get_predicted_arc_angle(velocity, radius)
+	"""חישוב זווית קשת חזויה באמצעות PhysicsUtils"""
+	# במקום הלוגיקה המורכבת הישנה, השתמש בפונקציה המאוחדת
+	# צריך planet reference - נקבל אותו מהparent
+	var planet = get_parent() as Planet
+	if not planet:
+		return 0.0
+	
+	var dummy_duration = PhysicsUtils.calculate_orbit_duration(planet, velocity)
+	return PhysicsUtils.calculate_orbit_arc_angle(planet, velocity, dummy_duration)
 
 func get_arc_rotation_speed(velocity: Vector2) -> float:
-	"""Get visual rotation speed for arc based on current orbital motion"""
-	return PhysicsUtils.get_arc_rotation_speed(velocity, radius)
+	"""קבל מהירות סיבוב ויזואלית לקשת על בסיס תנועה מסלולית נוכחית"""
+	var speed = velocity.length()
+	
+	if speed <= 0:
+		return 30.0
+	
+	# מהירות סיבוב בסיסית על בסיס משך הזמן החזוי
+	var planet = get_parent() as Planet
+	if not planet:
+		return 30.0
+	
+	var predicted_duration = PhysicsUtils.calculate_orbit_duration(planet, velocity)
+	var arc_angle = get_predicted_arc_angle(velocity)
+	
+	if predicted_duration > 0:
+		return arc_angle / predicted_duration
+	else:
+		return 30.0
