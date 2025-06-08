@@ -112,108 +112,44 @@ func update_prediction(start_position: Vector2, initial_velocity: Vector2):
 	if is_predicting:
 		predict_trajectory(start_position, initial_velocity)
 
-# בתוך trajectory_predictor.gd - החלק של predict_trajectory:
-
 func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
-	"""חישוב מסלול באמצעות PhysicsUtils"""
+	"""Calculate trajectory using simplified physics"""
 	var new_points = []
 	
 	var max_steps = min(int(max_prediction_time / PhysicsUtils.TRAJECTORY_TIME_STEP), PhysicsUtils.MAX_TRAJECTORY_STEPS)
 	
-	# מצב סימולציה
+	# Simulation state
 	var position = start_position
 	var velocity = initial_velocity
-	var in_gravity_zone: Planet = null
-	var gravity_entry_time = 0.0
-	var expected_orbit_duration = 0.0
-	var orbit_entry_velocity: Vector2 = Vector2.ZERO
-	var predicted_arc_angle = 0.0
 	
-	# קבל את כל הכדורים
+	# Get all planets
 	var planets = PhysicsUtils.find_all_planets(get_tree())
 	
-	# סימולציה של המסלול
+	# Simulate trajectory using simplified physics
 	for step in range(max_steps):
 		var sim_time = step * PhysicsUtils.TRAJECTORY_TIME_STEP
 		
-		# הוסף נקודת מסלול כל כמה צעדים
+		# Add trajectory point every few steps
 		if step % PhysicsUtils.TRAJECTORY_POINT_INTERVAL == 0:
 			new_points.append(to_local(position))
 		
-		# הפעל דעיכת מהירות ריאליסטית (זהה לחללית)
-		velocity *= PhysicsUtils.VELOCITY_DAMPING_PER_FRAME
+		# Use simplified physics simulation
+		var physics_result = PhysicsUtils.simulate_physics_step(position, velocity, planets, PhysicsUtils.TRAJECTORY_TIME_STEP)
 		
-		# בדוק אם נכנס/יוצא מאזורי גרביטציה
-		var current_planet = PhysicsUtils.get_planet_at_position(position, planets)
+		position = physics_result.position
+		velocity = physics_result.velocity
 		
-		if current_planet != in_gravity_zone:
-			if current_planet:
-				# נכנס לאזור גרביטציה חדש
-				in_gravity_zone = current_planet
-				gravity_entry_time = sim_time
-				
-				# חזה מהירות אמיתית כשהחללית מגיעה לאזור הגרביטציה
-				orbit_entry_velocity = velocity * 0.9  # קירוב
-				
-				# השתמש בפונקציות PhysicsUtils עם התחשבות בזווית הגישה
-				var predicted_duration = PhysicsUtils.calculate_orbit_duration(current_planet, orbit_entry_velocity, position)
-				predicted_arc_angle = PhysicsUtils.calculate_orbit_arc_angle(current_planet, orbit_entry_velocity, predicted_duration)
-				
-				if predicted_duration > 0:
-					expected_orbit_duration = predicted_duration
-			else:
-				# יוצא מאזור גרביטציה
-				in_gravity_zone = null
-		
-		# הפעל כוחות מתאימים
-		if in_gravity_zone:
-			# בדוק אם צריך לצאת על בסיס משך חזוי
-			var time_in_gravity = sim_time - gravity_entry_time
-			if time_in_gravity >= expected_orbit_duration:
-				# כפה יציאה מגרביטציה
-				in_gravity_zone = null
-			else:
-				# הפעל כוחות גרביטציה + ייצוב מסלול
-				var orbit_force = PhysicsUtils.calculate_orbit_simulation_force(position, velocity, in_gravity_zone, PhysicsUtils.TRAJECTORY_TIME_STEP)
-				velocity += orbit_force
-		else:
-			# סימולציית גרביטציה רגילה מחוץ למסלול
-			var total_gravity_force = Vector2.ZERO
-			for planet in planets:
-				if not planet or not is_instance_valid(planet):
-					continue
-				
-				var distance_to_planet = position.distance_to(planet.global_position)
-				if distance_to_planet <= planet.gravity_radius:
-					var force = PhysicsUtils.calculate_gravity_force(position, planet, PhysicsUtils.TRAJECTORY_TIME_STEP)
-					total_gravity_force += force
-			
-			velocity += total_gravity_force
-		
-		# הזז מיקום
-		position += velocity * PhysicsUtils.TRAJECTORY_TIME_STEP
-		
-		# בדוק התנגשות עם כדור
-		var collision_detected = false
-		for planet in planets:
-			if not planet or not is_instance_valid(planet):
-				continue
-			
-			var distance_center_to_center = position.distance_to(planet.global_position)
-			if distance_center_to_center <= (planet.planet_radius + PhysicsUtils.SPACECRAFT_COLLISION_RADIUS):
-				collision_detected = true
-				break
-		
-		if collision_detected:
+		# Check for collision
+		if physics_result.collision:
 			break
 		
-		# בדיקת גבולות
+		# Bounds check
 		if abs(position.x) > PhysicsUtils.MAX_SIMULATION_BOUNDS or abs(position.y) > PhysicsUtils.MAX_SIMULATION_BOUNDS:
 			break
 		
-		# בדיקת מגבלת מהירות
+		# Velocity limit check
 		if velocity.length() > PhysicsUtils.MAX_VELOCITY_LIMIT:
 			break
 	
-	# עדכן נקודות מסלול יעד
+	# Update target trajectory points
 	target_trajectory_points = new_points

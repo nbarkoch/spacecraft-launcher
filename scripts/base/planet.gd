@@ -1,3 +1,4 @@
+# scripts/planet.gd - BACK TO BASICS
 extends StaticBody2D
 class_name Planet
 
@@ -30,8 +31,6 @@ func _ready():
 	if show_gravity_zone:
 		setup_gravity_visualization()
 	setup_shader_material()
-	
-	update_visual_feedback()
 
 func create_unique_resources():
 	"""Create unique resources for this planet instance"""
@@ -100,29 +99,3 @@ func _on_planet_area_body_entered(body):
 		body.exit_gravity_assist()
 		body.is_dead = true
 		body.destroy()
-
-# בתוך planet.gd - רק החלקים שצריכים עדכון:
-
-func get_gravity_behavior_type() -> String:
-	"""קביעת סוג ההתנהגות של הכדור"""
-	return PhysicsUtils.get_gravity_behavior_type(gravity_strength)
-
-func get_prevention_multiplier() -> float:
-	"""חישוב כמה מניעת התנגשות הכדור מספק"""
-	return PhysicsUtils.get_prevention_multiplier(gravity_strength)
-
-func calculate_approach_angle(spacecraft_pos: Vector2, spacecraft_velocity: Vector2) -> float:
-	"""חישוב זווית הגישה"""
-	return PhysicsUtils.calculate_approach_angle(spacecraft_pos, spacecraft_velocity, global_position)
-
-func calculate_predicted_orbit_duration(spacecraft_velocity: Vector2, spacecraft_pos: Vector2) -> float:
-	"""חישוב משך המסלול החזוי"""
-	return PhysicsUtils.calculate_orbit_duration(self, spacecraft_velocity, spacecraft_pos)
-
-func update_visual_feedback():
-	"""עדכון צבע הכדור על בסיס עוצמת הגרביטציה"""
-	zone_color = PhysicsUtils.calculate_gravity_color(gravity_strength)
-	
-	if gravity_visualizer:
-		gravity_visualizer.set_color(zone_color)
-		

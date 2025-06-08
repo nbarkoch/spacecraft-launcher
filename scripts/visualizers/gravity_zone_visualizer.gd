@@ -8,7 +8,7 @@ class_name GravityZoneVisualizer
 @export var line_color: Color = Color(1.0, 1.0, 1.0, 0.05)  # Light blue, semi-transparent
 @export var rotation_speed: float = 30.0  # degrees per second
 
-# NEW: Arc sector properties
+# Arc sector properties
 @export_group("Arc Sector Display")
 @export var show_orbit_arc: bool = false
 @export var arc_color: Color = Color(1.0, 1.0, 1.0, 0.3)
@@ -130,7 +130,7 @@ func set_rotation_speed(new_speed: float):
 	"""Update the rotation speed"""
 	rotation_speed = new_speed
 
-# NEW: Arc sector control methods
+# Arc sector control methods
 func show_orbit_prediction(predicted_angle_degrees: float, speed_factor: float = 1.0):
 	"""Show orbit prediction arc based on calculated angle"""
 	show_orbit_arc = true
@@ -184,36 +184,3 @@ func set_arc_color(new_color: Color):
 	arc_color = new_color
 	if arc_line:
 		arc_line.default_color = arc_color
-
-# בתוך gravity_zone_visualizer.gd - עדכון הפונקציות בסוף הקובץ:
-
-func get_predicted_arc_angle(velocity: Vector2) -> float:
-	"""חישוב זווית קשת חזויה באמצעות PhysicsUtils"""
-	# במקום הלוגיקה המורכבת הישנה, השתמש בפונקציה המאוחדת
-	# צריך planet reference - נקבל אותו מהparent
-	var planet = get_parent() as Planet
-	if not planet:
-		return 0.0
-	
-	var dummy_duration = PhysicsUtils.calculate_orbit_duration(planet, velocity)
-	return PhysicsUtils.calculate_orbit_arc_angle(planet, velocity, dummy_duration)
-
-func get_arc_rotation_speed(velocity: Vector2) -> float:
-	"""קבל מהירות סיבוב ויזואלית לקשת על בסיס תנועה מסלולית נוכחית"""
-	var speed = velocity.length()
-	
-	if speed <= 0:
-		return 30.0
-	
-	# מהירות סיבוב בסיסית על בסיס משך הזמן החזוי
-	var planet = get_parent() as Planet
-	if not planet:
-		return 30.0
-	
-	var predicted_duration = PhysicsUtils.calculate_orbit_duration(planet, velocity)
-	var arc_angle = get_predicted_arc_angle(velocity)
-	
-	if predicted_duration > 0:
-		return arc_angle / predicted_duration
-	else:
-		return 30.0

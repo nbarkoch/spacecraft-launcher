@@ -15,13 +15,13 @@ var leftLine
 var rightLine
 var spacecraft: Spacecraft = null
 var trajectory_predictor: TrajectoryPredictor
-const MULTIPLIER = 6
+const MULTIPLIER = 4  # Reduced from 6 for less sensitivity
 
 # Snap system - עדין ולא פולשני
 const ANGLE_SNAP_INTERVAL = 22.5  # כל 22.5 מעלות (16 כיוונים)
 const DISTANCE_SNAP_INTERVAL = 15.0  # כל 15 פיקסלים
-const SNAP_RADIUS = 8.0  # בתוך כמה פיקסלים יש משיכה
-const SNAP_STRENGTH = 0.4  # עוצמת המשיכה (0-1)
+const SNAP_RADIUS = 12.0  # Increased for easier snapping
+const SNAP_STRENGTH = 0.2  # Reduced for subtler snap
 
 @onready var slingshot_center: Marker2D = $SlingshotCenter
 
@@ -29,9 +29,9 @@ const SNAP_STRENGTH = 0.4  # עוצמת המשיכה (0-1)
 var target_mouse_pos = Vector2.ZERO
 const TRANSITION_SPEED = 12.0  # מהירות המעבר החלק
 
-# NEW: Planet arc visualization
+# Planet arc visualization (simplified)
 var all_planets: Array = []
-var max_display_distance: float = 400.0  # מרחק מקסימלי להצגת פלחים
+var max_display_distance: float = 400.0
 
 func _ready():
 	slingshotState = SlingshotState.idle
@@ -43,7 +43,7 @@ func _ready():
 	add_child(trajectory_predictor)
 	trajectory_predictor.hide_trajectory()
 	
-	# NEW: Find all planets for arc visualization
+	# Find all planets
 	await get_tree().process_frame
 	find_all_planets()
 	if not spacecraft or not is_instance_valid(spacecraft):
@@ -58,13 +58,12 @@ func find_all_planets():
 	var planets = get_tree().get_nodes_in_group("Planets")
 	
 	for planet in planets:
-		if planet is Planet and planet.gravity_visualizer:
+		if planet is Planet:
 			all_planets.append(planet)
 
 func _process(delta):
 	match slingshotState:
 		SlingshotState.idle:
-			# NEW: Hide all planet arcs when idle
 			hide_all_planet_arcs()
 			
 		SlingshotState.pulling:
@@ -103,14 +102,9 @@ func _process(delta):
 				
 				# Update trajectory prediction
 				trajectory_predictor.show_trajectory()
-				var initial_speed = velocity.length()
-				var velocity_factor =  clamp(initial_speed / 130.0, 0.74, 1)
-				var velocity_at_gravity_zone = velocity * velocity_factor * 0.9
+				trajectory_predictor.update_prediction(current_mouse_pos, velocity * 0.97)
 				
-				
-				trajectory_predictor.update_prediction(current_mouse_pos, velocity_at_gravity_zone)
-				
-				# NEW: Update planet arc visualizations
+				# Simple planet arc visualization
 				update_planet_arcs(velocity)
 				
 			if Input.is_action_just_released("FINGER_TAP"):
@@ -235,10 +229,8 @@ func _on_touch_area_input_event(viewport, event, shape_idx):
 			# Refresh planet list when starting to pull
 			find_all_planets()
 
-# בתוך slingshot.gd - החלק של update_planet_arcs:
-
 func update_planet_arcs(predicted_velocity: Vector2):
-	"""עדכון הצגת הקשתות באמצעות PhysicsUtils"""
+	"""Simple planet arc visualization"""
 	var slingshot_pos = slingshot_center.global_position
 	
 	for planet in all_planets:
@@ -247,29 +239,25 @@ func update_planet_arcs(predicted_velocity: Vector2):
 		
 		var distance_to_planet = slingshot_pos.distance_to(planet.global_position)
 		
-		# הסתר קשתות עבור כדורים רחוקים
+		# Hide arcs for distant planets
 		if distance_to_planet > max_display_distance:
 			if planet.gravity_visualizer and planet.gravity_visualizer.has_method("hide_orbit_prediction"):
 				planet.gravity_visualizer.hide_orbit_prediction()
 			continue
 		
-		# חזה משך זמן ממשי כשהחללית מגיעה לאזור הגרביטציה
-		var predicted_duration = PhysicsUtils.calculate_orbit_duration(planet, predicted_velocity)
-		var predicted_arc_angle = PhysicsUtils.calculate_orbit_arc_angle(planet, predicted_velocity, predicted_duration)
-		
-		if predicted_velocity.length() == 0:
-			# לא יכנס לאזור הגרביטציה, הסתר קשת
+		# Simple logic: if will enter gravity zone, show basic arc
+		if distance_to_planet <= planet.gravity_radius * 1.2:  # Close enough to be affected
+			var speed = predicted_velocity.length()
+			var arc_angle = 60.0  # Simple fixed arc
+			if speed > 150:
+				arc_angle = 30.0  # Smaller arc for fast speed
+			
+			var speed_factor = speed / 100.0
+			if planet.gravity_visualizer and planet.gravity_visualizer.has_method("update_orbit_prediction"):
+				planet.gravity_visualizer.update_orbit_prediction(arc_angle, speed_factor)
+		else:
 			if planet.gravity_visualizer and planet.gravity_visualizer.has_method("hide_orbit_prediction"):
 				planet.gravity_visualizer.hide_orbit_prediction()
-			continue
-		
-		# חישוב פקטור מהירות לסיבוב ויזואלי על בסיס מהירות כניסה אמיתית
-		var entry_speed = predicted_velocity.length()
-		var speed_factor = clamp(entry_speed / 100.0, 0.2, 3.0)
-		
-		# הצג את ויזואליזציית הקשת באמצעות GravityZoneVisualizer הקיים
-		if planet.gravity_visualizer and planet.gravity_visualizer.has_method("update_orbit_prediction"):
-			planet.gravity_visualizer.update_orbit_prediction(predicted_arc_angle, speed_factor)
 
 func reset():
 	slingshotState = SlingshotState.idle

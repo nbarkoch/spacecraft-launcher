@@ -3,75 +3,52 @@ extends Resource
 
 var planet: Planet
 var is_active: bool = false
-
-# Core settings - השתמש בערכים מ-PhysicsUtils
-var collision_safety_distance: float = PhysicsUtils.COLLISION_SAFETY_DISTANCE
-var emergency_force_multiplier: float = PhysicsUtils.EMERGENCY_FORCE_MULTIPLIER
-var angle_correction_strength: float = PhysicsUtils.ANGLE_CORRECTION_STRENGTH
-var optimal_angle_tolerance: float = PhysicsUtils.OPTIMAL_ANGLE_TOLERANCE
-var magnet_strength: float = PhysicsUtils.MAGNET_STRENGTH
-
-# Duration control
-var predicted_orbit_duration: float = 0.0
-
-# Internal state
 var spacecraft_ref: Spacecraft = null
 var entry_time: float = 0.0
-var entry_speed: float = 0.0
-var should_exit: bool = false
-var ideal_orbit_radius: float = 0.0
+var orbit_duration: float = 2.0  # Fixed duration for now
 
 func _init(p_planet: Planet, spacecraft: Spacecraft):
 	planet = p_planet
 	is_active = true
-	var spacecraft_velocity = spacecraft.linear_velocity
-	entry_speed = spacecraft_velocity.length()
+	spacecraft_ref = spacecraft
 	entry_time = 0.0
-	should_exit = false
 	
-	if planet:
-		# השתמש בפונקציה המאוחדת מ-PhysicsUtils
-		predicted_orbit_duration = PhysicsUtils.calculate_orbit_duration(planet, spacecraft_velocity, spacecraft.global_position)
-		ideal_orbit_radius = PhysicsUtils.calculate_orbit_radius(planet)
-		spacecraft_ref = spacecraft
+	# Simple orbit duration based on speed
+	if spacecraft and spacecraft.linear_velocity.length() > 0:
+		var speed = spacecraft.linear_velocity.length()
+		if speed < 100:
+			orbit_duration = 4.0  # Slow = longer orbit
+		elif speed < 200:
+			orbit_duration = 2.0  # Medium speed
+		else:
+			orbit_duration = 1.0  # Fast = short orbit
 
 func update_curve(delta: float, spacecraft_pos: Vector2) -> Vector2:
+	"""Simple gravity with basic orbital help"""
 	if not is_active or not planet or not spacecraft_ref:
 		return Vector2.ZERO
 	
 	entry_time += delta
-	check_exit_conditions()
 	
 	var to_planet = planet.global_position - spacecraft_pos
 	var distance = to_planet.length()
 	
-	if distance < PhysicsUtils.MIN_DISTANCE_FOR_FORCE:
+	if distance < 1.0:
 		return Vector2.ZERO
 	
-	# גרביטציה בסיסית
-	var gravity_force = PhysicsUtils.calculate_gravity_force(spacecraft_pos, planet, delta)
+	# Basic gravity force (same as before)
+	var gravity_strength = planet.gravity_strength * delta * 60.0 / (distance * 0.01)
+	var gravity_force = to_planet.normalized() * gravity_strength
 	
-	# תיקונים רק אם לא יוצאים
-	var guidance_force = Vector2.ZERO
-	if not should_exit:
-		guidance_force += PhysicsUtils.calculate_collision_prevention(spacecraft_pos, distance, delta, planet)
-		guidance_force += PhysicsUtils.calculate_angle_correction(spacecraft_ref.linear_velocity, to_planet, delta)
-		guidance_force += PhysicsUtils.calculate_orbital_magnet(spacecraft_pos, distance, delta, planet)
-		guidance_force += PhysicsUtils.calculate_gentle_speed_boost(spacecraft_ref.linear_velocity, entry_speed, distance, ideal_orbit_radius, delta)
+	# Simple collision prevention - only if very close
+	var collision_prevention = Vector2.ZERO
+	if distance < planet.planet_radius + 25.0:
+		var push_direction = (spacecraft_pos - planet.global_position).normalized()
+		var danger = 1.0 - ((distance - planet.planet_radius) / 25.0)
+		collision_prevention = push_direction * danger * 100.0 * delta
 	
-	return gravity_force + guidance_force
-
-func check_exit_conditions():
-	if should_exit:
-		return
-	if entry_time >= predicted_orbit_duration:
-		should_exit = true
+	return gravity_force + collision_prevention
 
 func is_curve_complete() -> bool:
-	return should_exit
-
-func get_spacecraft_reference() -> Spacecraft:
-	if not planet:
-		return null
-	var spacecrafts = planet.get_tree().get_nodes_in_group("Spacecrafts")
-	return spacecrafts[0] if spacecrafts.size() > 0 else null
+	"""Exit after simple time duration"""
+	return entry_time >= orbit_duration
