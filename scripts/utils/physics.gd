@@ -67,54 +67,22 @@ static func calculate_stabilizer_control(speed: float) -> float:
 	return clamp(control_factor, STABILIZER_MIN_CONTROL, STABILIZER_MAX_CONTROL)
 
 static func calculate_orbit_duration(planet: Planet, velocity: Vector2, spacecraft_pos: Vector2 = Vector2.ZERO) -> float:
-	"""חישוב משך הזמן של המסלול - פונקציה מרכזית יחידה"""
 	var speed = velocity.length()
-	var orbit_circumference = calculate_orbit_circumference(planet)
 	
-	print("=== ORBIT DURATION CALCULATION ===")
-	print("Planet radius: ", planet.planet_radius, " Gravity radius: ", planet.gravity_radius)
-	print("Orbit circumference: ", orbit_circumference, " Speed: ", speed)
+	# רדיוס המסלול
+	var orbit_radius = calculate_orbit_radius(planet)
 	
-	var base_duration = 0.0
-	var orbital_speed = speed * ORBITAL_SPEED_FACTOR
-	var max_duration = orbit_circumference / orbital_speed
+	# היקף המסלול (2πr)
+	var orbit_circumference = 2 * PI * orbit_radius
 	
-	if speed <= SPEED_THRESHOLD_LOW:
-		# מהירות נמוכה = מסלול מלא
-		base_duration = max_duration
-	else:
-		# מהירות גבוהה = מסלול חלקי תלוי בשליטה
-		var stabilizer_control = calculate_stabilizer_control(speed)
-		var speed_reduction_factor = (speed - SPEED_THRESHOLD_LOW) / SPEED_REDUCTION_RANGE
-		speed_reduction_factor = clamp(speed_reduction_factor, 0.0, 1.0)
-		
-		# זווית יורדת עם המהירות
-		var base_angle = 360.0 * (1.0 - speed_reduction_factor * SPEED_REDUCTION_MULTIPLIER)
-		var final_angle = base_angle * stabilizer_control
-		
-		# משך זמן על בסיס הזווית
-		var arc_length = orbit_circumference * (final_angle / 360.0)
-		var effective_orbital_speed = speed * (0.7 + speed_reduction_factor * 0.3)
-		base_duration = arc_length / effective_orbital_speed
+	# מהירות במסלול (איטית יותר מכניסה)
+	var orbital_speed = speed * 1.2
 	
-	# פקטור גרביטציה
-	var gravity_factor = 300.0 / max(planet.gravity_strength, 50.0)
+	# זמן = מרחק / מהירות
+	var time_for_full_orbit = orbit_circumference / orbital_speed
 	
-	# פקטור זווית גישה
-	var angle_factor = 1.0
-	if spacecraft_pos != Vector2.ZERO:
-		var approach_angle = calculate_approach_angle(spacecraft_pos, velocity, planet.global_position)
-		if approach_angle < 5.0:
-			return 0.1  # התרסקות מיידית
-		angle_factor = approach_angle / 90.0
-		angle_factor = max(angle_factor, 0.1)
+	return time_for_full_orbit
 	
-	var final_duration = clamp(base_duration * gravity_factor * angle_factor, 0.1, max_duration * gravity_factor / 2)
-	
-	print("Base duration: ", base_duration, " Final duration: ", final_duration, " Gravity factor: ", gravity_factor)
-	
-	return final_duration
-
 static func calculate_orbit_arc_angle(planet: Planet, velocity: Vector2, duration: float) -> float:
 	"""חישוב זווית הקשת על בסיס המשך"""
 	var speed = velocity.length()
