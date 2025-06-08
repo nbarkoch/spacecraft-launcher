@@ -7,7 +7,7 @@ class_name Room
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	LevelManager.set_room(self)
-	MusicManager.play_room_music()
+	#MusicManager.play_room_music()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -1,8 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bp4wny2hgl85v"]
+[gd_scene load_steps=7 format=3 uid="uid://bp4wny2hgl85v"]
 
 [ext_resource type="Script" path="res://scripts/base/border_game.gd" id="1_888eq"]
 [ext_resource type="Shader" path="res://shaders/gradient_background.gdshader" id="1_y4uhd"]
-[ext_resource type="Script" path="res://scripts/visualizers/stars_background.gd" id="3_lm1qi"]
+[ext_resource type="Shader" path="res://shaders/small_stars.gdshader" id="3_fnw7i"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kc0ic"]
 size = Vector2(345, 549.5)
@@ -11,6 +11,16 @@ size = Vector2(345, 549.5)
 shader = ExtResource("1_y4uhd")
 shader_parameter/top_color = Color(0, 0.0705882, 0.286275, 1)
 shader_parameter/bottom_color = Color(0, 0.27451, 0.478431, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_32j3s"]
+shader = ExtResource("3_fnw7i")
+shader_parameter/star_density = 0.4
+shader_parameter/star_brightness = 1.141
+shader_parameter/twinkle_speed = 2.064
+shader_parameter/twinkle_intensity = 0.319
+shader_parameter/star_size = 0.742
+shader_parameter/shooting_star_frequency = 1.0
+shader_parameter/shooting_star_speed = 1.0
 
 [node name="BorderGame" type="Area2D"]
 z_index = -2
@@ -23,19 +33,19 @@ shape = SubResource("RectangleShape2D_kc0ic")
 
 [node name="GradientBackground" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_4x834")
-offset_left = -200.0
-offset_top = -318.0
-offset_right = 200.0
-offset_bottom = 304.0
+offset_left = -165.0
+offset_top = -262.0
+offset_right = 162.0
+offset_bottom = 264.0
 mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="."]
-offset_left = -201.0
-offset_top = -318.0
-offset_right = 199.0
-offset_bottom = 302.0
+material = SubResource("ShaderMaterial_32j3s")
+offset_left = -163.0
+offset_top = -261.0
+offset_right = 162.0
+offset_bottom = 263.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
-script = ExtResource("3_lm1qi")
 
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
