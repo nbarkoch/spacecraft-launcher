@@ -1,0 +1,70 @@
+[gd_scene load_steps=7 format=3 uid="uid://cqgt4nw4al5xm"]
+
+[ext_resource type="PackedScene" uid="uid://vvpan4smuxbd" path="res://scenes/elements/target_area.tscn" id="1_ljeoi"]
+[ext_resource type="PackedScene" uid="uid://bryh4m50q0dgo" path="res://scenes/pickable/coin.tscn" id="2_iyvyp"]
+[ext_resource type="PackedScene" uid="uid://d0ac4c4klebkb" path="res://scenes/elements/meteroid.tscn" id="3_x4qra"]
+[ext_resource type="PackedScene" uid="uid://o6k1snpuyeeh" path="res://scenes/planets/planet_y.tscn" id="4_jk3il"]
+[ext_resource type="PackedScene" uid="uid://et54j7lrftig" path="res://scenes/planets/planet_g.tscn" id="5_jrf6a"]
+[ext_resource type="PackedScene" uid="uid://g4pla60a1nwd" path="res://scenes/elements/speed_booster.tscn" id="6_l3u85"]
+
+[node name="Level7" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="TargetArea" parent="." instance=ExtResource("1_ljeoi")]
+position = Vector2(35, -180)
+
+[node name="Coin" parent="." instance=ExtResource("2_iyvyp")]
+position = Vector2(-76, 1)
+
+[node name="Coin2" parent="." instance=ExtResource("2_iyvyp")]
+position = Vector2(10, -157)
+
+[node name="Meteroid" parent="." instance=ExtResource("3_x4qra")]
+position = Vector2(32, -11)
+rotation = -0.677136
+start_angle = 40.0
+
+[node name="Meteroid2" parent="." instance=ExtResource("3_x4qra")]
+position = Vector2(59, 22)
+rotation = 0.716422
+start_angle = 20.0
+
+[node name="Meteroid3" parent="." instance=ExtResource("3_x4qra")]
+position = Vector2(50, -42)
+rotation = -0.363201
+start_angle = 180.0
+
+[node name="Meteroid6" parent="." instance=ExtResource("3_x4qra")]
+position = Vector2(29, 52)
+rotation = -0.363201
+start_angle = 180.0
+
+[node name="Meteroid4" parent="." instance=ExtResource("3_x4qra")]
+position = Vector2(-91, -98)
+
+[node name="Meteroid5" parent="." instance=ExtResource("3_x4qra")]
+position = Vector2(84, 49)
+
+[node name="Meteroid7" parent="." instance=ExtResource("3_x4qra")]
+position = Vector2(27, 21)
+
+[node name="YellowPlanet" parent="." instance=ExtResource("4_jk3il")]
+position = Vector2(-29, 1)
+
+[node name="GreenPlanet" parent="." instance=ExtResource("5_jrf6a")]
+position = Vector2(27, -118)
+
+[node name="SpeedBooster" parent="." instance=ExtResource("6_l3u85")]
+position = Vector2(3, -39)
+rotation = 2.07538
+direction_tolerance = 25.0
+
+[node name="SpeedBooster2" parent="." instance=ExtResource("6_l3u85")]
+position = Vector2(-9, -134)
+rotation = 0.685858
+boost_force = 50.0
+
+[node name="GreenPlanet2" parent="." instance=ExtResource("5_jrf6a")]
+position = Vector2(97, 7)

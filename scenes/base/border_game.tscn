@@ -9,7 +9,7 @@ size = Vector2(345, 549.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4x834"]
 shader = ExtResource("1_y4uhd")
-shader_parameter/top_color = Color(0, 0.0705882, 0.286275, 1)
+shader_parameter/top_color = Color(0, 0.0784314, 0.286275, 1)
 shader_parameter/bottom_color = Color(0, 0.27451, 0.478431, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_32j3s"]
