@@ -16,7 +16,7 @@ position = Vector2(42, -127)
 [node name="GreenPlanet" parent="." instance=ExtResource("2_c1k4v")]
 
 [node name="TargetArea" parent="." instance=ExtResource("3_mvnu8")]
-position = Vector2(60, -178)
+position = Vector2(73, -170)
 
 [node name="Coin" parent="." instance=ExtResource("4_bxano")]
 position = Vector2(85, -130)

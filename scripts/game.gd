@@ -19,6 +19,6 @@ func load_intro():
 	var room_scene = load("res://scenes/base/room.tscn")
 	var room = room_scene.instantiate()
 	await get_tree().process_frame
-	LevelManager.load_level(2)
+	LevelManager.load_level(8)
 	add_child(room)
 	remove_child(intro_screen)

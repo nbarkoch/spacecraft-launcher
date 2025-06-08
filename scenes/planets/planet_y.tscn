@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://o6k1snpuyeeh"]
+
+[ext_resource type="PackedScene" uid="uid://p8a8uk5vtjdd" path="res://scenes/base/planet.tscn" id="1_v27v7"]
+[ext_resource type="Texture2D" uid="uid://btwt75nj4gaf0" path="res://sprites/planet_y.png" id="2_ql4k0"]
+
+[node name="YellowPlanet" type="Node2D"]
+
+[node name="Planet" parent="." instance=ExtResource("1_v27v7")]
+sprite_texture = ExtResource("2_ql4k0")
+glow_color = Color(0.235294, 0.380392, 0.698039, 0)
+planet_radius = 27.5
+gravity_radius = 65.0
+gravity_strength = 5.0
+zone_color = Color(1, 1, 1, 0.501961)

@@ -41,4 +41,4 @@ rotation = -0.363201
 start_angle = 180.0
 
 [node name="Meteroid4" parent="." instance=ExtResource("5_oef5i")]
-position = Vector2(-59, -84)
+position = Vector2(-73, -78)

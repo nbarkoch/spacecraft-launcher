@@ -11,7 +11,7 @@ class_name Planet
 # Physics properties
 @export var planet_radius: float = 20.0
 @export var gravity_radius: float = 60.0
-@export_range(50.0, 800.0, 10.0) var gravity_strength: float = 300.0
+@export_range(0.0, 800.0, 1.0) var gravity_strength: float = 50.0
 
 # Visual feedback
 @export var show_gravity_zone: bool = true
