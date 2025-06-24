@@ -42,13 +42,6 @@ func _physics_process(delta):
 	if use_advanced_physics and is_physics_active:
 		# פיזיקה מתקדמת עם כל האינטראקציות
 		simulate_advanced_physics(delta)
-	else:
-		# הפיזיקה הישנה (backup)
-		var current_assist = gravity_assist
-		if current_assist:
-			apply_gravity_assist(delta)
-			if current_assist == gravity_assist and current_assist.is_curve_complete():
-				exit_gravity_assist()
 	
 	update_debug_info()
 	update_fire_effect()
@@ -190,11 +183,23 @@ func calculate_meteroid_interactions_for_spacecraft(meteoroids: Array, delta: fl
 		if not meteroid or not is_instance_valid(meteroid):
 			continue
 		
+		# חישוב התנגשות
 		var distance = physics_position.distance_to(meteroid.global_position)
 		if distance <= (13.0 + 6.0):  # התנגשות
+			# חשב כוח התנגשות על החללית
 			var collision_direction = (physics_position - meteroid.global_position).normalized()
-			var collision_strength = 150.0
+			
+			# המסה של החללית קטנה יותר - היא מקבלת יותר כוח
+			var spacecraft_mass = 1.0
+			var meteroid_mass_actual = meteroid.meteroid_physics_mass  # השתמש במסה שלנו
+			var momentum_transfer = (2.0 * meteroid_mass_actual) / (spacecraft_mass + meteroid_mass_actual)
+			var collision_strength = 200.0 * momentum_transfer
+			
 			result.force += collision_direction * collision_strength
+			
+			# הפעל אפקט על המטאור עם הפיזיקה שלנו
+			meteroid.apply_collision_effect(physics_velocity)
+			print("Spacecraft collided with meteroid! Both objects affected by our physics.")
 			break
 	
 	return result

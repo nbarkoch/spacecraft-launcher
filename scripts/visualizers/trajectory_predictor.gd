@@ -267,10 +267,17 @@ func calculate_meteroid_interactions(pos: Vector2, vel: Vector2, meteoroids: Arr
 		if not meteroid or not is_instance_valid(meteroid):
 			continue
 		
+		# חישוב התנגשות - בדיוק כמו בחללית!
 		var distance = pos.distance_to(meteroid.global_position)
 		if distance <= (13.0 + 6.0):  # התנגשות
 			var collision_direction = (pos - meteroid.global_position).normalized()
-			var collision_strength = 150.0
+			
+			# השתמש במסה שלנו של המטאור
+			var spacecraft_mass = 1.0
+			var meteroid_mass_actual = meteroid.meteroid_physics_mass  # המסה שלנו
+			var momentum_transfer = (2.0 * meteroid_mass_actual) / (spacecraft_mass + meteroid_mass_actual)
+			var collision_strength = 200.0 * momentum_transfer
+			
 			result.force += collision_direction * collision_strength
 			break
 	

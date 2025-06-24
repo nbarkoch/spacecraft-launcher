@@ -134,12 +134,9 @@ func _process(delta):
 			rightLine.points[0] = rightLine.to_local(slingshot_center.global_position)
 			
 			hide_all_planet_arcs()
-			if not spacecraft or not is_instance_valid(spacecraft):
-				slingshotState = SlingshotState.idle
-				GameManager.currentState = GameManager.GameState.idle
 				
 		SlingshotState.reset:
-			pass
+			reset()
 
 func hide_all_planet_arcs():
 	"""Hide arc visualization on all planets"""
