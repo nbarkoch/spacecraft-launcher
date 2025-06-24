@@ -13,17 +13,22 @@ const FADE_DELAY: float = 2.5  # Delay before old song starts fading out
 
 # Room music - sequence of songs
 var room_songs: Array[String] = [
-	"res://music/room_song1.mp3",
-	"res://music/room_song2.mp3", 
-	"res://music/room_song3.mp3",
-	"res://music/room_song4.mp3",
-	"res://music/room_song5.mp3",
+	"res://music/1. Spacecraft Launcher - Purity.mp3",
+	"res://music/2. Spacecraft Launcher - Self Confidence.mp3",
+	"res://music/3. Spacecraft Launcher - Fun Playground.mp3",
+	"res://music/4. Spacecraft Launcher - Caution.mp3",
+	"res://music/5. Spacecraft Launcher - Hopeless.mp3",
+	"res://music/6. Spacecraft Launcher - Sad Story.mp3",
+	"res://music/7. Spacecraft Launcher - Troublesome.mp3",
+	"res://music/8. Spacecraft Launcher - Awaken.mp3",
+	"res://music/9. Spacecraft Launcher - Overwhelmed.mp3",
+	"res://music/10. Spacecraft Launcher - Critical Thinking.mp3",
 ]
 var current_room_song: int = 0
 var is_room_music_playing: bool = false
 
 # Menu music - single track
-var menu_song: String = "res://music/menu_music.mp3"
+var menu_song: String = "res://music/9. Spacecraft Launcher - Overwhelmed.mp3"
 var is_menu_music_playing: bool = false
 
 func _ready():

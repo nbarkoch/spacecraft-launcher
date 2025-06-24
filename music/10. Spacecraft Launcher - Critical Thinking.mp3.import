@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bdgeb8dt4g5rt"
+path="res://.godot/imported/10. Spacecraft Launcher - Critical Thinking.mp3-592db8e91bdaa132edb61c938aa5fe9f.mp3str"
+
+[deps]
+
+source_file="res://music/10. Spacecraft Launcher - Critical Thinking.mp3"
+dest_files=["res://.godot/imported/10. Spacecraft Launcher - Critical Thinking.mp3-592db8e91bdaa132edb61c938aa5fe9f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c8aus8tohs6lj"
+path="res://.godot/imported/6. Spacecraft Launcher - Sad Story.mp3-95a380a41b19d307ec350b0a577a1242.mp3str"
+
+[deps]
+
+source_file="res://music/6. Spacecraft Launcher - Sad Story.mp3"
+dest_files=["res://.godot/imported/6. Spacecraft Launcher - Sad Story.mp3-95a380a41b19d307ec350b0a577a1242.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

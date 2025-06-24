@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bbu43k4dino0"
+path="res://.godot/imported/9. Spacecraft Launcher - Overwhelmed.mp3-7882bf6b1a8f6b47d06f7db9591557ea.mp3str"
+
+[deps]
+
+source_file="res://music/9. Spacecraft Launcher - Overwhelmed.mp3"
+dest_files=["res://.godot/imported/9. Spacecraft Launcher - Overwhelmed.mp3-7882bf6b1a8f6b47d06f7db9591557ea.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

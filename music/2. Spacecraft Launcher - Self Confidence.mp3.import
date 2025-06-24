@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b7i6t8x3vcrd0"
+path="res://.godot/imported/2. Spacecraft Launcher - Self Confidence.mp3-20d0ae2a26bc7f02eb2b71c62b3f45fd.mp3str"
+
+[deps]
+
+source_file="res://music/2. Spacecraft Launcher - Self Confidence.mp3"
+dest_files=["res://.godot/imported/2. Spacecraft Launcher - Self Confidence.mp3-20d0ae2a26bc7f02eb2b71c62b3f45fd.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
