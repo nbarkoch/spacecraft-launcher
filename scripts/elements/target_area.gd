@@ -17,7 +17,9 @@ func _on_body_entered(body):
 		
 
 func capture_spacecraft(spacecraft: Spacecraft):
-	# Stop spacecraft movement immediately
+	spacecraft.is_physics_active = false
+	spacecraft.physics_velocity = Vector2.ZERO
+	
 	spacecraft.freeze = true
 	spacecraft.linear_velocity = Vector2.ZERO
 	spacecraft.angular_velocity = 0.0
@@ -40,5 +42,3 @@ func capture_spacecraft(spacecraft: Spacecraft):
 	await tween.finished
 	#spacecraft.queue_free()
 	spacecraft.stop()
-	
-	

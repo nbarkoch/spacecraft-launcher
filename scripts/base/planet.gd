@@ -11,7 +11,7 @@ class_name Planet
 # Physics properties
 @export var planet_radius: float = 20.0
 @export var gravity_radius: float = 60.0
-@export_range(0.0, 800.0, 1.0) var gravity_strength: float = 50.0
+@export_range(50.0, 800.0, 10.0) var gravity_strength: float = 300.0
 
 # Visual feedback
 @export var show_gravity_zone: bool = true
@@ -85,13 +85,21 @@ func setup_shader_material():
 func _on_gravity_zone_body_entered(body):
 	"""Handle spacecraft entering gravity zone"""
 	if body is Spacecraft:
+		# אל תפעיל gravity assist אם החללית משתמשת בפיזיקה החדשה!
+		if body.use_advanced_physics:
+			print("Spacecraft uses advanced physics - skipping old gravity assist")
+			return
+		
+		# רק אם משתמשים בפיזיקה הישנה
 		body.exit_gravity_assist()
 		body.enter_gravity_assist(GravityAssist.new(self, body))
 
 func _on_gravity_zone_body_exited(body):
 	"""Handle spacecraft leaving gravity zone"""
 	if body is Spacecraft and body.gravity_assist and body.gravity_assist.planet == self:
-		body.exit_gravity_assist()
+		# רק אם משתמשים בפיזיקה הישנה
+		if not body.use_advanced_physics:
+			body.exit_gravity_assist()
 
 func _on_planet_area_body_entered(body):
 	"""Handle spacecraft collision with planet surface"""

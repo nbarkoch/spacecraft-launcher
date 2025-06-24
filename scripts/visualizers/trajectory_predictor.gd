@@ -108,48 +108,226 @@ func hide_trajectory():
 		trajectory_line.clear_points()
 
 func update_prediction(start_position: Vector2, initial_velocity: Vector2):
-	"""Update prediction in real-time with smooth transitions"""
+	"""Update prediction using COMPLETE PHYSICS SIMULATION"""
 	if is_predicting:
-		predict_trajectory(start_position, initial_velocity)
+		predict_trajectory_complete(start_position, initial_velocity)
 
-func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
-	"""Calculate trajectory using simplified physics"""
+func predict_trajectory_complete(start_position: Vector2, initial_velocity: Vector2):
+	"""חיזוי מלא עם כל האינטראקציות - מטאורים, פורטלים, חורים שחורים"""
 	var new_points = []
-	
-	var max_steps = min(int(max_prediction_time / PhysicsUtils.TRAJECTORY_TIME_STEP), PhysicsUtils.MAX_TRAJECTORY_STEPS)
-	
-	# Simulation state
 	var position = start_position
 	var velocity = initial_velocity
+	var time = 0.0
+	var step_count = 0
+	var is_alive = true
+	var current_gravity_assist = null
+	var gravity_assist_time = 0.0
 	
-	# Get all planets
-	var planets = PhysicsUtils.find_all_planets(get_tree())
+	# קבועים
+	var physics_fps = 60.0
+	var delta = 1.0 / physics_fps
+	var damping = 0.999
 	
-	# Simulate trajectory using simplified physics
-	for step in range(max_steps):
-		var sim_time = step * PhysicsUtils.TRAJECTORY_TIME_STEP
-		
-		# Add trajectory point every few steps
-		if step % PhysicsUtils.TRAJECTORY_POINT_INTERVAL == 0:
+	# איסוף כל האובייקטים
+	var planets = get_tree().get_nodes_in_group("Planets")
+	var meteoroids = collect_meteoroids()
+	var portals = collect_portals()
+	var black_holes = collect_black_holes()
+	
+	while time < max_prediction_time and is_alive:
+		# הוסף נקודה
+		if step_count % 2 == 0:
 			new_points.append(to_local(position))
 		
-		# Use simplified physics simulation
-		var physics_result = PhysicsUtils.simulate_physics_step(position, velocity, planets, PhysicsUtils.TRAJECTORY_TIME_STEP)
-		
-		position = physics_result.position
-		velocity = physics_result.velocity
-		
-		# Check for collision
-		if physics_result.collision:
+		# בדוק גבולות - בדיוק כמו בחללית!
+		if abs(position.x) > 200.0 or abs(position.y) > 400.0:
 			break
 		
-		# Bounds check
-		if abs(position.x) > PhysicsUtils.MAX_SIMULATION_BOUNDS or abs(position.y) > PhysicsUtils.MAX_SIMULATION_BOUNDS:
+		# חשב כוחות מכל המקורות
+		var total_force = Vector2.ZERO
+		
+		# 1. כוחי כבידה עם gravity assist
+		var gravity_result = calculate_gravity_forces(position, velocity, planets, current_gravity_assist, gravity_assist_time, delta)
+		total_force += gravity_result.force
+		current_gravity_assist = gravity_result.current_assist
+		gravity_assist_time = gravity_result.assist_time
+		
+		# בדוק התנגשות עם כוכבי לכת
+		if check_planet_collision(position, planets):
+			is_alive = false
 			break
 		
-		# Velocity limit check
-		if velocity.length() > PhysicsUtils.MAX_VELOCITY_LIMIT:
+		# 2. אינטראקציה עם מטאורים
+		var meteroid_result = calculate_meteroid_interactions(position, velocity, meteoroids, delta)
+		total_force += meteroid_result.force
+		
+		# 3. בדוק פורטלים
+		var portal_result = check_portal_teleportation(position, portals)
+		if portal_result.teleported:
+			position = portal_result.new_position
+		
+		# 4. חורים שחורים
+		var blackhole_result = calculate_blackhole_forces(position, velocity, black_holes, delta)
+		total_force += blackhole_result.force
+		if not blackhole_result.is_alive:
+			is_alive = false
+			break
+		
+		# עדכן פיזיקה
+		velocity *= damping
+		velocity += total_force
+		position += velocity * delta
+		
+		# בדוק גבולות אחרי העדכון גם
+		if abs(position.x) > 200.0 or abs(position.y) > 400.0:
+			break
+		
+		time += delta
+		step_count += 1
+		gravity_assist_time += delta
+		
+		if step_count > 300:
 			break
 	
-	# Update target trajectory points
 	target_trajectory_points = new_points
+
+# פונקציות עזר לחישובי פיזיקה מלאים
+
+func collect_meteoroids() -> Array:
+	return get_tree().get_nodes_in_group("Meteoroids")
+
+func collect_portals() -> Array:
+	return get_tree().get_nodes_in_group("Portals")
+
+func collect_black_holes() -> Array:
+	return get_tree().get_nodes_in_group("BlackHoles")
+
+func calculate_gravity_forces(pos: Vector2, vel: Vector2, planets: Array, current_assist, assist_time: float, delta: float) -> Dictionary:
+	var result = {"force": Vector2.ZERO, "current_assist": current_assist, "assist_time": assist_time}
+	
+	for planet in planets:
+		if not planet or not is_instance_valid(planet):
+			continue
+		
+		var distance = pos.distance_to(planet.global_position)
+		if distance <= planet.gravity_radius and distance > 1.0:
+			var to_planet = planet.global_position - pos
+			
+			# כוח כבידה בסיסי
+			var base_force_magnitude = (planet.gravity_strength * delta * 60.0) / (distance * 0.01)
+			var base_force = to_planet.normalized() * base_force_magnitude
+			
+			# gravity assist logic
+			if current_assist == planet:
+				# המשך gravity assist
+				var orbital_direction = Vector2(-to_planet.y, to_planet.x).normalized()
+				var assist_strength = 50.0 * (1.0 + assist_time * 0.5)
+				var assist_force = orbital_direction * assist_strength * delta
+				result.force = base_force + assist_force
+				result.assist_time = assist_time
+				
+				# סיום gravity assist - בדיוק כמו בחללית
+				if assist_time > 2.0 or distance > planet.gravity_radius * 0.8:
+					result.current_assist = null
+					result.assist_time = 0.0
+			else:
+				# בדוק התחלת gravity assist - בדיוק כמו בחללית
+				var tangential_velocity = calculate_tangential_velocity_for_planet(pos, vel, planet)
+				if distance <= planet.gravity_radius * 0.6 and tangential_velocity > 50.0:
+					result.current_assist = planet
+					result.assist_time = 0.0
+				
+				result.force = base_force
+			
+			break
+	
+	return result
+
+func calculate_tangential_velocity_for_planet(pos: Vector2, vel: Vector2, planet) -> float:
+	var to_planet = planet.global_position - pos
+	var radial_direction = to_planet.normalized()
+	var velocity_direction = vel.normalized() if vel.length() > 0 else Vector2.ZERO
+	var dot_product = radial_direction.dot(velocity_direction)
+	var tangential_component = sqrt(max(0, 1.0 - dot_product * dot_product))
+	return tangential_component * vel.length()
+
+func check_planet_collision(pos: Vector2, planets: Array) -> bool:
+	for planet in planets:
+		if not planet or not is_instance_valid(planet):
+			continue
+		var distance = pos.distance_to(planet.global_position)
+		if distance <= (planet.planet_radius + 6.0):
+			return true
+	return false
+
+func calculate_meteroid_interactions(pos: Vector2, vel: Vector2, meteoroids: Array, delta: float) -> Dictionary:
+	var result = {"force": Vector2.ZERO}
+	
+	for meteroid in meteoroids:
+		if not meteroid or not is_instance_valid(meteroid):
+			continue
+		
+		var distance = pos.distance_to(meteroid.global_position)
+		if distance <= (13.0 + 6.0):  # התנגשות
+			var collision_direction = (pos - meteroid.global_position).normalized()
+			var collision_strength = 150.0
+			result.force += collision_direction * collision_strength
+			break
+	
+	return result
+
+func check_portal_teleportation(pos: Vector2, portals: Array) -> Dictionary:
+	var result = {"teleported": false, "new_position": pos}
+	
+	for portal in portals:
+		if not portal or not is_instance_valid(portal):
+			continue
+		
+		var distance = pos.distance_to(portal.global_position)
+		if distance <= 13.0:
+			var target_portal = find_target_portal(portal, portals)
+			if target_portal:
+				result.teleported = true
+				result.new_position = target_portal.global_position
+			break
+	
+	return result
+
+func find_target_portal(source_portal, all_portals: Array):
+	var portal_group = source_portal.portal_group if "portal_group" in source_portal else "portal1"
+	for portal in all_portals:
+		if portal != source_portal and portal.portal_group == portal_group:
+			return portal
+	return null
+
+func calculate_blackhole_forces(pos: Vector2, vel: Vector2, black_holes: Array, delta: float) -> Dictionary:
+	var result = {"force": Vector2.ZERO, "is_alive": true}
+	
+	for black_hole in black_holes:
+		if not black_hole or not is_instance_valid(black_hole):
+			continue
+		
+		var distance = pos.distance_to(black_hole.global_position)
+		
+		if distance <= 10.0:  # נפילה לחור
+			result.is_alive = false
+			return result
+		
+		if distance <= black_hole.gravity_radius:
+			var to_blackhole = black_hole.global_position - pos
+			var blackhole_force = (black_hole.gravity_strength * 2.0) / distance
+			result.force += to_blackhole.normalized() * blackhole_force * delta
+			
+			# עצירת בריחה
+			var velocity_toward = vel.dot(to_blackhole.normalized())
+			if velocity_toward < 0:
+				result.force += -vel * 0.1
+			
+			break
+	
+	return result
+
+# Keep the old prediction method as fallback
+func predict_trajectory(start_position: Vector2, initial_velocity: Vector2):
+	"""OLD METHOD - kept for compatibility"""
+	predict_trajectory_complete(start_position, initial_velocity)

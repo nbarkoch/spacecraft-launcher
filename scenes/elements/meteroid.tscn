@@ -60,7 +60,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_u7kpt"]
 radius = 13.0
 
-[node name="Meteroid" type="RigidBody2D"]
+[node name="Meteroid" type="RigidBody2D" groups=["Meteroids"]]
 gravity_scale = 0.0
 script = ExtResource("1_g1etq")
 orbit_radius = 15.0
