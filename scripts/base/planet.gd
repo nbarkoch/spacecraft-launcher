@@ -105,5 +105,4 @@ func _on_planet_area_body_entered(body):
 	"""Handle spacecraft collision with planet surface"""
 	if body is Spacecraft:
 		body.exit_gravity_assist()
-		body.is_dead = true
 		body.destroy()

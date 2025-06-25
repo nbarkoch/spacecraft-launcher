@@ -23,7 +23,7 @@ func _process(delta):
 	
 func level_started():
 	if self.room:
-		var slingshot = self.room.level.slingshot
+		var slingshot: SlingShot = self.room.level.slingshot
 		if slingshot:
 			slingshot.reset()
 
@@ -79,8 +79,11 @@ func load_level(level_num: int):
 	await get_tree().process_frame
 	if self.room:
 		if self.room.level.content:
+			var old_content = self.room.level.content
+			self.room.level.remove_child(old_content)
 			self.room.level.content.queue_free()
-			self.get_parent().add_child(new_content)
+			
+		self.room.level.add_child(new_content)
 		self.room.level.content = new_content
 	
 	

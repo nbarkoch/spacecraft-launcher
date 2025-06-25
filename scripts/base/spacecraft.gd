@@ -310,12 +310,14 @@ func exit_gravity_assist():
 
 func destroy():
 	"""Destroy spacecraft when it hits a planet"""
+	if is_dead:
+		return
 	var explosion_position = global_position
 	var scene_parent = get_tree().current_scene
 	
 	# עצור פיזיקה
 	is_physics_active = false
-	
+	is_dead = true
 	# Create explosion effect
 	SpacecraftExplosion.create_explosion_at(explosion_position, scene_parent)
 	
