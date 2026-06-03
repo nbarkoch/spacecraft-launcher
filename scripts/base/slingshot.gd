@@ -121,7 +121,7 @@ func _process(delta):
 				spacecraft.reset(s_rotation, center_pos)
 				
 				await get_tree().process_frame
-				
+
 				# Apply impulse with advanced physics
 				spacecraft.apply_impulse_predictable(velocity)
 				

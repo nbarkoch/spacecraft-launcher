@@ -205,7 +205,6 @@ func apply_impulse_predictable(impulse: Vector2):
 	physics_velocity = impulse
 	physics_rotation = rotation
 	is_physics_active = true
-	print("Started advanced physics with impulse: ", impulse)
 
 func destroy():
 	"""Destroy spacecraft"""

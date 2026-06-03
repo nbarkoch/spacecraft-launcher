@@ -9,7 +9,7 @@ func _process(delta):
 	pass
 
 func _on_body_entered(body):
-	if body is Spacecraft and not spacecraft_captured:
+	if body is Spacecraft and not spacecraft_captured and body.is_physics_active:
 		spacecraft_captured = true
 		capture_spacecraft(body)
 		$AnimationPlayer.play("enter")
