@@ -1,4 +1,4 @@
-# scripts/planet.gd - BACK TO BASICS
+# scripts/planet.gd - Advanced Physics Only
 extends StaticBody2D
 class_name Planet
 
@@ -83,26 +83,17 @@ func setup_shader_material():
 		$Sprite.scale = Vector2(scale_factor, scale_factor)
 
 func _on_gravity_zone_body_entered(body):
-	"""Handle spacecraft entering gravity zone"""
+	"""Handle spacecraft entering gravity zone - Advanced physics handles this automatically"""
 	if body is Spacecraft:
-		# אל תפעיל gravity assist אם החללית משתמשת בפיזיקה החדשה!
-		if body.use_advanced_physics:
-			print("Spacecraft uses advanced physics - skipping old gravity assist")
-			return
-		
-		# רק אם משתמשים בפיזיקה הישנה
-		body.exit_gravity_assist()
-		body.enter_gravity_assist(GravityAssist.new(self, body))
+		print("Spacecraft entered gravity zone of: ", name, " (handled by advanced physics)")
 
 func _on_gravity_zone_body_exited(body):
-	"""Handle spacecraft leaving gravity zone"""
-	if body is Spacecraft and body.gravity_assist and body.gravity_assist.planet == self:
-		# רק אם משתמשים בפיזיקה הישנה
-		if not body.use_advanced_physics:
-			body.exit_gravity_assist()
+	"""Handle spacecraft leaving gravity zone - Advanced physics handles this automatically"""
+	if body is Spacecraft:
+		print("Spacecraft exited gravity zone of: ", name, " (handled by advanced physics)")
 
 func _on_planet_area_body_entered(body):
 	"""Handle spacecraft collision with planet surface"""
 	if body is Spacecraft:
-		body.exit_gravity_assist()
+		body.is_dead = true
 		body.destroy()

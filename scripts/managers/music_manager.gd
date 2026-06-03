@@ -18,11 +18,11 @@ var room_songs: Array[String] = [
 	"res://music/3. Spacecraft Launcher - Fun Playground.mp3",
 	"res://music/4. Spacecraft Launcher - Caution.mp3",
 	"res://music/5. Spacecraft Launcher - Hopeless.mp3",
-	"res://music/6. Spacecraft Launcher - Sad Story.mp3",
-	"res://music/7. Spacecraft Launcher - Troublesome.mp3",
-	"res://music/8. Spacecraft Launcher - Awaken.mp3",
-	"res://music/9. Spacecraft Launcher - Overwhelmed.mp3",
-	"res://music/10. Spacecraft Launcher - Critical Thinking.mp3",
+	#"res://music/6. Spacecraft Launcher - Sad Story.mp3",
+	#"res://music/7. Spacecraft Launcher - Troublesome.mp3",
+	#"res://music/8. Spacecraft Launcher - Awaken.mp3",
+	#"res://music/9. Spacecraft Launcher - Overwhelmed.mp3",
+	#"res://music/10. Spacecraft Launcher - Critical Thinking.mp3",
 ]
 var current_room_song: int = 0
 var is_room_music_playing: bool = false

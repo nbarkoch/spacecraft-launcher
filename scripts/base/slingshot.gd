@@ -1,5 +1,4 @@
 extends Node2D
-
 class_name SlingShot
 
 enum SlingshotState {
@@ -14,7 +13,7 @@ var slingshotState
 var leftLine
 var rightLine
 var spacecraft: Spacecraft = null
-var trajectory_predictor: TrajectoryPredictor  # החיזוי המלא החדש
+var trajectory_predictor: TrajectoryPredictor
 const MULTIPLIER = 4
 
 # Snap system
@@ -36,7 +35,7 @@ func _ready():
 	leftLine = $LeftLine
 	rightLine = $RightLine
 	
-	# צור חיזוי מסלול מדויק ומלא
+	# Create trajectory predictor
 	trajectory_predictor = TrajectoryPredictor.new()
 	add_child(trajectory_predictor)
 	trajectory_predictor.hide_trajectory()
@@ -93,9 +92,9 @@ func _process(delta):
 				# Calculate velocity
 				var velocity = (center_pos - current_mouse_pos) * MULTIPLIER
 				
-				# עדכן חיזוי מדויק - זה החלק החשוב!
+				# Physics simulation starts at the launch point; drag_origin extends the visual line back
 				trajectory_predictor.show_trajectory()
-				trajectory_predictor.update_prediction(current_mouse_pos, velocity)
+				trajectory_predictor.update_prediction(slingshot_center.global_position, velocity, current_mouse_pos)
 				
 				update_planet_arcs(velocity)
 				
@@ -110,10 +109,9 @@ func _process(delta):
 				
 				var velocity = (center_pos - final_mouse_pos) * MULTIPLIER
 				
-				# שחרר חללית עם פיזיקה מדויקת
-				spacecraft.linear_velocity = Vector2.ZERO
-				spacecraft.angular_velocity = 0.0
-				spacecraft.gravity_assist = null
+				# Release spacecraft with advanced physics
+				spacecraft.physics_velocity = Vector2.ZERO
+				spacecraft.current_gravity_assist_planet = null
 				spacecraft.freeze = true
 				spacecraft.release()
 				Input.vibrate_handheld(10)
@@ -124,7 +122,7 @@ func _process(delta):
 				
 				await get_tree().process_frame
 				
-				# השתמש בפונקציה החדשה עם פיזיקה מדויקת
+				# Apply impulse with advanced physics
 				spacecraft.apply_impulse_predictable(velocity)
 				
 				GameManager.currentState = GameManager.GameState.action
@@ -132,7 +130,6 @@ func _process(delta):
 		SlingshotState.released:
 			leftLine.points[0] = leftLine.to_local(slingshot_center.global_position)
 			rightLine.points[0] = rightLine.to_local(slingshot_center.global_position)
-			
 			hide_all_planet_arcs()
 				
 		SlingshotState.reset:
@@ -145,7 +142,7 @@ func hide_all_planet_arcs():
 			planet.gravity_visualizer.hide_orbit_prediction()
 
 func apply_subtle_snap(mouse_pos: Vector2, center_pos: Vector2) -> Vector2:
-	"""הפעל snap עדין על המיקום"""
+	"""Apply subtle snap to position"""
 	var pull_vector = mouse_pos - center_pos
 	
 	if pull_vector.length() < 5.0:
@@ -163,7 +160,7 @@ func apply_subtle_snap(mouse_pos: Vector2, center_pos: Vector2) -> Vector2:
 	return snapped_pos
 
 func apply_angle_snap(angle: float) -> float:
-	"""הפעל snap עדין על זווית"""
+	"""Apply subtle angle snap"""
 	var angle_degrees = rad_to_deg(angle)
 	var nearest_snap = round(angle_degrees / ANGLE_SNAP_INTERVAL) * ANGLE_SNAP_INTERVAL
 	var distance_to_snap = abs(angle_degrees - nearest_snap)
@@ -187,7 +184,7 @@ func apply_angle_snap(angle: float) -> float:
 	return deg_to_rad(angle_degrees)
 
 func apply_distance_snap(distance: float) -> float:
-	"""הפעל snap עדין על מרחק"""
+	"""Apply subtle distance snap"""
 	var nearest_snap = round(distance / DISTANCE_SNAP_INTERVAL) * DISTANCE_SNAP_INTERVAL
 	var distance_to_snap = abs(distance - nearest_snap)
 	
