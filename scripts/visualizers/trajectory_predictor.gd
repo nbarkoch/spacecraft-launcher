@@ -128,11 +128,13 @@ func predict_trajectory(start_position: Vector2, initial_velocity: Vector2, drag
 	var time: float = 0.0
 	var step: int = 0
 
-	var pos          = start_position
-	var vel          = initial_velocity
-	var assist_planet = null
-	var assist_time  = 0.0
-	var alive        = true
+	var pos             = start_position
+	var vel             = initial_velocity
+	var assist_planet   = null
+	var assist_time     = 0.0
+	var alive           = true
+	var sc_rotation     = initial_velocity.angle() + PI / 2.0
+	var propulsion_speed = initial_velocity.length()
 
 	while time < max_prediction_time and alive:
 		if step % 2 == 0:
@@ -140,7 +142,8 @@ func predict_trajectory(start_position: Vector2, initial_velocity: Vector2, drag
 
 		var state = Spacecraft.step_physics(
 			pos, vel, assist_planet, assist_time,
-			delta, planets, meteoroids, portals, black_holes
+			delta, planets, meteoroids, portals, black_holes,
+			sc_rotation, propulsion_speed
 		)
 
 		pos           = state.pos
@@ -148,6 +151,7 @@ func predict_trajectory(start_position: Vector2, initial_velocity: Vector2, drag
 		assist_planet = state.assist_planet
 		assist_time   = state.assist_time
 		alive         = state.alive
+		sc_rotation   = state.sc_rotation
 
 		time += delta
 		step += 1

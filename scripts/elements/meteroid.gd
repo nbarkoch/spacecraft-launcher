@@ -25,8 +25,8 @@ enum MeteroidType {
 # Physics properties
 @export_group("Physics")
 @export var return_to_orbit_strength: float = 2.0
-@export var collision_impulse_multiplier: float = 0.05
-@export var damping_factor: float = 0.90
+@export var damping_factor: float = 0.98
+@export var collision_impulse_multiplier: float = 0.35
 
 # Internal variables for movement
 var center_position: Vector2
@@ -34,7 +34,7 @@ var current_angle: float
 var time_elapsed: float = 0.0
 var is_disturbed: bool = false
 var disturbance_timer: float = 0.0
-var max_disturbance_time: float = 0.6
+var max_disturbance_time: float = 2.0
 
 # Advanced physics system
 var meteroid_physics_position: Vector2
@@ -149,9 +149,10 @@ func calculate_orbital_force() -> Vector2:
 	if distance_to_orbit > 1.0:
 		var base_strength = return_to_orbit_strength
 		
-		# Slightly stronger return force when disturbed
+		# Gradually increase return force as disturbance time runs out
 		if is_disturbed:
-			base_strength *= 2.0
+			var time_factor = 1.0 + (max_disturbance_time - disturbance_timer)
+			base_strength *= time_factor
 		
 		var orbit_scale_factor = max(1.0, orbit_radius / 30.0)
 		var distance_factor = min(distance_to_orbit * 0.1, 1.0)
@@ -161,28 +162,14 @@ func calculate_orbital_force() -> Vector2:
 	
 	return Vector2.ZERO
 
-func apply_collision_effect(spacecraft_velocity: Vector2):
-	"""Apply collision effect using our physics system"""
-	# Mark as disturbed
+func apply_collision_effect(impulse: Vector2):
+	"""Apply pre-computed collision impulse (along collision normal, proportional to approach)"""
 	is_disturbed = true
 	disturbance_timer = max_disturbance_time
-	
-	# Calculate collision force
-	var spacecraft_mass = 1.0
-	var momentum_transfer = (2.0 * spacecraft_mass) / (spacecraft_mass + meteroid_physics_mass)
-	var collision_force = spacecraft_velocity * momentum_transfer * collision_impulse_multiplier
-	
-	# Apply force to meteroid
-	meteroid_physics_velocity += collision_force
-	
-	# Ensure position is updated
+	meteroid_physics_velocity += impulse
 	if meteroid_physics_position == Vector2.ZERO:
 		meteroid_physics_position = global_position
-	
-	# Visual effect
 	create_collision_effect()
-	
-	print("Meteroid hit! Disturbed for ", max_disturbance_time, " seconds. Velocity: ", meteroid_physics_velocity)
 
 func create_collision_effect():
 	"""Visual collision effect"""

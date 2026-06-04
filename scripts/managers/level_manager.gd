@@ -8,7 +8,7 @@ var score = 0
 
 var room: Room
 var dialog: Dialog = null
-var current_level_num = 7
+var current_level_num = 9
 
 func inc_score():
 	score += 1
